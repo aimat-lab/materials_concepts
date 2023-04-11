@@ -60,10 +60,13 @@ class InMemoryHandler:
     def handle(self, data):
         self.data.extend(data)
 
-    def to_csv(self, filename, converters={}):
-        self.to_df(converters).to_csv(filename, index=False)
+    def to_csv(self, filename, converter=None):
+        self.to_df(converter).to_csv(filename, index=False)
 
     def to_df(self, converter):
+        if converter is None:
+            return pd.DataFrame(self.data)
+
         conv_data = converter.apply(self.data)
         return pd.DataFrame(conv_data)
 
