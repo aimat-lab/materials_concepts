@@ -49,10 +49,16 @@ def clean_text_(text):
   - Use concepts (filter: level > 1/2, score > 0.3)
   - Large Language Models: Use them directly or filter afterwards (normalize singular/plural)
 
+```
+# r = Rake(min_length=2, max_length=5, language="english")
+# r.extract_keywords_from_text(df.loc[1]["abstract_inverted_index"])
+# keywords = r.get_ranked_phrases()
+```
+
 ## TODO Process
 
 - [ ] Implement cursor fetching
-- [ ] Work cleaning: Filter out works (no title, no abstract, retracted, paratext)
+- [ ] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
 - [ ] Abstract cleaning: Clean chemical elements
 - [ ] Generate cleaned 'list' of all concepts
 - [ ] Build graph with histogram edges

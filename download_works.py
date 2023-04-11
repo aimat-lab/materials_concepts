@@ -1,5 +1,3 @@
-from rake_nltk import Rake
-
 # custom imports
 from Downloader import OADownloader
 from utils.utils import inverted_abstract_to_abstract, extract_concepts
@@ -17,11 +15,10 @@ downloader = OADownloader(
         "is_paratext",
         "abstract_inverted_index",
         "concepts",
-        "ngrams_url",
     ],
     per_page=200,  # 200
     fetch_limit=1000,  # limit is 10.000, implement cursor fetching for more
-    filter="host_venue.id:S26125866",
+    filter="host_venue.id:S4210205488",
 )
 
 df = downloader.get().to_df(
@@ -32,8 +29,6 @@ df = downloader.get().to_df(
     }
 )
 
-df.to_csv("data/works.csv", index=False)
+df = df.rename(columns={"abstract_inverted_index": "abstract"})
 
-# r = Rake(min_length=2, max_length=5, language="english")
-# r.extract_keywords_from_text(df.loc[1]["abstract_inverted_index"])
-# keywords = r.get_ranked_phrases()
+df.to_csv("../data/works.csv", index=False)

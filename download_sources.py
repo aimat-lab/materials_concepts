@@ -1,6 +1,6 @@
 from Downloader import OADownloader
 
-TOPIC = "material"
+TOPIC = "material science"
 SOURCES_URL = f"https://api.openalex.org/sources?search={TOPIC}"
 
 downloader = OADownloader(
@@ -9,11 +9,11 @@ downloader = OADownloader(
     per_page=200,  # 200 is the maximum
 )
 
-filename = f"data/{TOPIC.replace(' ', '-')}_sources.csv"
+filename = f"../data/{TOPIC.replace(' ', '-')}_sources.csv"
 downloader.get().to_csv(
     filename=filename,
     converters={
         "alternate_titles": lambda x: x[0] if x else "",
-        "id": lambda x: x.rsplit("/", 1)[1],
+        "id": lambda x: x.rsplit("/", 1)[1],  # remove the URL prefix
     },
 )
