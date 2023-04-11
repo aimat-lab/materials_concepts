@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class OADownloader:
-    start_page = 1
+    CURSOR_START = "*"
 
     def __init__(self, url, fields, per_page, fetch_limit=None, filter=None) -> None:
         self._cache = []
@@ -13,12 +13,13 @@ class OADownloader:
         self.per_page = per_page
         self.fetch_limit = fetch_limit
         self.filter = filter
+        self.cursor = self.CURSOR_START  # init value for OpenAlex
 
-    def _get(self, page):
+    def _get(self, cursor):
         params = {
             "select": ",".join(self.fields),
             "per-page": self.per_page,
-            "page": page,
+            "cursor": cursor,
         }
         if self.filter is not None:
             params["filter"] = self.filter
@@ -26,19 +27,17 @@ class OADownloader:
         response = requests.get(self.url, params=params)
         response.raise_for_status()
         response = response.json()
-        count = response["meta"]["count"]
+        next_cursor = response["meta"]["next_cursor"]
+        self.cursor = next_cursor
 
-        # page * self.per_page => number of fetched items
-        # if number < count, there is more data to fetch
-        UPPER_LIMIT = self.fetch_limit or count
-        if page * self.per_page < UPPER_LIMIT:  # continue fetching?
-            return response["results"] + self._get(page + 1)
+        if next_cursor:
+            return response["results"] + self._get(next_cursor)
 
         return response["results"]
 
     def get(self):  # TODO lookup fetch: metadata => build progressbar (tqdm)
         if len(self._cache) == 0:
-            self._cache = self._get(self.start_page)
+            self._cache = self._get(self.CURSOR_START)
         return self
 
     def to_csv(self, filename, converters={}):
