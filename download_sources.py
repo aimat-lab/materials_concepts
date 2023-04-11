@@ -10,7 +10,7 @@ downloader = OADownloader(
     per_page=200,  # 200 is the maximum
 )
 
-cleaned_topic = make_valid_filename(TOPIC).replace(" ", "-")
+cleaned_topic = make_valid_filename(TOPIC)
 filename = f"{cleaned_topic}_sources.csv"
 
 downloader.get().to_csv(

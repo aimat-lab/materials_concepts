@@ -60,4 +60,6 @@ def make_valid_filename(filename):
     # Truncate the filename to 255 characters (max filename length on most file systems)
     filename = filename[:255]
 
+    filename = filename.replace(" ", "-")
+
     return filename
