@@ -16,11 +16,16 @@ FIELDS = [
 ]
 
 
+def invert_abstract_and_clean(abstract_inverted_index):
+    abstract = utils.inverted_abstract_to_abstract(abstract_inverted_index)
+    return abstract.replace("\n", " ").replace("\r", " ").replace("\r\n", " ")
+
+
 def fetch_single(host_venue, fetch_limit, output):
     converter = Converter(
         {
             "id": lambda x: x.rsplit("/", 1)[1],
-            "abstract_inverted_index": utils.inverted_abstract_to_abstract,
+            "abstract_inverted_index": invert_abstract_and_clean,
             "concepts": utils.extract_concepts,
         }
     )
@@ -54,11 +59,14 @@ def fetch_multiple(csv_file):
 
     df_subset = zip(df["id"], df["display_name"], df["works_count"])
 
-    for host_venue_id, display_name, works_count in df_subset:
+    venue_count = len(df)
+    for index, (host_venue_id, display_name, works_count) in enumerate(df_subset):
         title = f"{host_venue_id}"
         file_name = f"data/{subfolder}/{title}.csv"
 
-        print(f"Fetching {works_count} works for {display_name} ({host_venue_id})...")
+        print(
+            f"{index+1}/{venue_count} Fetching {works_count} works for {display_name} ({host_venue_id})..."
+        )
         fetch_single(host_venue_id, works_count, file_name)
 
 
@@ -73,7 +81,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--fetch_limit",
         type=int,
-        default=1000,
+        default=0,
         help="The number of works to fetch",
     )
     parser.add_argument(
@@ -83,7 +91,10 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.host_venue.endswith(".csv"):
-        fetch_multiple(args.host_venue)
-    else:
-        fetch_single(args.host_venue, args.fetch_limit, args.output)
+    try:
+        if args.host_venue.endswith(".csv"):
+            fetch_multiple(args.host_venue)
+        else:
+            fetch_single(args.host_venue, args.fetch_limit, args.output)
+    except KeyboardInterrupt:
+        print("Interrupted by user")
