@@ -1,21 +1,89 @@
 import requests
 import csv
 import pandas as pd
+from tqdm import tqdm
+
+
+class Converter:
+    def __init__(self, converter_funcs):
+        self.converter_funcs = converter_funcs
+
+    def _convert_row(self, row):
+        new_row = row.copy()
+        for attr, conv_func in self.converter_funcs.items():
+            new_row[attr] = conv_func(new_row[attr])
+        return new_row
+
+    def apply(self, data):
+        return [self._convert_row(row) for row in data]
+
+
+class FileHandler:
+    def __init__(self, filename, fields, converter, flush_threshold=1000):
+        self.filename = filename
+        self.fields = fields
+        self.converter = converter
+        self.flush_threshold = flush_threshold
+
+    def __enter__(self):
+        self.file = open(self.filename, "w")
+        self.flush_counter = 0
+        self.writer = csv.DictWriter(self.file, fieldnames=self.fields)
+        self.writer.writeheader()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.file.close()
+
+    def handle(self, data):
+        conv_data = self.converter.apply(data)
+        self.writer.writerows(conv_data)
+
+        self.flush_counter += len(conv_data)
+        if self.flush_counter >= self.flush_threshold:
+            self.file.flush()
+            self.flush_counter = 0
+
+
+class InMemoryHandler:
+    def __init__(self):
+        self.data = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Nothing needs to be cleaned up since the data
+        # should be available after exiting the with
+        pass
+
+    def handle(self, data):
+        self.data.extend(data)
+
+    def to_csv(self, filename, converters={}):
+        self.to_df(converters).to_csv(filename, index=False)
+
+    def to_df(self, converter):
+        conv_data = converter.apply(self.data)
+        return pd.DataFrame(conv_data)
 
 
 class OADownloader:
     CURSOR_START = "*"
 
-    def __init__(self, url, fields, per_page, fetch_limit=None, filter=None) -> None:
+    def __init__(
+        self, url, fields, per_page, handler, fetch_limit=None, filter=None
+    ) -> None:
         self._cache = []
         self.url = url
         self.fields = fields
         self.per_page = per_page
+        self.handler = handler
         self.fetch_limit = fetch_limit
         self.filter = filter
         self.cursor = self.CURSOR_START  # init value for OpenAlex
 
-    def _get(self, cursor):
+    def _get_params(self, cursor):
         params = {
             "select": ",".join(self.fields),
             "per-page": self.per_page,
@@ -24,31 +92,30 @@ class OADownloader:
         if self.filter is not None:
             params["filter"] = self.filter
 
+        return params
+
+    def perform_request(self, cursor):
+        params = self._get_params(cursor)
         response = requests.get(self.url, params=params)
         response.raise_for_status()
         response = response.json()
-        next_cursor = response["meta"]["next_cursor"]
-        self.cursor = next_cursor
+        return response
 
-        if next_cursor:
-            return response["results"] + self._get(next_cursor)
+    def get(self):
+        with tqdm(total=self.fetch_limit) as pbar:
+            with self.handler as handler:
+                while self.cursor:
+                    req_data = self.perform_request(self.cursor)
 
-        return response["results"]
+                    # handle data (e.g. store in memory, write to csv, etc.)
+                    handler.handle(req_data["results"])
 
-    def get(self):  # TODO lookup fetch: metadata => build progressbar (tqdm)
-        if len(self._cache) == 0:
-            self._cache = self._get(self.CURSOR_START)
-        return self
+                    # update progress bar
+                    count = len(req_data["results"])
+                    pbar.update(count)
 
-    def to_csv(self, filename, converters={}):
-        self.to_df(converters).to_csv(filename, index=False)
+                    # update cursor
+                    next_cursor = req_data["meta"]["next_cursor"]
+                    self.cursor = next_cursor
 
-    def to_df(self, converters={}):
-        def _convert_row(row):
-            new_row = row.copy()
-            for attr, conv_func in converters.items():
-                new_row[attr] = conv_func(new_row[attr])
-            return new_row
-
-        data = [_convert_row(row) for row in self._cache]
-        return pd.DataFrame(data)
+        return self.handler
