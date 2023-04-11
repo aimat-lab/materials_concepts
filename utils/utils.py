@@ -34,3 +34,30 @@ def inverted_abstract_to_abstract(inverted_abstract):
 
 def extract_concepts(concepts):
     return [(c["display_name"], c["level"], c["score"]) for c in concepts]
+
+
+def remove_non_ascii(text):
+    """
+    Removes non-ASCII characters from a string.
+    """
+    return "".join([char for char in text if ord(char) < 128])
+
+
+def make_valid_filename(filename):
+    """
+    Removes invalid characters from a string to create a valid filename.
+    """
+
+    filename = remove_non_ascii(filename)
+
+    invalid_chars = '<>:"/\\|?*'
+    for char in invalid_chars:
+        filename = filename.replace(char, "")
+
+    # Remove leading/trailing whitespace and dots
+    filename = filename.strip(". ")
+
+    # Truncate the filename to 255 characters (max filename length on most file systems)
+    filename = filename[:255]
+
+    return filename
