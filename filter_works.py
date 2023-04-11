@@ -14,7 +14,7 @@ CSV_FILE_OUT = "data/works_filtered.csv"
 def detect_language(text):
     try:
         return detect(text)
-    except:
+    except Exception:
         return "unknown"
 
 
