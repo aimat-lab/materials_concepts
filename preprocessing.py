@@ -1,15 +1,7 @@
 import re
 
 
-def replace_equation_symbols(text):
-    symbols = ["⩾", "⩽", "×", ">", "<", "=", "±", "%", "〈", "〉", "/", "∼"]
-    for symbol in symbols:
-        text = text.replace(symbol, " ")
-    return text
-
-
 def filter_out_ascii(text):
-    text = replace_equation_symbols(text)  # keep a whitespace here
     return "".join(
         char for char in text if ord(char) < 128
     )  # remove non-ascii (no whitespace)
