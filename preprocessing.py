@@ -9,7 +9,10 @@ def replace_equation_symbols(text):
 
 
 def filter_out_ascii(text):
-    return "".join(char for char in text if ord(char) < 128)
+    text = replace_equation_symbols(text)  # keep a whitespace here
+    return "".join(
+        char for char in text if ord(char) < 128
+    )  # remove non-ascii (no whitespace)
 
 
 def remove_multiple_whitespaces(text):
@@ -18,6 +21,7 @@ def remove_multiple_whitespaces(text):
 
 
 def remove_parenthesis(text):
+    """TODO: test if this can be done after parsing chemical formulas"""
     text = re.sub(r"[\(\)]", "", text)
     return text
 
@@ -90,9 +94,11 @@ def clean_abstract(text):
     return text.strip()
 
 
-# FLAG OR REMOVE
 def language_cleaning(text):
-    "resumo"
-    "auteurs"
-    "autoren"
-    # wenn enthalten => manuell cleanen
+    """TODO: This can be used to detect if there are any non-english paragraphs in the text."""
+    LANGUAGE = {
+        "resumo": "pt",
+        "autores": "pt",
+        "auteurs": "fr",
+        "autoren": "de",
+    }
