@@ -24,8 +24,21 @@ def invert_abstract_to_abstract_(invert_abstract):
     return " ".join(abstract)
 ```
 
-- Filter out abstracts: len < 30 and len > 1000
-- Clean abstracts: (preserve elements)
+- Filter out abstracts: len < 30 and len > 1000 (=> get distribution first)
+- Remove: 'abstract', 'authors ....'
+- Remove starting introduction
+- Keywords?
+-
+- Keep: [a-zA-Z0-9 \.]+
+  - What about mu and lambda?
+- Clean multiple spaces
+
+TODO:
+
+- Indication of other language present ('resumo', 'auteurs', 'autoren', 'autores')
+- Indication of latex code present ('\')
+- Replace alone numbers?
+
 - Extract elements from abstract and normalize numbers
 
 ```
@@ -57,8 +70,8 @@ def clean_text_(text):
 
 ## TODO Process
 
-- [ ] Implement cursor fetching
-- [ ] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
+- [x] Implement cursor fetching
+- [x] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
 - [ ] Abstract cleaning: Clean chemical elements
 - [ ] Generate cleaned 'list' of all concepts
 - [ ] Build graph with histogram edges
