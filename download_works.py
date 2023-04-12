@@ -1,5 +1,5 @@
 # custom imports
-from Downloader import OADownloader, InMemoryHandler, FileHandler, Converter
+from Downloader import OADownloader, FileHandler, Converter
 import utils.utils as utils
 
 WORKS_URL = "https://api.openalex.org/works"
