@@ -147,7 +147,7 @@ class Tokenizer:
             self.tokens[-2].type = TokenType.CHAR
             self.tokens.pop()
 
-    def merge_element(self):
+    def merge_element(self):  # currently: Number + Element =/> Element
         # before was element
         if len(self.tokens) > 1 and self.tokens[-2].type == TokenType.ELEMENT:
             self.tokens[-2].value += self.tokens[-1].value
@@ -170,8 +170,6 @@ class Tokenizer:
         elif len(self.tokens) > 1 and self.tokens[-2].type == TokenType.CHAR:
             self.tokens[-2].value += self.tokens[-1].value
             self.tokens.pop()
-
-        # currently case Number + Element =/> Element
 
     def merge_number(self):
         # before was slash and before that was number

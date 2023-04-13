@@ -19,6 +19,15 @@ class TestChemTokenizer(unittest.TestCase):
             with self.subTest(msg=f"Testing {input} -> {expected}"):
                 self.assertEqual(get_elements(input), {expected})
 
+    def advanced_tests(self):
+        tests = (("Fe-Cr-O-H-inert", "FeCrOH"),)
+
+        for input, expected in tests:
+            with self.subTest(msg=f"Testing {input} -> {expected}"):
+                self.assertEqual(get_elements(input), {expected})
+
+        # Implement behavior: YBa 2 Cu 3 S 6-y => YBa2Cu3S6-y
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
