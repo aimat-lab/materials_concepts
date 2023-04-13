@@ -1,22 +1,6 @@
 from enum import Enum
 from elements import elements
 
-COMMON_NO_ELEMENTS = [
-    "In",  #        word
-    "VIP",  #       abbr
-    "C",  #         Celsius
-    "K",  #         Kelvin
-    "As",  #        word
-    "I",  #         Roman numeral
-    "II",  #        Roman numeral
-    "III",  #       Roman numeral
-    "IV",  #        Roman numeral
-    "V",  #         Roman numeral || Volt
-    "Pa",  #        Pascal
-    "UV",  #        Ultraviolet
-]
-# => instead of deleting: calculate embeddings?
-
 
 class TokenType(Enum):
     INFER_TYPE = 0  # sentinal value
@@ -219,47 +203,6 @@ class Tokenizer:
             self.tokens.pop()
 
 
-def replace_oxide_numbers(text):
-    # replace roman numerals with numbers
-    text = text.replace("(I)", "1+")
-    text = text.replace("(II)", "2+")
-    text = text.replace("(III)", "3+")
-    text = text.replace("(IV)", "4+")
-    text = text.replace("(V)", "5+")
-    text = text.replace("(VI)", "6+")
-    text = text.replace("(VII)", "7+")
-    text = text.replace("(VIII)", "8+")
-    text = text.replace("(IX)", "9+")
-    text = text.replace("(X)", "10+")
-    return text
-
-
-def replace_parenthesis(text):
-    text = text.replace("(", " ")
-    text = text.replace(")", " ")
-    text = text.replace("[", " ")
-    text = text.replace("]", " ")
-    text = text.replace("|", " ")
-    return text
-
-
-def replace_abbreviations(text):
-    text = re.sub(r"[\s\(][A-Z]+s[\s\)]", text)
-    return text
-
-
-def chemic_cleaning(text):
-    # Removes temperatures: 1500 o C
-    text = re.sub(r"o\s*C", "", text)
-
-    # Removes temperatures: 1500C
-    text = re.sub(r"\d+\s*C", "", text)
-
-    # Replaces sup/sub script: Eu{sup 3+} {sup 5}D{sub 0}-{sup7}F{sub 2} (red)
-    text = re.sub(r"{su[bp]\s*([^}]]+)}", r"\1", text)
-    return text
-
-
 def filter_tokens(tokens, type: TokenType):
     return {token.value for token in tokens if token.type == type}
 
@@ -267,29 +210,3 @@ def filter_tokens(tokens, type: TokenType):
 def get_elements(text) -> set:
     tokens = Tokenizer(text).tokenize()
     return filter_tokens(tokens, TokenType.ELEMENT)
-
-
-if __name__ == "__main__":
-    import pandas as pd
-    from tqdm import tqdm
-    import re
-    import preprocessing
-
-    tqdm.pandas()
-
-    df = pd.read_csv("data/subset.csv")
-
-    third = lambda text: get_elements(Tokenizer(text).tokenize())
-
-    df["text"] = df["abstract"].copy()
-    df["pre"] = (
-        df.text.progress_apply(chemic_cleaning)
-        .progress_apply(preprocessing.clean_abstract)  # -> is this already applied?
-        .progress_apply(replace_oxide_numbers)
-        .progress_apply(replace_parenthesis)
-    )
-
-    df.text = df.pre.progress_apply(get_elements)
-    df["tokens"] = df.pre.progress_apply(lambda x: Tokenizer(x).tokenize())
-
-    print(df[["id", "text"]])
