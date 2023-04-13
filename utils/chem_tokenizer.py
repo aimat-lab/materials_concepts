@@ -325,6 +325,18 @@ def filter_tokens(tokens, type: TokenType):
     return {token.value for token in tokens if token.type == type}
 
 
+def filter_element_tokens(tokens):
+    return filter_tokens(tokens, TokenType.ELEMENT)
+
+
+def get_tokens(text) -> list[Token]:
+    return Tokenizer(text).tokenize()
+
+
+def merge_tokens(tokens):
+    return "".join(token.value for token in tokens)
+
+
 def get_elements(text) -> set:
     tokens = Tokenizer(text).tokenize()
     return filter_tokens(tokens, TokenType.ELEMENT)
