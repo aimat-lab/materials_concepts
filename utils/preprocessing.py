@@ -105,7 +105,7 @@ def replace_abbreviations(text):
     return text
 
 
-SUBSUP_REGEX = re.compile(r"{su[bp]\s*([^}]]+)}")
+SUBSUP_REGEX = re.compile(r"\{su[bp]\s*([^}]+)\}")
 
 
 def chemic_cleaning(text):
@@ -147,6 +147,7 @@ def clean_materials_science_abstract(text):
     text = replace_oxide_numbers(text)
     text = replace_parenthesis(text)
     text = replace_abbreviations(text)
+    return text
 
 
 def prepare(text):
@@ -157,14 +158,23 @@ def prepare(text):
     return text.strip()
 
 
-def language_cleaning(text):
-    """TODO: This can be used to detect if there are any non-english paragraphs in the text."""
+def detect_language(text):
+    """This can be used to detect if there are any non-english paragraphs in the text."""
     LANGUAGE = {
         "resumo": "pt",
         "autores": "pt",
         "auteurs": "fr",
         "autoren": "de",
     }
+
+    # not a complete list of all occuring languages
+    # but the ones that were not filtered out by language detection
+    # already will be filtered manually
+    for word, lang in LANGUAGE.items():
+        if word in text:
+            return lang
+
+    return "en"
 
 
 COMMON_ERRORS = {
