@@ -3,7 +3,7 @@ from chem_tokenizer import get_elements
 
 
 class TestChemTokenizer(unittest.TestCase):
-    def test_rules(self):
+    def test_chris_rules(self):
         """Testing Chris Konop's rules"""
         tests = (
             ("Fe3 O", "Fe3O"),
@@ -19,14 +19,13 @@ class TestChemTokenizer(unittest.TestCase):
             with self.subTest(msg=f"Testing {input} -> {expected}"):
                 self.assertEqual(get_elements(input), {expected})
 
-    def advanced_tests(self):
-        tests = (("Fe-Cr-O-H-inert", "FeCrOH"),)
+    def test_advanced_cases(self):
+        """Testing more advanced cases"""
+        tests = (("Fe-Cr-O-H-inert", "FeCrOH"), ("YBa 2 Cu 3 S 6-y", "YBa2Cu3S6"))
 
         for input, expected in tests:
             with self.subTest(msg=f"Testing {input} -> {expected}"):
                 self.assertEqual(get_elements(input), {expected})
-
-        # Implement behavior: YBa 2 Cu 3 S 6-y => YBa2Cu3S6-y
 
 
 if __name__ == "__main__":
