@@ -1,127 +1,21 @@
-import preprocessing
-
-elements = [
-    "H",
-    "He",
-    "Li",
-    "Be",
-    "B",
-    "C",
-    "N",
-    "O",
-    "F",
-    "Ne",
-    "Na",
-    "Mg",
-    "Al",
-    "Si",
-    "P",
-    "S",
-    "Cl",
-    "Ar",
-    "K",
-    "Ca",
-    "Sc",
-    "Ti",
-    "V",
-    "Cr",
-    "Mn",
-    "Fe",
-    "Co",
-    "Ni",
-    "Cu",
-    "Zn",
-    "Ga",
-    "Ge",
-    "As",
-    "Se",
-    "Br",
-    "Kr",
-    "Rb",
-    "Sr",
-    "Y",
-    "Zr",
-    "Nb",
-    "Mo",
-    "Tc",
-    "Ru",
-    "Rh",
-    "Pd",
-    "Ag",
-    "Cd",
-    "In",
-    "Sn",
-    "Sb",
-    "Te",
-    "I",
-    "Xe",
-    "Cs",
-    "Ba",
-    "La",
-    "Ce",
-    "Pr",
-    "Nd",
-    "Pm",
-    "Sm",
-    "Eu",
-    "Gd",
-    "Tb",
-    "Dy",
-    "Ho",
-    "Er",
-    "Tm",
-    "Yb",
-    "Lu",
-    "Hf",
-    "Ta",
-    "W",
-    "Re",
-    "Os",
-    "Ir",
-    "Pt",
-    "Au",
-    "Hg",
-    "Tl",
-    "Pb",
-    "Bi",
-    "Po",
-    "At",
-    "Rn",
-    "Fr",
-    "Ra",
-    "Ac",
-    "Th",
-    "Pa",
-    "U",
-    "Np",
-    "Pu",
-    "Am",
-    "Cm",
-    "Bk",
-    "Cf",
-    "Es",
-    "Fm",
-    "Md",
-    "No",
-    "Lr",
-    "Rf",
-    "Db",
-    "Sg",
-    "Bh",
-    "Hs",
-    "Mt",
-    "Ds",
-    "Rg",
-    "Cn",
-    "Nh",
-    "Fl",
-    "Mc",
-    "Lv",
-    "Ts",
-    "Og",
-]
-
 from enum import Enum
+from elements import elements
+
+COMMON_NO_ELEMENTS = [
+    "In",  #        word
+    "VIP",  #       abbr
+    "C",  #         Celsius
+    "K",  #         Kelvin
+    "As",  #        word
+    "I",  #         Roman numeral
+    "II",  #        Roman numeral
+    "III",  #       Roman numeral
+    "IV",  #        Roman numeral
+    "V",  #         Roman numeral || Volt
+    "Pa",  #        Pascal
+    "UV",  #        Ultraviolet
+]
+# => instead of deleting: calculate embeddings?
 
 
 class TokenType(Enum):
@@ -136,13 +30,42 @@ class TokenType(Enum):
     SLASH = 11
 
 
-class Automaton:
+class Token:
+    def __init__(self, value, type: TokenType = TokenType.INFER_TYPE) -> None:
+        self.value = value
+        self.type = Token.get_type(value) if type == TokenType.INFER_TYPE else type
+
+    @staticmethod
+    def get_type(value):
+        if value in elements:
+            return TokenType.ELEMENT
+        elif value == "+":
+            return TokenType.PLUS
+        elif value == "-":
+            return TokenType.HYPHEN
+        elif value == "/":
+            return TokenType.SLASH
+        elif value == " ":
+            return TokenType.WHITESPACE
+        elif value == ",":
+            return TokenType.DELIM
+        else:
+            return TokenType.CHAR
+
+    def __str__(self) -> str:
+        return self.value
+
+    def __repr__(self) -> str:
+        return f"Token({self.value}, {self.type})"
+
+
+class Tokenizer:
     def __init__(self, text) -> None:
         self.text = text
         self.pos = 0
         self.tokens = []
 
-    def advance(self, n=1):
+    def _advance(self, n=1):
         self.pos += n
 
     @property
@@ -163,73 +86,71 @@ class Automaton:
     def is_finished(self):
         return self.pos >= len(self.text)
 
-    def tokenize(self):
+    def tokenize(self) -> list[Token]:
         while not self.is_finished():
             # 2 letter elements
             if self.current + self.peek(1) in elements:
                 self.tokens.append(
                     Token(self.current + self.peek(1), TokenType.ELEMENT)
                 )
-                self.advance(2)
+                self._advance(2)
                 self.merge_element()
                 continue
 
             # 1 letter elements
             if self.current in elements:
                 self.tokens.append(Token(self.current, TokenType.ELEMENT))
-                self.advance()
+                self._advance()
                 self.merge_element()
                 continue
 
             # detect numbers
             if self.current.isdigit():
                 num = [self.current]
-                self.advance()
+                self._advance()
 
                 while self.current.isdigit():
                     num.append(self.current)
-                    self.advance()
+                    self._advance()
 
                 if self.current == "." and self.peek(1).isdigit():
                     num.append(self.current)
-                    self.advance()
+                    self._advance()
 
                     while self.current.isdigit():
                         num.append(self.current)
-                        self.advance()
+                        self._advance()
 
                 if self.current == "+" or self.current == "-":
                     num.append(self.current)
-                    self.advance()
+                    self._advance()
 
                 self.tokens.append(Token("".join(num), TokenType.NUMBER))
                 self.merge_number()
                 continue
 
             # detect symbols
-            if self.current in ("+/-"):
+            if self.current in ("+-/"):
                 self.tokens.append(Token(self.current, TokenType.INFER_TYPE))
-                self.advance()
+                self._advance()
                 continue
 
             # detect whitespaces
             if self.current == " ":
                 self.tokens.append(Token(self.current, TokenType.WHITESPACE))
-                self.advance()
+                self._advance()
                 self.merge_whitespace()
                 continue
 
             # detect comma or dot (end of sentence)
             if self.current == "." or self.current == ",":
                 self.tokens.append(Token(self.current, TokenType.DELIM))
-                self.advance()
+                self._advance()
                 continue
 
             self.tokens.append(Token(self.current, TokenType.CHAR))
-
-            # merge if both are chars or before was element
             self.merge_char()
-            self.advance()
+            self._advance()
 
         return self.tokens
 
@@ -266,14 +187,7 @@ class Automaton:
             self.tokens[-2].value += self.tokens[-1].value
             self.tokens.pop()
 
-        # TODO: Does this ever happen?
-        # elif ( # before was number
-        #     len(self.tokens) > 1
-        #     and self.tokens[-2].type == TokenType.NUMBER
-        # ):
-        #     self.tokens[-2].value += self.tokens[-1].value
-        #     self.tokens[-2].type = TokenType.ELEMENT
-        #     self.tokens.pop()
+        # currently case Number + Element =/> Element
 
     def merge_number(self):
         # before was slash and before that was number
@@ -305,45 +219,6 @@ class Automaton:
             self.tokens.pop()
 
 
-class Token:
-    def __init__(self, value, type: TokenType = TokenType.INFER_TYPE) -> None:
-        self.value = value
-        self.type = Token.get_type(value) if type == TokenType.INFER_TYPE else type
-
-    @staticmethod
-    def get_type(value):
-        if value in elements:
-            return TokenType.ELEMENT
-        elif value == "+":
-            return TokenType.PLUS
-        elif value == "-":
-            return TokenType.HYPHEN
-        elif value == "/":
-            return TokenType.SLASH
-        elif value == " ":
-            return TokenType.WHITESPACE
-        elif value == ",":
-            return TokenType.DELIM
-        else:
-            return TokenType.CHAR
-
-    def __str__(self) -> str:
-        return self.value
-
-    def __repr__(self) -> str:
-        return f"Token({self.value}, {self.type})"
-
-
-def multiline_input():
-    text = ""
-    while True:
-        line = input()
-        if line == "":
-            break
-        text += line + ""
-    return text
-
-
 def replace_oxide_numbers(text):
     # replace roman numerals with numbers
     text = text.replace("(I)", "1+")
@@ -359,64 +234,62 @@ def replace_oxide_numbers(text):
     return text
 
 
-def get_elements(tokens):
-    return {token.value for token in tokens if token.type == TokenType.ELEMENT}
+def replace_parenthesis(text):
+    text = text.replace("(", " ")
+    text = text.replace(")", " ")
+    text = text.replace("[", " ")
+    text = text.replace("]", " ")
+    text = text.replace("|", " ")
+    return text
+
+
+def replace_abbreviations(text):
+    text = re.sub(r"[\s\(][A-Z]+s[\s\)]", text)
+    return text
+
+
+def chemic_cleaning(text):
+    # Removes temperatures: 1500 o C
+    text = re.sub(r"o\s*C", "", text)
+
+    # Removes temperatures: 1500C
+    text = re.sub(r"\d+\s*C", "", text)
+
+    # Replaces sup/sub script: Eu{sup 3+} {sup 5}D{sub 0}-{sup7}F{sub 2} (red)
+    text = re.sub(r"{su[bp]\s*([^}]]+)}", r"\1", text)
+    return text
+
+
+def filter_tokens(tokens, type: TokenType):
+    return {token.value for token in tokens if token.type == type}
+
+
+def get_elements(text) -> set:
+    tokens = Tokenizer(text).tokenize()
+    return filter_tokens(tokens, TokenType.ELEMENT)
 
 
 if __name__ == "__main__":
     import pandas as pd
     from tqdm import tqdm
     import re
+    import preprocessing
 
     tqdm.pandas()
 
     df = pd.read_csv("data/subset.csv")
 
-    zeroth = lambda text: preprocessing.clean_abstract(text)
-
-    def clean(text):
-        text = re.sub(r"o\s*C", "", text)
-        text = re.sub(r"\d+\s*C", "", text)
-        text = re.sub(r"{sub ([0-9]+)}", r"\1", text)
-        return text
-
-    cleaning = lambda text: clean(text)
-    first = lambda text: replace_oxide_numbers(text)
-    second = lambda text: (
-        text.replace("(", " ")
-        .replace(")", " ")
-        .replace("[", " ")
-        .replace("]", " ")
-        .replace("|", " ")
-    )
-
-    third = lambda text: get_elements(Automaton(text).tokenize())
+    third = lambda text: get_elements(Tokenizer(text).tokenize())
 
     df["text"] = df["abstract"].copy()
     df["pre"] = (
-        df.text.progress_apply(cleaning)
-        .progress_apply(zeroth)
-        .progress_apply(first)
-        .progress_apply(second)
+        df.text.progress_apply(chemic_cleaning)
+        .progress_apply(preprocessing.clean_abstract)  # -> is this already applied?
+        .progress_apply(replace_oxide_numbers)
+        .progress_apply(replace_parenthesis)
     )
 
-    df.text = df.pre.progress_apply(third)
-    df["tokens"] = df.pre.progress_apply(lambda x: Automaton(x).tokenize())
+    df.text = df.pre.progress_apply(get_elements)
+    df["tokens"] = df.pre.progress_apply(lambda x: Tokenizer(x).tokenize())
 
     print(df[["id", "text"]])
-
-COMMON_NO_ELEMENTS = [
-    "In",  #        word
-    "VIP",  #       abbr
-    "C",  #         Celsius
-    "K",  #         Kelvin
-    "As",  #        word
-    "I",  #         Roman numeral
-    "II",  #        Roman numeral
-    "III",  #       Roman numeral
-    "IV",  #        Roman numeral
-    "V",  #         Roman numeral || Volt
-    "Pa",  #        Pascal
-    "UV",  #        Ultraviolet
-]
-# => instead of deleting: calculate embeddings?
