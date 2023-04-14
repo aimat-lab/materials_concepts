@@ -72,19 +72,21 @@ class InMemoryHandler:
 
 
 class OADownloader:
-    CURSOR_START = "*"
+    CURSOR_START = "*"  # init value for OpenAlex
 
     def __init__(
-        self, url, fields, per_page, handler, fetch_limit=None, filter=None
+        self, url, fields, handler=None, per_page=200, fetch_limit=None, filter=None
     ) -> None:
         self._cache = []
         self.url = url
         self.fields = fields
         self.per_page = per_page
+        if handler is None:
+            handler = InMemoryHandler()
         self.handler = handler
         self.fetch_limit = fetch_limit
         self.filter = filter
-        self.cursor = self.CURSOR_START  # init value for OpenAlex
+        self.cursor = self.CURSOR_START
 
     def _get_params(self, cursor):
         params = {
