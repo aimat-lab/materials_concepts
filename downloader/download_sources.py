@@ -1,5 +1,5 @@
 from Downloader import OADownloader, InMemoryHandler, Converter
-from utils.utils import make_valid_filename
+from helper import make_valid_filename
 
 TOPIC = "materials science"
 SOURCES_URL = f"https://api.openalex.org/sources?search={TOPIC}"

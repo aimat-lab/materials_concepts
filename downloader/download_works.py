@@ -1,6 +1,6 @@
 # custom imports
 from Downloader import OADownloader, FileHandler, Converter
-import utils.utils as utils
+from helper import Timer, make_valid_filename
 
 WORKS_URL = "https://api.openalex.org/works"
 
@@ -16,8 +16,28 @@ FIELDS = [
 ]
 
 
+def extract_concepts(concepts):
+    return [(c["display_name"], c["level"], c["score"]) for c in concepts]
+
+
+def inverted_abstract_to_abstract(inverted_abstract):
+    if not inverted_abstract:
+        return ""
+
+    ab_len = -1
+    for _, value in inverted_abstract.items():
+        for index in value:
+            ab_len = max(ab_len, index)
+
+    abstract = [" "] * (ab_len + 1)
+    for key, value in inverted_abstract.items():
+        for i in value:
+            abstract[i] = key
+    return " ".join(abstract)
+
+
 def invert_abstract_and_clean(abstract_inverted_index):
-    abstract = utils.inverted_abstract_to_abstract(abstract_inverted_index)
+    abstract = inverted_abstract_to_abstract(abstract_inverted_index)
     return abstract.replace("\n", " ").replace("\r", " ").replace("\r\n", " ")
 
 
@@ -26,7 +46,7 @@ def fetch_single(host_venue, fetch_limit, output):
         {
             "id": lambda x: x.rsplit("/", 1)[1],
             "abstract_inverted_index": invert_abstract_and_clean,
-            "concepts": utils.extract_concepts,
+            "concepts": extract_concepts,
         }
     )
 
@@ -43,7 +63,7 @@ def fetch_single(host_venue, fetch_limit, output):
         filter=f"host_venue.id:{host_venue}",
     )
 
-    with utils.Timer("Downloading works"):
+    with Timer("Download time:"):
         downloader.get()  # file handler stores data
 
 
@@ -51,7 +71,7 @@ def fetch_multiple(csv_file):
     import pandas as pd
     import os
 
-    subfolder = utils.make_valid_filename(os.path.basename(csv_file[:-4]))
+    subfolder = make_valid_filename(os.path.basename(csv_file[:-4]))
     print("Creating folder:", subfolder)
     os.makedirs(f"data/{subfolder}/", exist_ok=True)
 
