@@ -1,6 +1,9 @@
 # custom imports
 from Downloader import OADownloader, FileHandler, Converter
-from helper import Timer, make_valid_filename
+from helper import Timer
+import os
+import pandas as pd
+from tqdm import tqdm
 
 WORKS_URL = "https://api.openalex.org/works"
 
@@ -41,53 +44,79 @@ def invert_abstract_and_clean(abstract_inverted_index):
     return abstract.replace("\n", " ").replace("\r", " ").replace("\r\n", " ")
 
 
-def fetch_single(host_venue, fetch_limit, output):
-    converter = Converter(
-        {
-            "id": lambda x: x.rsplit("/", 1)[1],
-            "abstract_inverted_index": invert_abstract_and_clean,
-            "concepts": extract_concepts,
-        }
-    )
+def create_file(filename):
+    with open(filename, "w") as _:
+        pass
 
-    handler = FileHandler(
-        output, fields=FIELDS, converter=converter, flush_threshold=5000
-    )
+
+def append_to_file(filename, df):
+    with open(filename, "a") as f:
+        file_empty = f.tell() == 0
+        df.to_csv(f, header=file_empty, index=False)
+
+
+converter = Converter(
+    {
+        "id": lambda x: x.rsplit("/", 1)[1],
+        # invert abstract and remove newlines
+        "abstract_inverted_index": invert_abstract_and_clean,
+        "concepts": extract_concepts,
+    }
+)
+
+
+def fetch_single(source, fetch_limit, folder, handler=None):
+    filename = os.path.join(folder, f"{source}.csv")
+
+    if handler is None:  #
+        handler = FileHandler(
+            filename=filename, fields=FIELDS, converter=converter, flush_threshold=5000
+        )
 
     downloader = OADownloader(
         url=WORKS_URL,
         fields=FIELDS,
-        per_page=200,  # 200 is max
         handler=handler,
         fetch_limit=fetch_limit,
-        filter=f"host_venue.id:{host_venue}",
+        filter=f"host_venue.id:{source}",
     )
 
     with Timer("Download time:"):
         downloader.get()  # file handler stores data
 
 
-def fetch_multiple(csv_file):
-    import pandas as pd
-    import os
+def merge_files(csv_file, folder):
+    merged_file = os.path.join(
+        folder,
+        # materials-science.sources.csv -> materials-science.works.csv
+        os.path.basename(csv_file).split(".")[0] + ".works.csv",
+    )
 
-    subfolder = make_valid_filename(os.path.basename(csv_file[:-4]))
-    print("Creating folder:", subfolder)
-    os.makedirs(f"data/{subfolder}/", exist_ok=True)
+    create_file(merged_file)
 
     df = pd.read_csv(csv_file)
+    for source_id in tqdm(df["id"]):
+        # load
+        source_filename = os.path.join(folder, f"{source_id}.csv")
+        # append to merge file
+        append_to_file(filename=merged_file, df=pd.read_csv(source_filename))
+        # clean up source file
+        os.remove(source_filename)
 
-    df_subset = zip(df["id"], df["display_name"], df["works_count"])
 
-    venue_count = len(df)
-    for index, (host_venue_id, display_name, works_count) in enumerate(df_subset):
-        title = f"{host_venue_id}"
-        file_name = f"data/{subfolder}/{title}.csv"
-
+def fetch_multiple(csv_file, fetch_limit=None, folder="data/"):
+    df = pd.read_csv(csv_file)
+    sources_count = len(df)
+    for index, (source_id, display_name, works_count) in enumerate(
+        zip(df["id"], df["display_name"], df["works_count"])
+    ):
         print(
-            f"{index+1}/{venue_count} Fetching {works_count} works for {display_name} ({host_venue_id})..."
+            f"({index+1}/{sources_count}) Fetching {works_count} works for {display_name} ({source_id})..."
         )
-        fetch_single(host_venue_id, works_count, file_name)
+
+        fetch_single(
+            source=source_id, fetch_limit=(fetch_limit or works_count), folder=folder
+        )
 
 
 if __name__ == "__main__":
@@ -95,26 +124,34 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
     parser.add_argument(
-        "host_venue",
-        help="The host venue ID to filter by or a csv file containing the column 'id', 'display_name', and 'works_count'",
+        "source",
+        help="The source ID to filter by or a csv file containing the column 'id', 'display_name', and 'works_count'",
     )
     parser.add_argument(
         "--fetch_limit",
         type=int,
-        default=0,
-        help="The number of works to fetch",
+        default=None,
+        help="The number of works to fetch. Defaults to all works.",
     )
     parser.add_argument(
-        "--output",
-        default="data/works.csv",
-        help="The output file (default: 'data/works.csv'))",
+        "--folder",
+        default="data/",
+        help="The output file (default: 'data/'))",
     )
     args = parser.parse_args()
 
     try:
-        if args.host_venue.endswith(".csv"):
-            fetch_multiple(args.host_venue)
+        if args.source.endswith(".csv"):
+            print("Fetching works for each source...")
+            fetch_multiple(
+                args.source, fetch_limit=args.fetch_limit, folder=args.folder
+            )
+            print("Creating merged file...")
+            merge_files(args.source, args.folder)
+
         else:
-            fetch_single(args.host_venue, args.fetch_limit, args.output)
+            fetch_single(
+                source=args.source, fetch_limit=args.fetch_limit, folder=args.folder
+            )
     except KeyboardInterrupt:
         print("Interrupted by user")

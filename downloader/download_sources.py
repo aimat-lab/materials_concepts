@@ -22,7 +22,7 @@ def main(topic, folder):
     )
 
     cleaned_topic = make_valid_filename(topic)
-    filename = f"{cleaned_topic}_sources.csv"
+    filename = f"{cleaned_topic}.sources.csv"
 
     downloader.get().to_csv(
         filename=os.path.join(folder, filename),
