@@ -24,6 +24,27 @@ Fetch works from all sources:
 
 > This will create a `{source}.csv` file for each source in `data/materials-science_sources/` listing all the works which belong to that source.
 
+# TODO General
+
+## Process
+
+- [x] Create README with instructions to recreate progress
+- [x] Implement cursor fetching
+- [x] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
+- [x] Abstract cleaning: Clean chemical elements
+- [ ] Generate cleaned 'list' of all concepts
+- [ ] Build graph with histogram edges
+- [ ] Implement top performing model from kaggle challange
+- [ ] Store model and graph
+- [ ] Build API to query prediction service
+
+## Optimization
+
+- [ ] Where to store the data?
+- [ ] Data storing for works: How to store concepts (fetched and generated)
+- [ ] How to speed up text processing in pandas? Pandas 2.0 or other option to achieve pyarrow backend
+- [ ] Dockerize what comes after data fetching
+
 # My handy tools
 
 ## Abstract checking
