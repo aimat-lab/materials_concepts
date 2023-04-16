@@ -22,7 +22,16 @@ Fetch works from all sources:
 
 `$ python downloader/download_works.py data/materials-science.sources.csv --folder data/`
 
-> This will create a `{source}.csv` file for each source in `data/materials-science_sources/` listing all the works which belong to that source.
+> During fetching, this will create a `{source}.csv` file for each source in `{folder}/` listing all the works which belong to that source. After downloading, these are merged automatically into a single file `materials-science.works.csv` in the specified folder.
+> If the download gets interrupted, the downloaded files serve as a cache. Re-run the script, it will automatically skip sources for which the data was already fetched.
+
+## Data Filtering
+
+Filter the data to improve its quality:
+
+`$ python filtering/filter_works.py materials-science.works.csv --folder data/`
+
+> This will output a file `materials-science.filtered.works.csv` in the specified folder containing all works which sufficed the conditions.
 
 # TODO General
 
