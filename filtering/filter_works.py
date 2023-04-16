@@ -1,13 +1,28 @@
 import pandas as pd
-import os
 from langdetect import detect
 from langdetect import DetectorFactory
+from tqdm import tqdm
+
+tqdm.pandas()
 
 DetectorFactory.seed = 0  # deterministic results: https://pypi.org/project/langdetect/
 
-INPUT_DIR = "data/materials-science_sources"
-CSV_FILE_OUT = "data/works_filtered.csv"
-INPUT_FILES = [file for file in os.listdir(INPUT_DIR) if file.endswith(".csv")][:3]
+import datetime
+
+
+class Timer:
+    def __init__(self, name: str):
+        self.name = name
+        self.start = None
+
+    def __enter__(self):
+        self.start = datetime.datetime.now()
+        return self
+
+    def __exit__(self, *args):
+        print(
+            f"{self.name} time elapsed: {(datetime.datetime.now() - self.start).seconds} seconds..."
+        )
 
 
 def detect_language(text):
@@ -17,12 +32,42 @@ def detect_language(text):
         return "unknown"
 
 
-def add_language(df):
-    df["lang"] = df["abstract"].apply(detect_language)
+def detect_other_language(text):
+    """This can be used to detect (heuristically) if there are any non-english paragraphs in the text."""
+    LANGUAGE = {
+        "resumo": "pt",
+        "autores": "pt",
+        "auteurs": "fr",
+        "autoren": "de",
+        " und ": "de",
+        " le ": "fr",
+        " les ": "fr",
+    }
+
+    # not a complete list of all occuring languages
+    # but the ones that were not filtered out by language detection
+    # already will be filtered manually
+    for word, lang in LANGUAGE.items():
+        if word in text.lower():
+            return lang
+
+    return "en"
+
+
+def add_primary_language(df):
+    df["lang"] = df["abstract"].progress_apply(detect_language)
     return df
 
 
-def filter(df, func):
+def add_secondary_language(df):
+    # overwrite lang attribute, as after filtering out non-english abstracts before
+    df["lang"] = df["abstract"].progress_apply(detect_other_language)
+    return df
+
+
+def filter(df, func, name=None):
+    if name is not None:
+        print("Applying filter: ", name)
     return df[func(df)]
 
 
@@ -33,26 +78,50 @@ is_english = lambda df: df["lang"] == "en"
 
 
 def filter_df(df):
-    df = filter(df, has_title)
-    df = filter(df, has_abstract)
-    df = filter(df, not_paratext_or_retracted)
-    df = add_language(df)
-    df = filter(df, is_english)
+    df = filter(df, has_title, name="Has title")
+    df = filter(df, has_abstract, name="Has abstract")
+    df = filter(df, not_paratext_or_retracted, name="Is not paratext or retracted")
+
+    print("Detect primary language:")
+    df = add_primary_language(df)
+    df = filter(df, is_english, name="Primary language is english")
+
+    print("Detect secondary language:")
+    df = add_secondary_language(df)  # if any other language parts are still present
+    df = filter(df, is_english, name="No other languages present")
+
     df = df.drop(columns=["lang"])
     return df
 
 
-def process_df(f):  # MODIFY as this is only one file now
-    print(f"Processing {f}:", end=" ")
-    df = pd.read_csv(os.path.join(INPUT_DIR, f))
+def main(works_file, folder):
+    import os
 
-    print(len(df), end=" -> ")
+    input_file = os.path.join(folder, works_file)
+    df = pd.read_csv(input_file)
     df = filter_df(df)
-    print(len(df))
-    return df
+
+    topic = works_file.split(".")[0]
+    output_file = os.path.join(folder, f"{topic}.filtered.works.csv")
+    df.to_csv(output_file, index=False)
 
 
-dfs = [process_df(f) for f in INPUT_FILES]
-result = pd.concat(dfs, ignore_index=True)
-result = result.reset_index(drop=True)
-result.to_csv(CSV_FILE_OUT, index=False)
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Script to filter works listed in a .csv file."
+    )
+    parser.add_argument(
+        "works_file",
+        help="The .csv file containing the works which should be filtered.",
+    )
+    parser.add_argument(
+        "--folder",
+        help="Where input file is located and where output file will be created. Defaults to 'data/'",
+        default="data/",
+    )
+    args = parser.parse_args()
+
+    with Timer(name="Filtering works"):
+        main(works_file=args.works_file, folder=args.folder)
