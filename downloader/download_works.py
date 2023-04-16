@@ -79,6 +79,9 @@ def fetch_single(source, fetch_limit, folder, handler=None):
     with Timer("Download time:"):
         df = downloader.get().to_df(converter=converter)  # file handler stores data
         df["source_id"] = source
+        df = df.rename(
+            columns={"abstract_inverted_index": "abstract"}
+        )  # after generating the abstract from the inverted index, the column name should be changed
         df.to_csv(filename, index=False)
 
 

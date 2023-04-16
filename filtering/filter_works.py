@@ -33,7 +33,6 @@ is_english = lambda df: df["lang"] == "en"
 
 
 def filter_df(df):
-    df = df.rename(columns={"abstract_inverted_index": "abstract"})
     df = filter(df, has_title)
     df = filter(df, has_abstract)
     df = filter(df, not_paratext_or_retracted)
@@ -43,7 +42,7 @@ def filter_df(df):
     return df
 
 
-def process_df(f):
+def process_df(f):  # MODIFY as this is only one file now
     print(f"Processing {f}:", end=" ")
     df = pd.read_csv(os.path.join(INPUT_DIR, f))
 
