@@ -104,16 +104,40 @@ def merge_files(csv_file, folder):
         os.remove(source_filename)
 
 
+def get_line_count(filepath):
+    with open(filepath, "r") as file:
+        line_count = sum(1 for _ in file) - 1  # subtract 1 for the header
+    return line_count
+
+
+def file_cached(source, folder, works_count):
+    # This won't always work because the amount of sources available is
+    # not always the same as the 'works_count'.
+    # Therefore, accept if the file is within a certain tolerance of the works_count.
+
+    filename = os.path.join(folder, f"{source}.csv")
+
+    TOLERANCE = 30
+    return (
+        os.path.exists(filename) and get_line_count(filename) >= works_count - TOLERANCE
+    )
+
+
 def fetch_multiple(csv_file, fetch_limit=None, folder="data/"):
     df = pd.read_csv(csv_file)
     sources_count = len(df)
     for index, (source_id, display_name, works_count) in enumerate(
         zip(df["id"], df["display_name"], df["works_count"])
     ):
+        if file_cached(source_id, folder, works_count):
+            print(
+                f"({index+1}/{sources_count}) Skipping: {works_count} works already cached for {display_name} ({source_id})..."
+            )
+            continue
+
         print(
             f"({index+1}/{sources_count}) Fetching {works_count} works for {display_name} ({source_id})..."
         )
-
         fetch_single(
             source=source_id, fetch_limit=(fetch_limit or works_count), folder=folder
         )
