@@ -28,4 +28,8 @@ Fetch works from all sources:
 
 ## Abstract checking
 
-For me: `$ abstract W2159161622`
+Retrieve abstract for work given work ID: `$ abstract W2159161622`
+
+## Identifying Sourcce
+
+Retrieve source for work given work ID: `$ getsource W2159161622`
