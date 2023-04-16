@@ -22,7 +22,7 @@ def remove_text_enumerations(text):  # RISKY: Dont remove element numbers
     # with roman numerals
     text = re.sub(r"\s+(i|ii|iii|iv|v)[\.\)]", "", text)
     # with a, b, c, d
-    text = re.sub(r"\s+[a-e][\.\)]", "", text)
+    text = re.sub(r"\s+[a-e][\.\)]\s", "", text)
 
     return text
 
@@ -156,25 +156,6 @@ def prepare(text):
     text = clean_materials_science_abstract(text)
     text = remove_multiple_whitespaces(text)
     return text.strip()
-
-
-def detect_language(text):
-    """This can be used to detect if there are any non-english paragraphs in the text."""
-    LANGUAGE = {
-        "resumo": "pt",
-        "autores": "pt",
-        "auteurs": "fr",
-        "autoren": "de",
-    }
-
-    # not a complete list of all occuring languages
-    # but the ones that were not filtered out by language detection
-    # already will be filtered manually
-    for word, lang in LANGUAGE.items():
-        if word in text:
-            return lang
-
-    return "en"
 
 
 COMMON_ERRORS = {
