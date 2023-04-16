@@ -46,7 +46,7 @@ def invert_abstract_and_clean(abstract_inverted_index):
 
 def create_file(filename):
     with open(filename, "w") as _:
-        pass
+        pass  # create file
 
 
 def append_to_file(filename, df):
@@ -68,11 +68,6 @@ converter = Converter(
 def fetch_single(source, fetch_limit, folder, handler=None):
     filename = os.path.join(folder, f"{source}.csv")
 
-    if handler is None:  #
-        handler = FileHandler(
-            filename=filename, fields=FIELDS, converter=converter, flush_threshold=5000
-        )
-
     downloader = OADownloader(
         url=WORKS_URL,
         fields=FIELDS,
@@ -82,7 +77,9 @@ def fetch_single(source, fetch_limit, folder, handler=None):
     )
 
     with Timer("Download time:"):
-        downloader.get()  # file handler stores data
+        df = downloader.get().to_df(converter=converter)  # file handler stores data
+        df["source_id"] = source
+        df.to_csv(filename, index=False)
 
 
 def merge_files(csv_file, folder):
