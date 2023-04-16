@@ -34,7 +34,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Process some topic and folder arguments."
+        description="Script to retrieve all sources (host venues) for a given topic from OpenAlex."
     )
     parser.add_argument("topic", help="the topic to process")
     parser.add_argument("--folder", help="the folder to process", default="data/")

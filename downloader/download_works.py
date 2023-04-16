@@ -146,7 +146,10 @@ def fetch_multiple(csv_file, fetch_limit=None, folder="data/"):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(
+        description="Script to retrieve works for given source (enter ID) \
+            or for a list of sources (enter path to .csv file) from OpenAlex."
+    )
     parser.add_argument(
         "source",
         help="The source ID to filter by or a csv file containing the column 'id', 'display_name', and 'works_count'",
