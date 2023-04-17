@@ -92,7 +92,7 @@ def replace_parenthesis(text):
     return text
 
 
-ABBR_REGEX = re.compile(r"[\s\(][A-Z]+s[\s\)]")
+ABBR_REGEX = re.compile(r"[\s\(][A-Z]+s[\s\)\.,;]")
 
 
 def replace_abbreviations(text):
