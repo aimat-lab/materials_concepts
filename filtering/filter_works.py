@@ -172,4 +172,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(works_file=args.works_file, folder=args.folder, n_jobs=args.n_jobs)
+    main(works_file=args.works_file, folder=args.folder, n_jobs=args.njobs)
