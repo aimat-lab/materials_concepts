@@ -1,59 +1,101 @@
 import pandas as pd
 from tqdm import tqdm
-from preprocessing import prepare, filter_common_errors
 from chem_tokenizer import get_tokens, merge_tokens, filter_element_tokens
-from concurrent.futures import ProcessPoolExecutor
-import numpy as np
-from utils.utils import Timer
+
+import sys, os
+
+# Add the parent directory to sys.path
+parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if parent_directory not in sys.path:
+    sys.path.append(parent_directory)
+
+from utils.utils import apply_in_parallel
 
 tqdm.pandas()
+
+COMMON_ERRORS = {
+    "In",  #        word
+    "At",  #        word
+    "VIP",  #       abbr
+    "C",  #         Celsius
+    "K",  #         Kelvin
+    "As",  #        word
+    "I",  #         Roman numeral
+    "II",  #        Roman numeral
+    "III",  #       Roman numeral
+    "IV",  #        Roman numeral
+    "V",  #         Roman numeral || Volt
+    "Pa",  #        Pascal
+    "UV",  #        Ultraviolet
+    "U",  #         ?
+    "K1",  #         Thermal conductivity
+}
+
+
+def filter_common_errors(formulas: set) -> set:
+    return formulas - COMMON_ERRORS
 
 
 def set_to_str(x):
     return ",".join(sorted(x)) if x else ""
 
 
-def process_df(partial_df):
-    partial_df["new_abstract"] = partial_df["abstract"].copy()
-    partial_df["new_abstract"] = partial_df["new_abstract"].progress_apply(prepare)
-    partial_df["tokens"] = partial_df["new_abstract"].progress_apply(get_tokens)
+def extract_elements(partial_df):
+    """
+    Extract elements from abstracts to new column 'elements' and
+    replace abstracts with corresponding version where all detected
+    elements are merged into one 'word' (e.g. 'NaCl' instead of 'Na Cl').
+    """
 
-    partial_df["new_abstract"] = partial_df.tokens.progress_apply(merge_tokens)
+    partial_df["tokens"] = partial_df["abstract"].progress_apply(get_tokens)
+
+    partial_df["abstract"] = partial_df.tokens.apply(
+        merge_tokens
+    )  # merge tokens back to abstract
+
     partial_df["elements"] = (
-        partial_df.tokens.progress_apply(filter_element_tokens)
-        .progress_apply(filter_common_errors)
-        .progress_apply(set_to_str)
+        partial_df.tokens.apply(filter_element_tokens)
+        .apply(filter_common_errors)
+        .apply(set_to_str)
     )
 
     del partial_df["tokens"]
-    del partial_df["abstract"]
-    partial_df.rename(columns={"new_abstract": "abstract"}, inplace=True)
 
     return partial_df
 
 
-X = 4
-N_CHUNKS = 8
+def main(input_file, folder, n_jobs):
+    df = pd.read_csv(os.path.join(folder, input_file))
 
+    df = apply_in_parallel(df, extract_elements, n_jobs)
 
-def main():
-    df = pd.read_csv(f"data/split/output_{X}.csv")
-
-    tasks = np.array_split(df, N_CHUNKS, axis=0)
-
-    result = []
-    with ProcessPoolExecutor(max_workers=8) as executor:
-        for processed_df in executor.map(process_df, tasks):
-            result.append(processed_df)
-
-    print("Concatenating dfs...")
-
-    df = pd.concat(result)
-
-    # save df
-    df.to_csv(f"data/split/elements_output_{X}.csv", index=False)
+    topic = input_file.split(".")[0]
+    output_file = os.path.join(folder, f"{topic}.elements.works.csv")
+    df.to_csv(output_file, index=False)
 
 
 if __name__ == "__main__":
-    with Timer("Main:"):
-        main()
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Script to extract elements from abstracts and merge detected ones into one word in the abstract text."
+    )
+    parser.add_argument(
+        "works_file",
+        help="The .csv file containing the works whose abstracts should be processed.",
+    )
+    parser.add_argument(
+        "--folder",
+        help="Where input file is located and where output file will be created. Defaults to 'data/'",
+        default="data/",
+    )
+
+    parser.add_argument(
+        "--njobs",
+        help="How many processes should be used for the heavier tasks. Defaults to 8.",
+        default=8,
+    )
+
+    args = parser.parse_args()
+
+    main(input_file=args.works_file, folder=args.folder, n_jobs=args.njobs)
