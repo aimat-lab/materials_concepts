@@ -33,6 +33,32 @@ Filter the data to improve its quality:
 
 > This will output a file `materials-science.filtered.works.csv` in the specified folder containing all works which sufficed the conditions.
 
+## Data Preparation
+
+### Cleaning abstracts
+
+Clean the abstracts:
+
+`$ python preparation/clean_abstracts.py materials-science.filtered.works.csv --folder data/`
+
+> This will output a file `materials-science.cleaned.works.csv` in the specified folder containing all works with cleaned abstracts.
+
+### Extraction
+
+> Note: As these operations are very time consuming, they are split across several scripts and parallelized. The scripts should be run in the following order:
+
+1. Extract 'chemical elements' from abstracts:
+
+`$ python preparation/extract_elements.py materials-science.cleaned.works.csv --folder data/`
+
+> This will output a file `materials-science.extraction-1.works.csv` in the specified folder containing all works with extracted chemical elements in a separate columns `elements`.
+
+2. Extract 'concepts' from abstracts:
+
+`$ python preparation/extract_concepts.py materials-science.extraction-1.works.csv --folder data/`
+
+> This will output a file `materials-science.extraction-2.works.csv` in the specified folder containing all works with extracted concepts in a separate columns `extracted_concepts`.
+
 # TODO General
 
 ## Process
