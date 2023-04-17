@@ -2,10 +2,11 @@
 
 - [x] Remove: 'abstract', 'authors ....'
 - [x] Remove starting introduction
-- [ ] Replace C<sub>15</sub>H<sub>9</sub>
-- [ ] If latex present -> substitute
+- [x] Replace C<sub>15</sub>H<sub>9</sub>
+- [x] If latex present -> substitute (already dealt with in `filter_works.py`)
+- [x] Build clean_works script
 
-## Preparation
+## Extraction
 
 - [ ] Extract elements from abstract and normalize numbers (Investigate common errors (large numbers or number '1') LLMs can be used?)
 - [ ] Extract existing keywords
