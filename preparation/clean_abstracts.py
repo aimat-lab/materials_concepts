@@ -13,6 +13,8 @@ from utils.utils import apply_in_parallel
 
 tqdm.pandas()
 
+import math
+
 
 def filter_out_ascii(text):
     return "".join(
@@ -155,7 +157,8 @@ def prepare(text):
     text = clean_abstract(text)
     text = clean_materials_science_abstract(text)
     text = remove_multiple_whitespaces(text)
-    return text.strip()
+    text = text.strip()
+    return text
 
 
 def prepare_df(df):
@@ -171,6 +174,8 @@ def main(csv_file, folder, n_jobs):
     df = pd.read_csv(input_file)
 
     df = apply_in_parallel(df, prepare_df, n_jobs=n_jobs)
+
+    df = df[df.abstract != ""]  # some abstracts are empty after cleaning
 
     df.to_csv(output_file, index=False)
 
