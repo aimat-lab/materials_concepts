@@ -87,17 +87,17 @@ def get_keywords(text):
         return None
 
 
-def extract_relevant_oa_concepts(text, threshold_score, threshold_level=1):
+def extract_relevant_oa_concepts(text, threshold_score=0.5, threshold_level=1):
     c_list_parsed = literal_eval(text)
     keep = []
     for concept, level, score in c_list_parsed:
         if float(score) > threshold_score and int(level) >= threshold_level:
             keep.append(concept)
-    return keep
+    return list_to_string(keep)
 
 
 def extract_concepts(text):
-    r = Rake(min_length=2, max_length=5, language="english")
+    r = Rake(min_length=2, max_length=6, language="english")
 
     r.extract_keywords_from_text(before_rake(text))
     return list_to_string(r.get_ranked_phrases())
@@ -118,17 +118,19 @@ def extract_keybert(text):
 METHODS = {
     "rake": extract_concepts,
     "keywords": extract_keywords,
+    "openalex": extract_relevant_oa_concepts,
     "keyBERT": extract_keybert,
 }
 
 
 class FunctionApplication:
-    def __init__(self, colname, method):
+    def __init__(self, target, colname, method):
+        self.target = target
         self.colname = colname
         self.method = method
 
     def __call__(self, df):
-        df[self.colname] = df.abstract.progress_apply(self.method)
+        df[self.colname] = df[self.target].progress_apply(self.method)
         return df
 
 
@@ -139,7 +141,8 @@ def main(filename, folder, n_jobs, method, colname):
 
     df = pd.read_csv(input_file)
 
-    apply_func = FunctionApplication(colname, METHODS[method])
+    targetcolname = "abstract" if method != "openalex" else "concepts"
+    apply_func = FunctionApplication(targetcolname, colname, METHODS[method])
 
     df = apply_in_parallel(
         df,
