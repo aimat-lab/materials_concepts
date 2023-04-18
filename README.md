@@ -51,13 +51,17 @@ Clean the abstracts:
 
 `$ python preparation/extract_elements.py materials-science.cleaned.works.csv --folder data/`
 
-> This will output a file `materials-science.extraction-1.works.csv` in the specified folder containing all works with extracted chemical elements in a separate columns `elements`.
+> This will output a file `materials-science.elements.works.csv` in the specified folder containing all works with extracted chemical elements in a separate columns `elements`.
 
 2. Extract 'concepts' from abstracts:
 
-`$ python preparation/extract_concepts.py materials-science.extraction-1.works.csv --folder data/`
+`$ python preparation/extract_concepts.py materials-science.elements.works.csv {method} {colname} --folder data/`
 
-> This will output a file `materials-science.extraction-2.works.csv` in the specified folder containing all works with extracted concepts in a separate columns `extracted_concepts`.
+e.g.:
+
+`$ python preparation/extract_concepts.py materials-science.elements.works.csv rake rake_concepts --folder data/`
+
+> This will output a file `materials-science.rake.works.csv` in the specified folder containing all works with extracted concepts according to `rake` (`{method}`) in a separate columns `rake_concepts` (`{colname}`).
 
 # TODO General
 
@@ -67,7 +71,11 @@ Clean the abstracts:
 - [x] Implement cursor fetching
 - [x] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
 - [x] Abstract cleaning: Clean chemical elements
+- [ ] Invert filenames: ...cleaned.works.csv -> ...works.cleaned.csv
+- [ ] Add title to abstract (before cleaning)
 - [ ] Generate cleaned 'list' of all concepts
+  - [ ] Generate list of all concepts
+  - [ ] Clean with oxford3000?
 - [ ] Build graph with histogram edges
 - [ ] Implement top performing model from kaggle challange
 - [ ] Store model and graph
