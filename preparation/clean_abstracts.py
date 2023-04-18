@@ -13,8 +13,6 @@ from utils.utils import apply_in_parallel
 
 tqdm.pandas()
 
-import math
-
 
 def filter_out_ascii(text):
     return "".join(
