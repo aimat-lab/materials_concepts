@@ -1,0 +1,2390 @@
+================================================================================
+
+W2050041941
+
+Review of the anatase to rutile phase transformation. Titanium dioxide, TiO2, is
+an important photocatalytic material that exists as two main polymorphs, anatase
+and rutile. The presence of either or both of these phases impacts on the
+photocatalytic performance of the material. The present work reviews the anatase
+to rutile phase transformation. The synthesis and properties of anatase and
+rutile are examined, followed by a discussion of the thermodynamics of the phase
+transformation and the factors affecting its observation. A comprehensive
+analysis of the reported effects of dopants on the anatase to rutile phase
+transformation and the mechanisms by which these effects are brought about is
+presented in this review, yielding a plot of the cationic radius versus the
+valence characterised by a distinct boundary between inhibitors and promoters of
+the phase transformation. Further, the likely effects of dopant elements,
+including those for which experimental data are unavailable, on the phase
+transformation are deduced and presented on the basis of this analysis.
+
+§
+titanium dioxide
+photocatalytic material
+anatase
+rutile
+polymorphs
+photocatalytic performance
+phase transformation
+anatase to rutile phase transformation
+thermodynamics of phase transformation
+synthesis and properties
+dopants
+cationic radius
+valence
+inhibitors
+promoters
+dopant elements
+§
+
+================================================================================
+
+W2023728301
+
+Review: liquid phase sintering. Liquid phase sintering LPS is a process for
+forming high performance, multiple-phase components from powders. It involves
+sintering under conditions where solid grains coexist with a wetting liquid.
+Many variants of LPS are applied to a wide range of engineering materials.
+Example applications for this technology are found in automobile engine
+connecting rods and high-speed metal cutting inserts. Scientific advances in
+understanding LPS began in the 1950s. The resulting quantitative process models
+are now embedded in computer simulations to enable predictions of the sintered
+component dimensions, microstructure, and properties. However, there are
+remaining areas in need of research attention. This LPS review, based on over
+2,500 publications, outlines what happens when mixed powders are heated to the
+LPS temperature, with a focus on the densification and microstructure evolution
+events.
+
+§
+liquid phase sintering
+multi-phase components
+multi-phase formation
+powders
+solid grains
+wetting liquid
+metal cutting inserts
+engine connecting rods
+mixed powder heating
+computer simulations
+densification and microstructure evolution
+densification 
+microstructure
+§
+
+================================================================================
+
+W2144804459
+
+Review: environmental friendly lead-free piezoelectric materials. Lead zirconate
+titanate PZT based piezoelectric materials are well known for their excellent
+piezoelectric properties. However, considering the toxicity of lead and its
+compounds, there is a general awareness for the development of environmental
+friendly lead-free materials as evidenced from the legislation passed by the
+European Union in this effect. Several classes of materials are now being
+considered as potentially attractive alternatives tofor specific applications.
+In this paper, attempts have been made to review the recent developments on
+lead-free piezo materials emphasizing on their preparation, structureproperty
+correlation, etc. In this context, perovskite systems such as bismuth sodium
+titanate, alkali niobates ANbO3, etc. and non-perovskites such as bismuth layer-
+structured ferroelectrics are reviewed in detail. From the above study, it is
+concluded that some lead-free compositions show stable piezoelectric responses
+even though they do not match the overall performance of PZT. This has been the
+stimulant for growing research on this subject. This topic is of current
+interest to the researchers worldwide as evidenced from the large number of
+research publications. This has motivated us to come out with a review article
+with a view that it would give further impetus to the researchers already
+working in this area and also draw the attention of the others.
+
+§
+lead-free piezoelectric materials
+lead zirconate titanate
+piezoelectric properties
+perovskite systems
+bismuth sodium titanate
+alkali niobates
+non-perovskites
+bismuth layer-structured ferroelectrics
+piezoelectric materials
+toxicity of lead
+lead free materials
+structure-property correlation
+§
+
+================================================================================
+
+W3172350939
+
+Toughening mechanisms in elastomer-modified epoxies. Some brittle epoxies can be
+toughened significantly by the addition of an elastomeric phase. A great deal of
+controversy still exists on the nature of the toughening mechanisms. In this
+work tensile dilatometry at constant displacement rates was used to determine
+whether voiding, crazing or shear banding are the deformation mechanisms.
+Diglycidyl ether-bisphenol A epoxies toughened by various levels of several
+types of carboxyl-terminated butadiene nitrile liquid rubber were studied. The
+results indicate that at low strain rates the rubber particles simply enhance
+shear deformation. At sufficiently high strain rates the rubber particles
+cavitate and subsequently promote further shear deformation. No indication of
+crazing as an important toughening mechanism is found. No significant effect of
+rubber particle size or type can be ascertained.
+
+§
+toughening mechanisms
+elastomer-modified epoxies
+brittle epoxies
+elastomeric phase
+tensile dilatometry
+constant displacement rates
+deformation mechanisms
+Diglycidyl ether-bisphenol A
+carboxyl-terminated butadiene nitrile liquid rubber
+carboxyl-terminated butadiene nitrile
+liquid rubber
+butadiene nitrile liquid rubber
+strain rates
+rubber particles
+shear deformation
+cavitation
+§
+
+================================================================================
+
+W2033304583
+
+Microcapsule induced toughening in a self-healing polymer composite.
+Microencapsulated dicyclopentadiene DCPD healing agent and Grubbs' Ru catalyst
+are incorporated into an epoxy matrix to produce a polymer composite capable of
+self-healing. The fracture toughness and healing efficiency of this composite
+are measured using a tapered double-cantilever beam TDCB specimen. Both the
+virgin and healed fracture toughness depend strongly on the size and
+concentration of microcapsules added to the epoxy. Fracture of the neat epoxy is
+brittle, exhibiting a mirror fracture surface. Addition of DCPD-filled urea-
+formaldehyde UF microcapsules yields up to 127% increase in fracture toughness
+and induces a change in the fracture plane morphology to hackle markings. The
+fracture toughness of epoxy with embedded microcapsules is much greater than
+epoxy samples with similar concentrations of silica microspheres or solid UF
+polymer particles. The increased toughening associated with fluid-filled
+microcapsules is attributed to increased hackle markings as well as subsurface
+microcracking not observed for solid particle fillers. Overall the embedded
+microcapsules provide two independent effects: the increase in virgin fracture
+toughness from general toughening and the ability to self-heal the virgin
+fracture event.
+
+§
+microcapsule induced toughening
+self-healing polymer composite
+grubbs ru catalyst
+epoxy matrix
+self-healing
+fracture toughness
+healing efficiency
+tapered double-cantilever beam specimen
+microcapsules
+brittle neat epoxy
+mirror fracture surface
+DCPD-filled urea-formaldehyde microcapsules
+hackle markings
+silica microspheres
+fluid-filled microcapsules
+solid urea-formaldehyde polymer particles
+urea-formaldehyde polymer
+polymer particles
+subsurface microcracking
+virgin fracture toughness
+embedded microcapsules
+§
+
+================================================================================
+
+W2069651853
+
+Ultra-high-strength polyethylene filaments by solution spinning/drawing. This
+paper deals with ultra-high-strength monofilaments of linear polyethylene that
+are produced by solution spinning and subsequent hot drawing at. The influence
+of the draw ratio on the mechanical and thermal properties of the fibres was
+investigated. Some salient features of a polyethylene filament with a draw ratio
+of 31.7 are: tensile strength at break=3.0 GPa, Young's modulus=90 GPa and DSC-
+melting point at a scan speed of min1=145.5 C. The modulus was found to depend
+linearly on the draw ratio. The tensile strength tended, by contrast, to
+approach an upper limit at high draw ratios. Additional morphological and X-ray
+studies revealed an extremely good orientation of the macromolecules in the
+fibre direction of the highly drawn polyethylene monofilaments.
+
+§
+high-strength polyethylene filaments
+high-strength polyethylene
+high-strength monofilaments
+polyethylene filaments
+solution spinning
+solution drawing
+hot drawing
+draw ratio
+mechanical properties
+thermal properties
+tensile strength
+Young's modulus
+DSC-melting point
+scan speed
+morphological studies
+X-ray studies
+macromolecule orientation
+fibre direction
+polyethylene monofilaments
+§
+
+================================================================================
+
+W1638951802
+
+Toughening mechanisms in elastomer-modified epoxies. The role Of matrix
+ductility on the toughenability and toughening mechanism of elastomer-modified,
+diglycidyl ether of bisphenol A DGEBA-based epoxies is investigated. Matrix
+ductility is varied by using epoxide resins of varying epoxide monomer molecular
+weights. These epoxide resins are cured using 4,4 diaminodiphenyl sulphone DDS
+and, in some cases, modified with 10 vol% carboxyl-terminated copolymer of
+butadiene and acrylonitrile CTBN. Fracture toughness values for the neat epoxies
+are found to be almost independent of the monomer molecular weight of the
+epoxide resin used. However, the fracture toughness of the elastomer-modified
+epoxies is found to be very dependent upon the epoxide monomer molecular weight.
+Tensile dilatometry indicates that the toughening mechanism, when present, is
+similar to the mechanism found for piperidine cured, elastomer-modified epoxies
+studied previously. Scanning electron microscopy and optical microscopy
+techniques corroborate this finding.
+
+§
+toughening mechanisms
+elastomer-modified epoxies
+matrix ductility
+diglycidyl ether of bisphenol A
+monomer molecular weight
+epoxide resins
+diaminodiphenyl sulphone
+carboxyl-terminated copolymer of butadiene and acrylonitrile
+copolymer of butadiene and acrylonitrile
+butadiene
+acrylonitrile
+fracture toughness
+neat epoxies
+tensile dilatometry
+piperidine cured epoxies
+piperidine cured
+scanning electron microscopy
+optical microscopy
+§
+
+================================================================================
+
+W1998874719
+
+Influence of particle size and particle size distribution on toughening
+mechanisms in rubber-modified epoxies. The principal toughening mechanism of a
+substantially toughened, rubber-modified epoxy has again been shown to involve
+internal cavitation of the rubber particles and the subsequent formation of
+shear bands. Additional evidence supporting this sequence of events which
+provides a significant amount of toughness enhancement, is presented. However,
+in addition to this well-known mechanism, more subtle toughening mechanisms have
+been found in this work. Evidence for such mechanisms as crack deflection and
+particle bridging is shown under certain circumstances in rubber-modified
+epoxies. The occurrence of these toughening mechanisms appears to have a
+particle size dependence. Relatively large particles provide only a modest
+increase in fracture toughness by a particle bridging/crack deflection
+mechanism. In contrast, smaller particles provide a significant increase in
+toughness by cavitation-induced shear banding. A critical, minimum diameter for
+particles which act as bridging particles exists and this critical diameter
+appears to scale with the properties of the neat epoxy. Bimodal mixtures of
+epoxies containing small and large particles are also examined and no
+synergistic effects are observed.
+
+§
+influence of particle size
+particle size distribution
+toughening mechanisms
+rubber-modified epoxies
+internal cavitation
+rubber particles
+shear bands
+toughness enhancement
+crack deflection
+particle bridging
+particle size dependence
+fracture toughness
+cavitation-induced shear banding
+critical minimum diameter
+bridging particles
+neat epoxy
+bimodal epoxy mixtures
+§
+
+================================================================================
+
+W1980885978
+
+Review of recent studies in magnesium matrix composites. In this paper, recent
+progress in magnesium matrix composite technologies is reviewed. The
+conventional and new processes for the fabrication of magnesium matrix
+composites are summarized. The composite microstructure is subsequently
+discussed with respect to grain refinement, reinforcement distribution, and
+interfacial characteristics. The mechanical properties of the magnesium matrix
+composites are also reported.
+
+§
+magnesium matrix composites
+magnesium matrix composite technologies
+conventional fabrication processes
+new fabrication processes
+composite microstructure
+grain refinement
+reinforcement distribution
+interfacial characteristics
+mechanical properties
+§
+
+================================================================================
+
+W2032769396
+
+The macroscopic yield behaviour of polymers. A yield criterion, not previously
+compared with the actual macroscopic behaviour of polymers, is herein compared
+with the pressure-modified octahedral shear stress criterion earlier suggested
+by others. This new relation, which is a version of the von Mises criterion,
+accommodates differences in tensile and compressive yield strengths and accounts
+for any dependence of yielding on the hydrostatic component of the applied
+stress state.
+
+§
+macroscopic yield behaviour
+macroscopic yield behaviour of polymers
+polymer yield behaviour
+yield criterion
+pressure-modified octahedral shear stress criterion
+octahedral shear stress criterion
+von Mises criterion
+tensile yield strength
+compressive yield strength
+hydrostatic component
+applied stress state
+§
+
+================================================================================
+
+W2006113459
+
+Glass-ceramics: Their production from wastesA Review. Glass-ceramics are
+polycrystalline materials of fine microstructure that are produced by the
+controlled crystallisation devitrification of a glass. Numerous silicate based
+wastes, such as coal combustion ash, slag from steel production, fly ash and
+filter dusts from waste incinerators, mud from metal hydrometallurgy, different
+types of sludge as well as glass cullet or mixtures of them have been considered
+for the production of glass-ceramics. Developments of glass-ceramics from waste
+using different processing methods are described comprehensively in this review,
+covering R&D work carried out worldwide in the last 40 years. Properties and
+applications of the different glass-ceramics produced are discussed. The review
+reveals that considerable knowledge and expertise has been accumulated on the
+process of transformation of silicate waste into useful glass-ceramic products.
+These glass-ceramics are attractive as building materials for usage as
+construction and architectural components or for other specialised technical
+applications requiring a combination of suitable thermo-mechanical properties.
+Previous attempts to commercialise glass-ceramics from waste and to scale-up
+production for industrial exploitation are also discussed.
+
+§
+glass-ceramics
+production from wastes
+polycrystalline materials
+microstructure
+controlled crystallisation
+crystallisation
+devitrification
+silicate-based wastes
+coal combustion ash
+steel production slag
+fly ash
+waste incinerator filter dusts
+metal hydrometallurgy mud
+sludge
+glass cullet
+processing methods
+R&D work
+silcate waste
+building materials
+construction components
+architectural components
+thermo-mechanical properties
+commercialization
+industrial exploitation
+§
+
+================================================================================
+
+W2064375563
+
+Ceramic matrix composites containing carbon nanotubes. Due to the remarkable
+physical and mechanical properties of individual, perfect carbon nanotubes they
+are considered to be one of the most promising new reinforcements for structural
+composites. Their impressive electrical and thermal properties also suggest
+opportunities for multifunctional applications. In the context of inorganic
+matrix composites, researchers have particularly focussed onas toughening
+elements to overcome the intrinsic brittleness of the ceramic or glass material.
+Although there are now a number of studies published in the literature, these
+inorganic systems have received much less attention than CNT/polymer matrix
+composites. This paper reviews the current status of the research and
+development of CNT-loaded ceramic matrix composite CMC materials. It includes a
+summary of the key issues related to the optimisation of CNT-based composites,
+with particular reference to brittle matrices and provides an overview of the
+processing techniques developed to optimise dispersion quality, interfaces, and
+density. The properties of the various composite systems are discussed, with an
+emphasis on toughness; a comprehensive comparative summary is provided, together
+with a discussion of the possible toughening mechanism that may operate. Last, a
+range of potential applications are discussed, concluding with a discussion of
+the scope for future developments in the field.
+
+§
+ceramic matrix composites
+carbon nanotubes
+physical properties
+mechanical properties
+reinforcements
+structural composites reinforcements
+structural composites
+electrical properties
+thermal properties
+multifunctional applications
+inorganic matrix composites
+toughening elements
+intrinsic brittleness
+CNT/polymer matrix composites
+CNT/polymer
+CNT-loaded ceramic matrix composite
+brittle matrices
+dispersion quality
+density
+composite properties
+toughness
+toughening mechanism
+§
+
+================================================================================
+
+W2001428875
+
+Overview of transient liquid phase and partial transient liquid phase bonding.
+Transient liquid phase TLP bonding is a relatively new bonding process that
+joins materials using an interlayer. On heating, the interlayer melts and the
+interlayer element or a constituent of an alloy interlayer diffuses into the
+substrate materials, causing isothermal solidification. The result of this
+process is a bond that has a higher melting point than the bonding temperature.
+This bonding process has found many applications, most notably the joining and
+repair of Ni-based superalloy components. This article reviews important aspects
+of TLP bonding, such as kinetics of the process, experimental details bonding
+time, interlayer thickness and format, and optimal bonding temperature, and
+advantages and disadvantages of the process. A wide range of materials that TLP
+bonding has been applied to is also presented. Partial transient liquid phase
+PTLP bonding is a variant of TLP bonding that is typically used to join
+ceramics. PTLP bonding requires an interlayer composed of multiple layers; the
+most common bond setup consists of a thick refractory core sandwiched by thin,
+lower-melting layers on each side. This article explains how the experimental
+details and bonding kinetics of PTLP bonding differ from TLP bonding. Also, a
+range of materials that have been joined by PTLP bonding is presented.
+
+§
+liquid phase bonding
+transient liquid phase bonding
+partial transient liquid phase bonding
+material joining
+interlayer
+melting
+isothermal solidification
+higher melting point
+bonding temperature
+Ni-based superalloys
+process kinetics
+bonding time
+interlayer thickness
+interlayer format
+optimal bonding temperature
+multiple layers
+multiple layers interlayer
+ceramics
+refractory core
+lower-melting layers
+bonding kinetics
+§
+
+================================================================================
+
+W2160292870
+
+The toughness of epoxy polymers and fibre composites modified with rubber
+microparticles and silica nanoparticles. The present paper investigates the
+effect of adding silica nanoparticles to an anhydride-cured epoxy polymer in
+bulk and when used as the matrix of carbon- and glass-fibre reinforced
+composites. The formation of hybrid epoxy polymers, containing both silica
+nanoparticles and carboxyl-terminated butadiene-acrylonitrile CTBN rubber
+microparticles, is also discussed. The structure/property relationships are
+considered, with an emphasis on the toughness and the toughening mechanisms. The
+fracture energy of the bulk epoxy polymer was increased from 77 to 212J/m2 by
+the presence of 20wt% of silica nanoparticles. The observed toughening
+mechanisms that were operative were a plastic shear-yield bands, and b debonding
+of the matrix from the silica nanoparticles, followed by plastic void-growth of
+the epoxy. The largest increases in toughness observed were for the hybrid
+materials. Here a maximum fracture energy of 965J/m2 was measured for a hybrid
+epoxy polymer containing 9wt% and 15wt% of the rubber microparticles and silica
+nanoparticles, respectively. Most noteworthy was the observation that these
+increases in the toughness of the bulk polymers were found to be transferred to
+the fibre composites. Indeed, the interlaminar fracture energies for the fibre-
+composite materials were increased even further by a fibre-bridging toughening
+mechanism. The present work also extends an existing model to predict the
+toughening effect of the nanoparticles in a thermoset polymer. There was
+excellent agreement between the predictions and the experimental data for the
+epoxy containing the silica nanoparticles, and for epoxy polymers containing
+micrometre-sized glass particles. The latter, relatively large, glass particles
+were investigated to establish whether a nano-effect, with respect to increasing
+the toughness of the epoxy bulk polymers, did indeed exist.
+
+§
+toughness
+epoxy polymers
+fibre composites
+rubber microparticles
+silica nanoparticles
+anhydride-cured epoxy polymer
+carbon-fibre reinforced composites
+carbon-fibre composites
+glass-fibre reinforced composites
+glass-fibre composites
+hybrid epoxy polymers
+carboxyl-terminated butadiene-acrylonitrile
+butadiene
+acrylonitrile
+toughening mechanisms
+fracture energy
+bulk epoxy polymer
+plastic shear-yield bands
+debonding
+matrix
+plastic void-growth
+hybrid materials
+interlaminar fracture energies
+fibre-bridging toughening mechanism
+thermoset polymer
+nano-effect
+micrometre-sized glass particles
+§
+
+================================================================================
+
+W2091091868
+
+Grain boundary energy anisotropy: a review. This paper reviews findings on the
+anisotropy of the grain boundary energies. After introducing the basic concepts,
+there is a discussion of fundamental models used to understand and predict grain
+boundary energy anisotropy. Experimental methods for measuring the grain
+boundary energy anisotropy, all of which involve application of the Herring
+equation, are then briefly described. The next section reviews and compares the
+results of measurements and model calculations with the goal of identifying
+generally applicable characteristics. This is followed by a brief discussion of
+the role of grain boundary energies in nucleating discontinuous transitions in
+grain boundary structure and chemistry, known as complexion transitions. The
+review ends with some questions to be addressed by future research and a summary
+of what is known about grain boundary energy anisotropy.
+
+§
+grain boundary energy anisotropy
+grain boundary energy
+energy anisotropy
+Herring equation
+measurements
+nucleating discontinuous transitions
+discontinuous transitions
+nucleating transtitions
+grain boundary structure
+complexion transitions
+§
+
+================================================================================
+
+W3082721096
+
+Recent progress in carbon-based materials for supercapacitor electrodes: a
+review. Increased energy consumption stimulates the development of various
+energy types.a result, the storage of these different types of energy becomes a
+key issue. Supercapacitors, as one important energy storage device, have gained
+much attention and owned a wide range of applications by taking advantages of
+micro-size, lightweight, high power density and long cycle life. From this
+perspective, numerous studies, especially on electrode materials, have been
+reported and great progress in the advancement in both the fundamental and
+applied fields of supercapacitor has been achieved. Herein, a review of recent
+progress in carbon materials for supercapacitor electrodes is presented. First,
+the two mechanisms of supercapacitors are briefly introduced. Then, research on
+carbon-based material electrodes for supercapacitor in recent years is
+summarized, including different dimensional carbon-based materials and biomass-
+derived carbon materials. The characteristics and fabrication methods of these
+materials and their performance as capacitor electrodes are discussed. On the
+basis of these materials, many supercapacitor devices have been developed.
+Therefore, in the third part, the supercapacitor devices based on these carbon
+materials are summarized. A brief overview of two types of conventional
+supercapacitor according to the charge storage mechanism is compiled, including
+their development process, the merits or withdraws, and the principle of
+expanding the potential range. Additionally, another fast-developed capacitor,
+hybrid ion capacitors as a good compromise between battery and supercapacitor
+are also discussed. Finally, the future aspects and challenges on the carbon-
+based materials as supercapacitor electrodes are proposed.
+
+§
+carbon-based materials
+supercapacitor electrodes
+energy consumption
+energy storage
+supercapacitors
+micro-size
+lightweight
+high power density
+long cycle life
+electrode materials
+mechanisms of supercapacitors
+dimensional carbon-based materials
+biomass-derived carbon materials
+fabrication methods
+supercapacitor devices
+conventional supercapacitor
+charge storage mechanism
+hybrid ion capacitors
+§
+
+================================================================================
+
+W2328561330
+
+The preparation and characterization of alumina membranes with ultra-fine pores.
+Alumina films less than 20m thick are prepared by a process in which a boehmite
+sol is successively gelled, dried and calcined. The resulting structure has the
+unique property that only ultra-fine pores with a narrow pore size distribution
+are present within large crack-free layers. The microstructure can be influenced
+by the sintering temperature and the acid concentration of the precursor sol.
+The minimum modal pore size which has been obtained is 2.5 nm. A consistent
+model of the microstructure of the membranes and an explanation of its
+uniformity are presented.
+
+§
+preparation
+characterization
+alumina membranes
+ultra-fine pores
+alumina films
+boehmite sol
+gelation
+drying
+calcination
+pore size distribution
+crack-free layers
+microstructure
+sintering temperature
+acid concentration
+precursor sol
+minimum modal pore size
+microstructure model
+§
+
+================================================================================
+
+W2030199225
+
+Calcium orthophosphate-based biocomposites and hybrid biomaterials. In this
+review article, the state-of-the-art of calcium orthophosphate-based
+biocomposites and hybrid biomaterials suitable for biomedical applications is
+presented. This subject belongs to a rapidly expanding area of science and
+research, because these types of biomaterials offer many significant and
+exciting possibilities for hard tissue regeneration. Through the successful
+combinations of the desired properties of matrix materials with those of fillers
+in such systems, calcium orthophosphates might play either role, innovative bone
+graft biomaterials can be designed. The review starts with an
+
+§
+calcium orthophosphate-based biocomposites
+calcium biocomposites
+hybrid biomaterials
+biomedical applications
+hard tissue regeneration
+matrix materials
+fillers
+calcium orthophosphates
+bone graft biomaterials
+§
+
+================================================================================
+
+W1997091043
+
+Investigation on magnetorheological elastomers based on natural rubber.
+Magnetorheological Elastomers MR Elastomers orare a kind of novel smart
+material, whose mechanical, electrical, magnetic properties are controllable
+under applied magnetic fields. They have attracted increasing attentions and
+broad application prospects. But conventionalare limited to wide applications
+because their MR effects and mechanical performances are not high enough. This
+paper aims to optimize the fabrication method and to fabricate good natural
+rubber basedwith high modulus by investigating the influences of a variety of
+fabrication conditions on theperformances, such as matrix type, external
+magnetic flux density, and temperature, plasticizer and iron particles. Among
+these factors, the content of iron particles plays a most important contribution
+in shear modulus. When the iron particle weight fraction is 80% and the external
+magnetic flux density is 1 T, the field-induced increment of shear modulus
+reaches 3.6 MPa, and the relative MR effect is 133%. If the iron weight fraction
+increases to 90%, the field-induced increment of shear modulus is 4.5 MPa. This
+result has exceeded the best report in the literatures researching theon the
+same kind of matrix. The dynamic performances ofwere also experimentally
+characterized by using a modified Dynamic Mechanical Analyzer DMA system. The
+effects of strain amplitude and driving frequency on viscoelastic properties
+ofwere analyzed.
+
+================================================================================
+
+W2166223984
+
+A review of wetting versus adsorption, complexions, and related phenomena: the
+rosetta stone of wetting. This paper reviews the fundamental concepts and the
+terminology of wetting. In particular, it focuses on high temperature wetting
+phenomena of primary interest to materials scientists. We have chosen to split
+this review into two sections: one related to macroscopic continuum definitions
+and the other to a microscopic or atomistic approach, where the role of
+chemistry and structure of interfaces and free surfaces on wetting phenomena are
+addressed. A great deal of attention has been placed on thermodynamics. This
+allows clarification of many important features, including the state of
+equilibrium between phases, the kinetics of equilibration, triple lines,
+hysteresis, adsorption segregation and the concept of complexions, intergranular
+films, prewetting, bulk phase transitions versus interface transitions, liquid
+versus solid wetting, and wetting versus dewetting.
+
+================================================================================
+
+W1985601152
+
+Effect of impurities on sintering and conductivity of yttria-stabilized
+zirconia. The effect of low concentrations of Fe2O3, Al2O3 and Bi2O3 on the
+sintering behaviour of ZrO20.83YO1.50.17, made by alkoxide synthesis, has been
+investigated. The best results are achieved with Bi2O3 as a sinter agent and a
+relative density of 95% is obtained at. The effects of these impurities on the
+electrical conductivity of the bulk and the grain boundaries has been
+investigated using frequency dispersion analysis 101-106 Hz. All investigated
+impurities have a negative influence on both the bulk and grain-boundary
+conductivity. For Fe2O3 and Al2O3 grain-boundary segregation factors of about
+two are calculated.
+
+================================================================================
+
+W2033652129
+
+Performing elemental microanalysis with high accuracy and high precision by
+scanning electron microscopy/silicon drift detector energy-dispersive X-ray
+spectrometry SEM/SDD-EDS. Electron-excited X-ray microanalysis performed in the
+scanning electron microscope with energy-dispersive X-ray spectrometry EDS is a
+core technique for characterization of the microstructure of materials. The
+recent advances in EDS performance with the silicon drift detector SDD enable
+accuracy and precision equivalent to that of the high spectral resolution
+wavelength-dispersive spectrometer employed on the electron probe microanalyzer
+platform. SDD-EDS throughput, resolution, and stability provide practical
+operating conditions for measurement of high-count spectra that form the basis
+for peak fitting procedures that recover the characteristic peak intensities
+even for elemental combination where severe peak overlaps occur, such PbS, MoS2,
+BaTiO3, SrWO4, and WSi2. Accurate analyses are also demonstrated for
+interferences involving large concentration ratios: a major constituent on a
+minor constituent Ba at 0.4299 mass fraction on Ti at 0.0180 and a major
+constituent on a trace constituent Ba at 0.2194 on Ce at 0.00407; Si at 0.1145
+on Ta at 0.0041. Accurate analyses of low atomic number elements, C, N, O, and
+F, are demonstrated. Measurement of trace constituents with limits of detection
+below 0.001 mass fraction 1000 ppm is possible within a practical measurement
+time of 500 s.
+
+================================================================================
+
+W2159755070
+
+Principles of superplasticity in ultrafine-grained materials. Ultrafine-grained
+materials are attractive for achieving superplastic elongations provided the
+grains are reasonably stable at elevated temperatures. Since the strain rate in
+superplasticity varies inversely with the grain size raised to a power of two, a
+reduction in grain size to the submicrometer level leads to the occurrence of
+superplastic flow within the region of high strain rate superplasticity at
+strain rates >102 s1. This paper tabulates and examines the various reports of
+superplasticity in ultrafine-grained materials. It is shown that these materials
+exhibit many characteristics similar to conventional superplastic alloys
+including strain rates that are consistent with the standard model for
+superplastic flow and the development of internal cavitation during the flow
+process.
+
+================================================================================
+
+W2128742340
+
+The effect of carbon nanotubes on the fracture toughness and fatigue performance
+of a thermosetting epoxy polymer. Multi-walled carbon nanotubes, with a typical
+length of 140m and a diameter of 120nm, have been used to modify an anhydride-
+cured epoxy polymer. The modulus, fracture energy and the fatigue performance of
+the modified polymers have been investigated. Microscopy showed that these long
+nanotubes were agglomerated, and that increasing the nanotube content increased
+the severity of the agglomeration. The addition of nanotubes increased the
+modulus of the epoxy, but the glass transition temperature was unaffected. The
+measured fracture energy was also increased, from 133 to 223J/m2 with the
+addition of 0.5wt% of nanotubes. The addition of the carbon nanotubes also
+resulted in an increase in the fatigue performance. The threshold strain-energy
+release-rate, G th, increased from 24J/m2 for the unmodified material to 73J/m2
+for the epoxy with 0.5wt% of nanotubes. Electron microscopy of the fracture
+surfaces showed clear evidence of nanotube debonding and pull-out, plus void
+growth around the nanotubes, in both the fracture and fatigue tests. The
+modelling study showed that the modified HalpinTsai equation can fit very well
+with the measured values of the Youngs modulus, when the orientation and
+agglomeration of the nanotubes are considered. The fracture energy of the
+nanotube-modified epoxies was predicted, by considering the contributions of the
+toughening mechanisms of nanotube debonding, nanotube pull-out and plastic void
+growth of the epoxy. This indicated that debonding and pull-out contribute to
+the toughening effect, but the contribution of void growth is not significant.
+There was excellent agreement between the predictions and the experimental
+results.
+
+================================================================================
+
+W2091272232
+
+Advances in the application of nanotechnology in enabling a hydrogen economy.
+Hydrogen is gaining a great deal of attention as an energy carrier as well as an
+alternative fuel. However, in order to fully implement the so called hydrogen
+economy significant technical challenges need to be overcome in the fields of
+production and storage of hydrogen and its point of use especially in fuel cells
+for the automotive industry. The purpose of this review is to present and
+discuss recent advances in the use of nanomaterials for solar hydrogen
+production and on-board solid state storage of hydrogen. The role of
+nanotechnology in enhancing the efficiency of fuel cells and reducing their cost
+is also discussed.
+
+================================================================================
+
+W1966262811
+
+Effect of filler size and concentration on the structure and properties of
+polyvinylidene fluoride/BaTiO3 nanocomposites. The effect of filler size and
+content in the thermal, mechanical, and electrical response of polyvinylidene
+fluoride PVDF/BaTiO3 nanocomposites has been investigated. Dielectric constant
+increases significantly with increasing filler content and decreasing filler
+size. Space charge effects at the interface between BaTiO3 and PVDF strongly
+influence the dielectric response. The electroactive -phase of PVDF is nucleated
+by the presence of the ceramic filler, the effect being strongly dependent on
+filler size and independent on filler content. This filler/matrix interaction is
+also responsible for the variations observed in the activation energy of the
+thermal degradation of the polymer. Smaller particles lead to larger relative
+contact areas and are responsible for the main variations observed in the
+thermal, mechanical, and electrical properties of the composites.
+
+================================================================================
+
+W2913151242
+
+Thermal conductivity of carbon nanotube networks: a review. Depending on their
+structure and order individual, films, bundled, buckypapers, etc., carbon
+nanotubesdemonstrate different values of thermal conductivity, from the level of
+thermal insulation with the thermal conductivity of 0.1W/mK to such high values
+as 6600W/mK. This review article concentrates on analyzing the articles on
+thermal conductivity of CNT networks. It describes various measurement methods,
+such as the 3- method, bolometric, steady-state method and their variations,
+hot-disk method, laser flash analysis, thermoreflectance method and Raman
+spectroscopy, and summarizes the results obtained using those techniques. The
+article provides the main factors affecting the value of thermal conductivity,
+such as CNT density, number of defects in their structure, CNT ordering within
+arrays, direction of measurement in relation to their length, temperature of
+measurement and type of The practical methods of using CNT networks and the
+potential directions of future research in that scope were also described.
+
+================================================================================
+
+W2114699941
+
+Probing mechanical properties of graphene with Raman spectroscopy. The use of
+Raman scattering techniques to study the mechanical properties of graphene films
+is reviewed here. The determination of Gruneisen parameters of suspended
+graphene sheets under uni- and bi-axial strain is discussed and the values are
+compared to theoretical predictions. The effects of the graphene-substrate
+interaction on strain and to the temperature evolution of the graphene Raman
+spectra are discussed. Finally, the relation between mechanical and thermal
+properties is presented along with the characterization of thermal properties of
+graphene with Raman spectroscopy.
+
+================================================================================
+
+W2110340160
+
+Structure property studies of fibres from various parts of the coconut tree.
+Fibres from different structural parts of the coconut palm tree Cocos nucifera,
+linn. have been examined for properties such as size, density, electrical
+resistivity, ultimate tensile strength, initial modulus and percentage
+elongation. The stress-strain diagrams, fracture mode, microfibrillar angle as
+well as cellulose and lignin contents of these fibres have been determined. The
+observed properties have been related to the internal structure and chemical
+composition of the fibres. Some potential uses of these fibres have been listed.
+
+================================================================================
+
+W1995695802
+
+Assessment of durability of recycled aggregate concrete produced by two-stage
+mixing approach.more than 50% construction and demolition CD and ii the
+deformation and permeability of RAC can be enhanced when adopting TSMA.
+Therefore, it demonstrates that TSMA can help to improve the durability of RAC,
+on top of the previously verified strength improvement, and thus opening up
+wider applications of RAC.
+
+================================================================================
+
+W2785624757
+
+Understanding and mitigating hydrogen embrittlement of steels: a review of
+experimental, modelling and design progress from atomistic to continuum.
+Hydrogen embrittlement is a complex phenomenon, involving several length- and
+timescales, that affects a large class of metals. It can significantly reduce
+the ductility and load-bearing capacity and cause cracking and catastrophic
+brittle failures at stresses below the yield stress of susceptible materials.
+Despite a large research effort in attempting to understand the mechanisms of
+failure and in developing potential mitigating solutions, hydrogen embrittlement
+mechanisms are still not completely understood. There are controversial opinions
+in the literature regarding the underlying mechanisms and related experimental
+evidence supporting each of these theories. The aim of this paper is to provide
+a detailed review up to the current state of the art on the effect of hydrogen
+on the degradation of metals, with a particular focus on steels. Here, we
+describe the effect of hydrogen in steels from the atomistic to the continuum
+scale by reporting theoretical evidence supported by quantum calculation and
+modern experimental characterisation methods, macroscopic effects that influence
+the mechanical properties of steels and established damaging mechanisms for the
+embrittlement of steels. Furthermore, we give an insight into current approaches
+and new mitigation strategies used to design new steels resistant to hydrogen
+embrittlement.
+
+================================================================================
+
+W2803765856
+
+A review of the synthesis and characterization of anion exchange membranes. This
+review highlights advancements made in anion exchange membrane AEM head groups,
+polymer structures and membrane synthesis methods. Limitations of current
+analytical techniques for characterizingare also discussed. AEM research is
+primarily driven by the need to develop suitablefor the high-pH and high-
+temperature environments in anion exchange membrane fuel cells and anion
+exchange membrane water electrolysis applications. AEM head groups can be
+broadly classified as nitrogen based e.g. quaternary ammonium, nitrogen free
+e.g. phosphonium and metal cations e.g. ruthenium. Metal cation head groups show
+great promise for AEM due to their high stability and high valency. Through
+rational polymer architecture, it is possible to synthesizewith ion channels and
+improved chemical stability. Heterogeneous membranes using porous supports or
+inorganic nanoparticles show great promise due to the ability to tune membrane
+characteristics based on the ratio of polymer to porous support or
+nanoparticles. Future research should investigate consolidating advancements in
+AEM head groups with an optimized polymer structure in heterogeneous membranes
+to bring together the valuable characteristics gained from using head groups
+with improved chemical stability, with the benefits of a polymer structure with
+ion channels and improved membrane properties from using a porous support or
+nanoparticles.
+
+================================================================================
+
+W2070763485
+
+Effect of the LPSO volume fraction on the microstructure and mechanical
+properties of MgY2X Zn X alloys. The influence of the volume fraction of long-
+period stacking ordered structure LPSO on the microstructure and mechanical
+properties in three extruded Mg100-3x Y2x Zn x alloys x = 0.5, 1 and 1.5 at.%
+has been studied. Two structures of LPSO phase coexist in these extruded alloys,
+18R and 14H. The 18R structure transforms to 14H structure gradually in the
+course of the extrusion process. For the three alloys, the grain size in the
+vicinity of LPSO phase particles is refined because of a particle-stimulated
+nucleation PSN mechanism. The reinforcing effect of the LPSO phase is active up
+to. Above this temperature, grain size effect becomes important. Accordingly,
+MgY1Zn0,5 extruded alloy shows the Highest mechanical strength for temperatures
+greater than.
+
+================================================================================
+
+W2984349475
+
+The HallPetch and inverse HallPetch relations and the hardness of
+nanocrystalline metals. We review some of the factors that influence the
+hardness of polycrystalline materials with grain sizes less than 1 m. The
+fundamental physical mechanisms that govern the hardness of nanocrystalline
+materials are discussed. The recently proposed dislocation curvature model for
+grain size-dependent strengthening and the 60-year-old HallPetch relationship
+are compared. For grains less than 30 nm in size, there is evidence for a
+transition from dislocation-based plasticity to grain boundary sliding,
+rotation, or diffusion as the main mechanism responsible for hardness. The
+evidence surrounding the inverse HallPetch phenomenon is found to be
+inconclusive due to processing artefacts, grain growth effects, and errors
+associated with the conversion of hardness to yield strength in nanocrystalline
+materials.
+
+================================================================================
+
+W2154695447
+
+Glassceramic glazes for ceramic tiles: a review. Glassceramics are ceramic
+materials produced through controlled crystallisation nucleation and crystal
+growth of a parent glass. The great variety of compositions and the possibility
+of developing special microstructures with specific technological properties
+have allowed glassceramic materials to be used in a wide range of applications.
+One field for which glassceramics have been developed over the past two decades
+is that of glazes for ceramic tiles. Ceramic tiles are the most common building
+material for floor and wall coverings in Mediterranean countries. Glazed tiles
+are produced from frits glasses quenched in water applied on the surface of
+green tiles and subjected to a firing process. In the 1990s, there was growing
+interest in the development of frits that are able to crystallise on firing
+because of the need for improvement in the mechanical and chemical properties of
+glazed tiles. This review offers an extensive evaluation of the research carried
+out on glassceramic glazes used for covering and pavement ceramic tile is
+accomplished. The main crystalline phases silicates and oxides developed in
+glassceramic glazes have been considered. In addition, a section focused on
+glazes with specific functionality photocatalytic, antibacterial and antifungal
+activity, or aesthetic superficial effects is also included.
+
+================================================================================
+
+W3080496249
+
+Additive manufacturing of steels: a review of achievements and challenges. Metal
+additive manufacturing AM, also known as 3D printing, is a disruptive
+manufacturing technology in which complex engineering parts are produced in a
+layer-by-layer manner, using a high-energy heating source and powder, wire or
+sheet as feeding material. The current paper aims to review the achievements in
+AM of steels in its ability to obtain superior properties that cannot be
+achieved through conventional manufacturing routes, thanks to the unique
+microstructural evolution in AM. The challenges that AM encounters are also
+reviewed, and suggestions for overcoming these challenges are provided if
+applicable. We focus on laser powder bed fusion and directed energy deposition
+as these two methods are currently the most common AM methods to process steels.
+The main foci are on austenitic stainless steels and maraging/precipitation-
+hardened PH steels, the two so far most widely used classes of steels in AM,
+before summarising the state-of-the-art of AM of other classes of steels. Our
+comprehensive review highlights that a wide range of steels can be processed by
+AM. The unique microstructural features including hierarchical subgrains and
+fine precipitates induced by AM result in enhancements of strength, wear
+resistance and corrosion resistance of AM steels when compared to their
+conventional counterparts. Achieving an acceptable ductility and fatigue
+performance remains a challenge in AM steels. AM also acts as an intrinsic heat
+treatment, triggering in situ phase transformations including tempering and
+other precipitation phenomena in different grades of steels such as PH steels
+and tool steels. A thorough discussion of the performance of AM steels as a
+function of these unique microstructural features is presented in this review.
+
+================================================================================
+
+W1969879947
+
+Solvothermal reactions: an original route for the synthesis of novel materials.
+Twenty years after the first development of solvothermal reactions, it appears
+important through the last research activities to trace the future trends taking
+into account their potentialities and the different economical constraints.
+During these last 20 years solvothermal reactions have been mainly used from
+preparing micro- or nanoparticles with different morphologies. Due to the
+importance to dispose of new materials for developing either basic research or
+industrial applications, such a presentation will be only focussed on the
+potentialities of solvothermal reactions in materials synthesis. Solvothermal
+reactions are mainly characterized by different chemical parameters nature of
+the reagents and of the solvent and thermodynamical parameters in particular
+temperature, pressure. a The selection of the composition of the solvent opens
+new research areas for stabilizing materials belonging to different classes of
+materials alloys, oxides, nitrides, sulphides. b The mild temperature conditions
+generally used are able to improve chemical diffusion and reactivity in order to
+help the preparation of specific materials at the frontier between either
+different classes of inorganic materials oxides-nitrides, nitrides-halides or
+inorganic/organic, inorganic/biologic frameworks. c The high pressure
+conditions, due to the small conveyed energy compared to temperature, allow also
+to stabilize metastable frontier materials geo-inspired or bio-inspired
+materials. d In the future, taking into account, from one side: the economical
+and the environmental constraints, and from the other: the industrial demand of
+materials characterized by specific physical, chemical and biological
+properties, the potential developments of solvothermal processes will be
+analyzed.
+
+================================================================================
+
+W2014028350
+
+Properties of magnesium alloys reinforced with nanoparticles and carbon
+nanotubes: a review. Magnesium alloys suffer from only moderate high-temperature
+strength and creep resistance. Aluminium-free magnesium alloys for sand casting
+or alloys containing aluminium with expensive additional alloying elements may
+be in use, but only microparticle or microfibre-reinforced magnesium alloys
+really exhibit satisfactory creep strengths at temperatures up to. Reinforcing
+magnesium alloys with ceramic nanoparticles could be a solution for preserving a
+low density while increasing the high-temperature performance. When produced
+using melting processes, nanoparticle-reinforced magnesium composites are
+expected to enjoy strengthening due to the grain refinement described in the
+HallPetch relation. When an isotropic distribution of nanoparticles is achieved,
+the composites are additionally expected to be Orowan-strengthened. In this
+review, a variety of ceramic materials, such as SiC, Al2O3, Y2O3, SiO2 and
+carbon nanotubes were investigated for reinforcement. Pure magnesium and various
+magnesium alloys were chosen as the matrix material and both powder
+metallurgical PM and melting processes were used for production of the
+composites. The mechanical properties of the composites were generally enhanced,
+compared to an unreinforced alloy; not only at room temperature, but also at
+elevated temperatures. In some cases an increase in strength in combination with
+increased ductility was also identified.
+
+================================================================================
+
+W1972484197
+
+The mechanical properties and fracture behaviour of epoxy-inorganic micro- and
+nano-composites. Hybrid materials have been formed using an epoxy polymeric
+matrix and a range of inorganic particles, including mica and organically-
+modified montmorillonites organoclays, with various concentrations of the
+silicate modifier up to about 30 wt.% depending upon the viscosity increase
+induced by the presence of the silicate. Wide-angle and small-angle X-ray
+scattering plus transmission electron microscopy were used to identify the
+morphologies produced, which included particulate, intercalated and ordered
+exfoliated. The modulus of these composites increased with the weight fraction
+of silicate. The morphology had a small effect on the measured modulus; the
+nano-composites with the ordered exfoliated microstructure showing the highest
+values of the modulus for a given volume fraction of silicate. The fracture
+toughness, Kc, and the fracture energy, Gc, initially increased as the weight
+fraction of the silicate was increased, but then decreased at relatively high
+concentrations. The measured moduli and toughnesses were compared to theoretical
+predictions. The measured moduli values showed very good agreement with the
+predicted values, whilst the agreement for values of the measured fracture
+energy, Gc, with the predicted values, based upon a crack deflection toughening
+mechanism, were less convincing. Indeed, analysis of the fracture surfaces using
+scanning electron microscopy showed that the main toughening effect of the
+silicate particles is due to plastic deformation of the epoxy matrix around the
+particles.
+
+================================================================================
+
+W1964668664
+
+Mechanical properties of banana fibres Musa sepientum. The stressstrain curve
+for banana fibre is determined. Properties such as the initial modulus YM,
+ultimate tensile strength UTS and percentage elongation are evaluated as a
+function of fibre diameter, test length and speed of testing. It is found that
+YM, UTS and % elongation show little variation in their values for fibres of
+diameter ranging from 50 to 250 m. The UTS and breaking strain are found to
+decrease with an increase in the test length while both breaking strength and
+breaking strain remain constant with the increase of speed of testing from 0.5
+to 100 103 m and thereafter they both decrease. These observed properties are
+explained on the basis of the internal structure of the fibre, namely, the
+number of cells, spiral angle and the number of defects. Scanning electron
+microscopic SEM studies of the fractured surfaces of these fibres indiacte that
+the failure is due to pull-out of microfibrils accompanied by tearing of cell
+walls; the tendency for fibre pull-out seems to decrease with increasing speed
+of testing.
+
+================================================================================
+
+W2065905435
+
+From the computer to the laboratory: materials discovery and design using first-
+principles calculations. The development of new technological materials has
+historically been a difficult and time-consuming task. The traditional role of
+computation in materials design has been to better understand existing
+materials. However, an emerging paradigm for accelerated materials discovery is
+to design new compounds in silico using first-principles calculations, and then
+perform experiments on the computationally designed candidates. In this paper,
+we provide a review of ab initio computational materials design, focusing on
+instances in which a computational approach has been successfully applied to
+propose new materials of technological interest in the laboratory. Our examples
+include applications in renewable energy, electronic, magnetic and multiferroic
+materials, and catalysis, demonstrating that computationally guided materials
+design is a broadly applicable technique. We then discuss some of the common
+features and limitations of successful theoretical predictions across fields,
+examining the different ways in which first-principles calculations can guide
+the final experimental result. Finally, we present a future outlook in which we
+expect that new models of computational search, such as high-throughput studies,
+will play a greater role in guiding materials advancements.
+
+================================================================================
+
+W2076492362
+
+1000 at 1000: The effect of electric field and pressure on the synthesis and
+consolidation of materials: a review of the spark plasma sintering method. The
+use of electric current to activate the consolidation and reaction-sintering of
+materials is reviewed with special emphasis of the spark plasma sintering
+method. The method has been used extensively over the past decade with results
+showing clear benefits over conventional methods. The review critically examines
+the important features of this method and their individual roles in the observed
+enhancement of the consolidation process and the properties of the resulting
+materials.
+
+================================================================================
+
+W2139656363
+
+Fatigue crack propagation in microcapsule-toughened epoxy. The addition of
+liquid-filled urea-formaldehyde UF microcapsules to an epoxy matrix leads to
+significant reduction in fatigue crack growth rate and corresponding increase in
+fatigue life. Mode-I fatigue crack propagation is measured using a tapered
+double-cantilever beam TDCB specimen for a range of microcapsule concentrations
+and sizes: 0, 5, 10, and 20% by weight and 50, 180, and 460 m diameter. Cyclic
+crack growth in both the neat epoxy and epoxy filled with microcapsules obeys
+the Paris power law. Above a transition value of the applied stress intensity
+factor K T, which corresponds to loading conditions where the size of the
+plastic zone approaches the size of the embedded microcapsules, the Paris law
+exponent decreases with increasing content of microcapsules, ranging from 9.7
+for neat epoxy to approximately 4.5 for concentrations above 10 wt%
+microcapsules. Improved resistance to fatigue crack propagation, indicated by
+both the decreased crack growth rates and increased cyclic stress intensity for
+the onset of unstable fatigue-crack growth, is attributed to toughening
+mechanisms induced by the embedded microcapsules as well as crack shielding due
+to the release of fluid as the capsules are ruptured. In addition to increasing
+the inherent fatigue life of epoxy, embedded microcapsules filled with an
+appropriate healing agent provide a potential mechanism for self-healing of
+fatigue damage.
+
+================================================================================
+
+W2162994701
+
+XPS and FT-IR investigation of silicate polymers. This article presents the
+results of an investigation of the compositional and structural features of an
+inorganic polymer synthesized from amorphous silica and KOH. The inorganic
+polymers were characterized using Fourier transformation infrared spectroscopy
+FT-IR, X-ray photoelectron spectroscopy XPS, scanning electron microscopy SEM
+and X-ray diffraction XRD. FT-IR investigation of the inorganic polymers showed
+that an increase in the hydroxide concentration used in the synthesis shifts the
+position of the maximum absorbance of SiO bands toward lower wave numbers,
+indicating the transformation of Q4 units to Q3 and Q2 units. XPS investigation
+of the inorganic polymers showed that the total amount of oxygen and potassium
+present in the sample increased when higher concentrations of hydroxide were
+used in the synthesis. The O/Si ratio of the inorganic polymers changed from 2
+to 2.6 when the KOH concentration was increased from 0.75 to 4 M. The increase
+in the O/Si ratio can be explained by the greater dissolution of SiO2 particles
+leading to the formation of branched polymers and gelation.
+
+================================================================================
+
+W1964926165
+
+Materials development for intermediate-temperature solid oxide electrochemical
+devices. One of the major challenges in developing electrochemical devices for
+energy generation has been the identification and development of materials with
+outstanding performance at reduced intermediate temperatures 500700 C,
+increasing the durability and lowering the cost of the device. A solid-state
+electrochemical cell is in outline a simple device consisting of three
+components: anode, electrolyte and cathode. The function of each component is
+critical to cell performance, and as interest in fuel cells and electrolysers
+has gathered pace, many materials have been evaluated as functional components
+of these cells. Typically, the requirement for new materials development has
+been the drive to lower operation temperature, overcoming sluggish reaction
+kinetics in existing materials. Novel materials for the functional components of
+both electrolysers and fuel cells are introduced, with emphasis placed on the
+air electrode and electrolyte, with the potential of new classes of materials
+discussed, including layered materials, defect fluorites and tetrahedrally
+coordinated phases. Furthermore, the opportunity presented by thin film
+deposition to characterize anisotropic transport in materials and develop
+devices based on thin films is discussed.
+
+================================================================================
+
+W2049210182
+
+Fundamental issues of reactive wetting by liquid metals. After a brief
+presentation of thermodynamics and kinetics of non-reactive wetting, the recent
+results and theoretical developments concerning the reactive wetting of solids
+by liquid metals are reviewed. A section is devoted to illustrate and discuss
+the effect of interfacial reactions in removing the wetting barriers existing on
+many ceramic and metallic solids.
+
+================================================================================
+
+W2949463552
+
+Copper/graphene composites: a review. Recent research upon the incorporation of
+graphene into copper matrix composites is reviewed in detail. An extensive
+account is given of the large number of processing methods that can be employed
+to prepare copper/graphene composites along with a description of the
+microstructures that may be produced. Processing routes that have been employed
+are described including powder methods, electrochemical processing, chemical
+vapour deposition, layer-by-layer processing, liquid metal infiltration among a
+number of others. The mechanical properties of the composites are described in
+detail along with an account of the structural factors that control mechanical
+behaviour. The mechanics and mechanisms of deformation are discussed, and the
+effect of factors such as the graphene content and the type of graphene used,
+along with processing conditions for the fabrication of the composites, is
+described. The functional properties of copper/graphene composites are also
+reviewed including their electrical and thermal properties, and tribological and
+corrosion behaviour. In each case, the effect of the graphene type and content,
+and processing conditions are also described. Finally, possible future
+applications of copper/graphene composites are discussed.
+
+================================================================================
+
+W2339747005
+
+A review of low-temperature plasma treatment of textile materials. In recent
+years, plasma treatment technology has attracted more attention in the textile
+industry, as it seems to be a promising economically and ecologically sound
+alternative to conventional wet-chemical processing techniques. Plasma surface
+treatment is a relatively simple process that is clean, solvent-free, time
+saving, and environmentally friendly. Moreover, plasma treatments offer the
+possibility to obtain typical textile finishes without changing the key textile
+properties. The efficiency of plasma treatment depends on several factors
+including the nature of the substrate and the treatment operating conditions.
+However, the application of plasma technology to different kinds of textile
+materials has not been fully exploited. This paper presents a review of the
+current literature on the surface modification of textiles by low-temperature
+plasma LTP technology. Its main objectives are to i investigate the influence of
+LTP treatment on the surface properties of natural and man made textile
+materials, ii outline the contribution of LTP treatment towards sustainable
+development, and iii examine the hurdles that LTP has to overcome in the textile
+industry.
+
+================================================================================
+
+W2040935839
+
+Recent developments in the preparation, characterization and applications of
+glass- and glassceramic-to-metal seals and coatings. There has, in recent years,
+been a major revival of interest in glass- and glassceramic-to-metal seals and
+coatings for new applications. Experience dictates that many factors need to be
+taken into consideration in the successful design and manufacture of high-
+quality seals, particularly if an adequate component lifetime is to be achieved.
+For example, during their preparation, undesirable reactions may occur between
+diffusing metal species and glass constituents, and these can lead to the
+formation of highly localized internal stresses, which can initiate failure of a
+seal either during manufacture or, more seriously, whilst in service due to the
+influence of static fatigue. In the case of high-temperature systems, reactions
+under hostile operating conditions also need to be taken into consideration. In
+this review, the factors learnt from past experience that influence the
+formation and lifetime behaviour of glass and glassceramic/metal systems are
+briefly introduced, and their relevance to the newer applications including
+solid oxide fuel cell sealants and coatings on titanium for biomedical
+applications is discussed.
+
+================================================================================
+
+W1965717637
+
+Drying-induced changes in the structure of alkali-activated pastes. Drying of
+cement paste, mortar, or concrete specimens is usually required as a pre-
+conditioning step prior to the determination of permeability-related properties
+according to standard testing methods. The reaction process, and consequently
+the structure, of an alkali-activated slag or slag/fly ash blend geopolymer
+binder differs from that of Portland cement, and therefore there is little
+understanding of the effects of conventional drying methods as applied to
+Portland cements on the structure of the geopolymer binders. Here, oven drying
+60 C, acetone treatment, and desiccator/vacuum drying are applied to sodium
+silicate-activated slag and slag/fly ash geopolymer pastes after 40 days of
+curing. Structural characterization via X-ray diffraction, infrared
+spectroscopy, thermogravimetry, and nitrogen sorption shows that the acetone
+treatment best preserves the microstructure of the samples, while oven drying
+modifies the structure of the binding gels, especially in alkali-activated slag
+paste where it notably changes the pore structure of the binder. This suggests
+that the pre-conditioned drying of alkali activation-based materials strongly
+affects their microstructural properties, providing potentially misleading
+permeability and durability parameters for these materials when pre-conditioned
+specimens are used during standardized testing.
+
+================================================================================
+
+W1976245006
+
+The role of carbon segregation on nanocrystallisation of pearlitic steels
+processed by severe plastic deformation. The nanostructure and the carbon
+distribution in a pearlitic steel processed by torsion under high pressure was
+investigated by three-dimensional atom probe. In the early stage of deformation
+shear strain of 62, off-stoichiometry cementite was analysed close to interphase
+boundaries and a strong segregation of carbon atoms along dislocation cell
+boundaries was observed in the ferrite. At a shear strain of 300, only few
+nanoscaled off-stoichiometry cementite particles remain and a nanoscaled
+equiaxed grain structure with a grain size of about 20 nm was revealed. 3D-AP
+data clearly point out a strong segregation of carbon atoms along grain
+boundaries. The influence of this carbon atom segregation on the nanostructure
+formation is discussed and a scenario accounting for the nanocrystallisation
+during severe plastic deformation is proposed.
+
+================================================================================
+
+W2052616809
+
+An investigation of the mechanisms for strength gain or loss of geopolymer
+mortar after exposure to elevated temperature. When fly ash-based geopolymer
+mortars were exposed to a temperature of, it was found that the strength after
+the exposure sometimes decreased, but at other times increased. This paper shows
+that ductility of the mortars has a major correlation to this strength gain/loss
+behaviour. Specimens prepared with two different fly ashes, with strengths
+ranging from 5 to 60MPa, were investigated. Results indicate that the strength
+losses decrease with increasing ductility, with even strength gains at high
+levels of ductility. This correlation is attributed to the fact that mortars
+with high ductility have high capacity to accommodate thermal incompatibilities.
+It is believed that the two opposing processes occur in mortars: 1 further
+geopolymerisation and/or sintering at elevated temperatures leading to strength
+gain; 2 the damage to the mortar because of thermal incompatibility arising from
+non-uniform temperature distribution. The strength gain or loss occurs depending
+on the dominant process.
+
+================================================================================
+
+W2049511258
+
+Self-healing coatings in anti-corrosion applications. Nonmetallic based on
+polymers or oxides and metallic protective coatings are used to protect metal
+products against the harmful action of the corrosion environment. In recent
+years, self-healing coatings have been the subject of increasing interest. The
+ability of such coatings to self-repair local damage caused by external factors
+is a major factor contributing to their attractiveness. Polymer layers, silica-
+organic layers, conversion layers, metallic layers and ceramic layers, to
+mention but a few, are used as self-healing coatings. This paper presents the
+main kinds of self-healing coatings and explains their self-healing mechanisms.
+
+================================================================================
+
+W2126418091
+
+Grain size effect on deformation twinning and detwinning. This article
+systematically overviews the grain size effect on deformation twinning and
+detwinning in face-centered cubic fcc metals. With decreasing grain size,
+coarse-grained fcc metals become more difficult to deform by twinning, whereas
+nanocrystalline nc fcc metals first become easier to deform by twinning and then
+become more difficult, exhibiting an optimum grain size for twinning. The
+transition in twinning behavior from coarse-grained to nc fcc metals is caused
+by the change in deformation mechanisms. An analytical model based on observed
+deformation physics in nc metals,e., grain boundary emission of dislocations,
+provides an explanation of the observed optimum grain size for twinning in nc
+fcc metals. The detwinning process is caused by the interaction between
+dislocations and twin boundaries. Under a certain deformation condition, there
+exists a grain size range where the twinning process dominates over the
+detwinning process to produce the highest density of twins.
+
+================================================================================
+
+W2048403092
+
+Activation energy determination for linear heating experiments: deviations due
+to neglecting the low temperature end of the temperature integral. Model-free
+isoconversion methods which use approximations of the temperature integral are
+generally reliable methods for the calculation of activation energies of
+thermally activated reactions studied during linear heating. These methods
+generally neglect the temperature integral at the start of the linear heating,
+ITo. An analytical equation is derived which describes the deviations introduced
+by this assumption. It is shown that for most reactions encountered this
+assumption does not have a significant influence on the accuracy of the method.
+However in cases where To is within about 50 to of the reaction stage to be
+investigated and activation energies are relatively low, significant deviations
+are introduced. It is shown that some of the published thermal analysis work on
+activation energy analysis of reactions occurring at relatively low temperatures
+is affected by these deviations. Examples are specific cases of dehydration
+reactions, cure reactions and cluster formation in Al alloys.
+
+================================================================================
+
+W3100467701
+
+Review on slip transmission criteria in experiments and crystal plasticity
+models. A comprehensive overview is given of the literature on slip transmission
+criteria for grain boundaries in metals, with a focus on slip system and grain
+boundary orientation. Much of this extensive literature has been informed by
+experimental investigations. The use of geometric criteria in continuum crystal
+plasticity models is discussed. The theoretical framework of Gurtin 2008, J.
+Mech. Phys. Solids 56, p. 640 is reviewed for the single slip case. This
+highlights the connections to slip transmission criteria from the literature
+that are not discussed in the work itself. Different geometric criteria are
+compared for the single slip case with regard to their prediction of slip
+transmission. Perspectives on additional criteria, investigated in experiments
+and used in computational simulations, are given.
+
+================================================================================
+
+W2168354821
+
+Atomic mechanisms of grain boundary diffusion: Low versus high temperatures. We
+analyze recent results of atomistic computer simulations of grain boundary GB
+diffusion in metals. At temperatures well below the bulk melting point T m GB
+diffusion occurs by random walk of individual vacancies and self-interstitials.
+Both defects are equal participants in the diffusion process and can move by a
+large variety of diffusion mechanisms, many of which are collective transitions.
+GB diffusion coefficients can be computed by kinetic Monte Carlo simulations. At
+high temperatures, the presence of large concentrations of point defects is
+likely to alter the diffusion mechanisms. Molecular dynamics simulations of GB
+structure and diffusion in copper reveal a continuous GB premelting in close
+vicinity of T m . However, diffusion in high-energybecomes almost independent of
+the GB structure universal at temperatures well below T m . This behavior can be
+tentatively explained in terms of heterophase fluctuations from the solid to the
+liquid phase. The exact diffusion mechanisms in the presence of heterophase
+fluctuations are yet to be established.
+
+================================================================================
+
+W1273586946
+
+Magnetic nanoparticles: material engineering and emerging applications in
+lithography and biomedicine. We present an interdisciplinary overview of
+material engineering and emerging applications of iron oxide nanoparticles. We
+discuss material engineering of nanoparticles in the broadest sense, emphasizing
+size and shape control, large-area self-assembly, composite/hybrid structures,
+and surface engineering. This is followed by a discussion of several non-
+traditional, emerging applications of iron oxide nanoparticles, including
+nanoparticle lithography, magnetic particle imaging, magnetic guided drug
+delivery, and positive contrast agents for magnetic resonance imaging. We
+conclude with a succinct discussion of the pharmacokinetics pathways of iron
+oxide nanoparticles in the human body -- an important and required practical
+consideration for any in vivo biomedical application, followed by a brief
+outlook of the field.
+
+================================================================================
+
+W2048710336
+
+The influence of constrictivity on the effective transport properties of porous
+layers in electrolysis and fuel cells. The aim of the present investigation is
+to define microstructure parameters, which control the effective transport
+properties in porous materials for energy technology. Recent improvements in
+3D-imaging FIB-nanotomography, synchrotron X-ray tomography and image analysis
+skeletonization and graph analysis, transport simulations open new possibilities
+for the study of microstructure effects. In this study, we describe novel
+procedures for a quantitative analysis of constrictivity, which characterizes
+the so-called bottleneck effect. In a first experimental part, methodological
+tests are performed using a porous La,SrCoO3 material SOFC cathode. The tests
+indicate that the proposed procedure for quantitative analysis of constrictivity
+gives reproducible results even for samples with inhomogeneous microstructures
+cracks, gradient of porosity. In the second part, 3D analyses are combined with
+measurements of ionic conductivity by impedance spectroscopy. The investigations
+are preformed on membranes of electrolysis cells with porosities between 0.27
+and 0.8. Surprisingly, the tortuosities remain nearly constant 1.6 for the
+entire range of porosity. In contrast, the constrictivities vary strongly and
+correlate well with the measured transport resistances. Hence, constrictivity
+represents the dominant microstructure parameter, which controls the effective
+transport properties in the analysed membrane materials. An empirical
+relationship is then derived for the calculation of effective transport
+properties based on phase volume fraction, tortuosity, and constrictivity.
+
+================================================================================
+
+W3099964615
+
+A step forward from high-entropy ceramics to compositionally complex ceramics: a
+new perspective. High-entropy ceramicshave quickly gained attention since 2015.
+To date, nearly all work has focused on five-component, equimolar compositions.
+This perspective article briefly reviews different families ofand selected
+properties. Following a couple of our most recent studies, we propose a step
+forward to expandto Compositionally Complex ceramicsto include medium-entropy
+and non-equimolar compositions. Using defective fluorite and ordered pyrochlore
+oxides as two primary examples, we further consider the complexities of
+aliovalent cations and anion vacancies as well as ordered structures with two
+cation sublattices. Better thermally-insulating yet stiffhave been found in non-
+equimolar compositions with optimal amounts of oxygen vacancies and in ordered
+pyrochlores with substantial size disorder. It is demonstrated that medium-
+entropy ceramicscan prevail over their high-entropy counterparts. The
+diversifying classes ofprovide even more possibilities thanto tailor the
+composition, defects, disorder/order, and, consequently, various properties.
+
+================================================================================
+
+W1968805790
+
+Intumescent flame retardant polyurethane/reduced graphene oxide composites with
+improved mechanical, thermal, and barrier properties. Intumescent flame
+retardant polyurethane IFRPU composites were prepared in the presence of reduced
+graphene oxide rGO as synergism, melamine, and microencapsulated ammonium
+polyphosphate. The composites were examined in terms of thermal stability both
+under nitrogen and air, electrical conductivity, gas barrier, flammability,
+mechanical, and rheological properties. Wide-angle X-ray scattering and scanning
+electron microscopy indicated that rGO are well-dispersed and exfoliated in the
+IFRPU composites. The limiting oxygen index values increased from 22.0 to 34.0
+with the addition of 18 wt% IFR along with 2 wt% rGO. Moreover, the
+incorporation of rGO into IFRPU composites exhibited excellent antidripping
+properties as well as UL-94 V0 rating. The thermal stability of the composites
+enhanced. This was attributed to high surface area and good dispersion of rGO
+sheets induced by strong interactions between PU and rGO. The oxygen
+permeability, electrical, and viscoelasticity measurements, respectively,
+demonstrated that rGO lead to much more reduction in the gas permeability by ~90
+%, high electrical conductivity, and higher storage modulus of IFRPU composites.
+The tensile strength, modulus, and shore A remarkably improved by the
+incorporation of 2.0 wt% of rGO as well.
+
+================================================================================
+
+W1994910214
+
+Analysis of the mechanical behavior of woven fibrous material using virtual
+tests at the unit cell level. The determination of the mechanical properties of
+fabrics in biaxial tension and in-plane shearing is made from 3D finite element
+analyses of the unit woven cell. Compared to experimental tests these virtual
+tests have several advantages. They can easily be carried out for sets of varied
+parameters, they provide local information inside the woven material and above
+all they can be performed on woven materials that have not yet been
+manufactured. The 3D computations are not classical analyses because the yarns
+are made up of several thousands of fibres and their mechanical behaviour is
+very special. Several specific aspects of the analysis are detailed, especially
+the use of a hypoelastic law based on an objective derivative using the rotation
+of the fibre which allows a strict evolution of the directions of orthotropy
+according to the fibre direction. Examples of analyses are presented in biaxial
+tension and in-plane shear for woven reinforcements and in the case of the
+biaxial tension of a knitted fabric. The results obtained are in good agreement
+with experimental results.
+
+================================================================================
+
+W2014770525
+
+Analyses of the mechanical properties and microstructure of bamboo-epoxy
+composites. Bamboo reinforced epoxy possesses reasonably good properties to
+waarrant its use as a structural material, and is fabricated by utilizing
+bamboo, an abundant material resource, in the technology of fibre composites.
+Literature on bamboo-plastics composites is rare. This work is an experimental
+study of unidirectional bamboo-epoxy laminates of varying laminae number, in
+which tensile, compressive, flexural and interlaminar shear properties are
+evaluated. Further, the disposition of bamboo fibre, the parenchymatous tissue,
+and the resin matrix under different loading conditions are examined. Our
+results show that the specific strength and specific modulus of bamboo-epoxy
+laminates are adequate, the former being 3 to 4 times that of mild steel. Its
+mechanical properties are generally comparable to those of ordinary glass-fibre
+composites. The fracture behaviour of bamboo-epoxy under different loading
+conditions were observed using both acoustic emission techniques and scanning
+electron microscopy. The fracture mode varied with load, the fracture mechanism
+being similar to glass and carbon reinforced composites. Microstructural
+analyses revealed that natural bamboo is eligibly a fibre composite in itself;
+its inclusion in a plastic matrix will help solve the problems of cracking due
+to desiccation and bioerosion caused by insect pests. Furthermore, the thickness
+and shape of the composite can be tailored during fabrication to meet specific
+requirements, thereby enabling a wide spectrum of applications.
+
+================================================================================
+
+W2143289538
+
+Youngs modulus and volume porosity relationships for additive manufacturing
+applications. Recent advancements in additive manufacturing or rapid prototyping
+technologies allow the fabrication of end-use components with defined porous
+structures. For example, one area of particular interest is the potential to
+modify the flexibility bending stiffness of orthopedic implants through the use
+of engineered porosity i.e., design and placement of pores and subsequent
+fabrication of the implant using additive manufacturing processes. However,
+applications of engineered porosity require the ability to accurately predict
+mechanical properties from knowledge or characterization of the pore structure
+and the existence of robust equations characterizing the propertyporosity
+relationships.Youngs modulus can be altered by variations in pore shape as well
+as pore distribution, numerous semi-analytical and theoretical relationships
+have been proposed to describe the dependence of mechanical properties on
+porosity. However, the utility and physical meaning of many of these
+relationships is often unclear as most theoretical models are based on some
+idealized physical microstructure, and the resulting correlations often cannot
+be applied to real materials and practical applications. This review summarizes
+the evolution and development of relationships for the effective Youngs modulus
+of a porous material and concludes that verifiable equations yielding
+consistently reproducible results tied to specific pore structures do not yet
+exist. Further research is needed to develop and validate predictive equations
+for the effective Youngs modulus over a volume porosity range of 2050 %, the
+range of interest over which existing equations, whether based on effective
+medium theories or empirical results, demonstrate the largest disparity and
+offers the greatest opportunity for beneficial modification of bending stiffness
+in orthopedic applications using currently available additive manufacturing
+techniques.
+
+================================================================================
+
+W2937675615
+
+Review: recent progress in low-temperature proton-conducting ceramics. Proton-
+conducting ceramicsare of considerable interest for use in energy conversion and
+storage applications, electrochemical sensors, and separation membranes.that
+combine performance, efficiency, stability, and an ability to operate at low
+temperatures are particularly attractive. This review summarizes the recent
+progress made in the development of low-temperature proton-conducting ceramics
+LT-PCCs, which are defined as operating in the temperature range of. The
+structure of these ceramic materials, the characteristics of proton transport
+mechanisms, and the potential applications for LT-PCCs will be summarized with
+an emphasis on protonic conduction occurring at interfaces. Three temperature
+zones are defined in the LT-PCC operating regime based on the predominant proton
+transfer mechanism occurring in each zone. The variation in material properties,
+such as crystal structure, conductivity, microstructure, fabrication methods
+required to achieve the requisite grain size distribution, along with typical
+strategies pursued to enhance the proton conduction, is addressed. Finally, a
+perspective regarding applications of these materials to low-temperature solid
+oxide fuel cells, hydrogen separation membranes, and emerging areas in the
+nuclear industry including off-gas capture and isotopic separations is
+presented.
+
+================================================================================
+
+W2088757161
+
+Photochemistry on a polarisable semi-conductor: what do we understand today?.
+The continued development of ferroelectric materials into more and more consumer
+led applications has been at the forefront of recent ferroelectric material
+research. It is, however, possible to view a ferroelectric as a wide band gap
+semi-conductor that can sustain a surface charge density. This charge density
+arises from the movement of ions in the crystal lattice and the need to
+compensate for this charge. When viewing ferroelectrics as polarisable semi-
+conductors a large number of new interactions are possible. One such is the use
+of super band gap illumination to generate electronhole pairs. These
+photogenerated carriers can then perform local electrochemistry. What is most
+interesting for ferroelectric materials is that the REDOX chemistry can be
+chosen by selectively modifying the domain structure of the ferroelectricwe can
+perform oxidation and reduction on the surface of the same material at spatially
+separate locations, or use the material to drive photoexcited carriers apart.
+This means we can separate the REDOX products or produce patterns of
+photogenerated material in places we have predetermined. This review aims to
+introduce the background research that has led to the current understanding as
+well a highlight some of the current areas that require further development.
+
+================================================================================
+
+W2055759352
+
+Mechanical properties of CuCr system alloys with and without Zr and Ag. The
+effects of addition of Zr and Ag on the mechanical properties of a Cu0.5 wt%Cr
+alloy have been investigated. The addition of 0.15 wt%Zr enhances the strength
+and resistance to stress relaxation of the CuCr alloy. The increase in strength
+is caused by both the decrease in inter-precipitate spacing of Cr precipitates
+and the precipitation of Cu5Zr phase. The stress relaxation resistance is
+improved by the preferentially forming Cu5Zr precipitates on dislocations, in
+addition to Cr precipitates on dislocations. The addition of 0.1 wt%Ag to the
+CuCr and CuCrZr alloys improves the strength, stress relaxation resistance and
+bend formability of these alloys. The increase in strength and stress relaxation
+resistance is ascribed to the decrease in inter-precipitate spacing of Cr
+precipitates and the suppression of recovery during aging, and to the Ag-atom-
+drag effect on dislocation motion. The better bend formability of the Ag-added
+alloys is explained in terms of the larger post-uniform elongation of the
+alloys.
+
+================================================================================
+
+W2017232865
+
+Toughening mechanisms in a multi-phase alloy of nylon 6,6/polyphenylene oxide.
+Toughening mechanisms in a nylon 6,6/polyphenylene oxide PA/PPO alloy are
+studied. This alloy consists of well dispersed PPO particles containing an
+elastomeric phase in a PA matrix. Both crazing and shear yielding mechanisms are
+found to be sequentially operative in this alloy. When a crack propagates in the
+material, a crazed zone forms ahead of the crack tip. This crazed zone then
+transforms into a shear yielded zone as the crack propagates through it. The
+crazes inside the original crazed zone are closed or distorted by the shear
+yielding process. In the transformed region, the shear yielded material is
+oriented at different angles as the crack propagates. These findings are
+consistent with the notion that hydrostatic tension has to be dissipated in
+order for the remaining deviatoric stress to reach the critical value for
+yielding. It is possible to partially attribute the increase in toughness to
+both crack blunting and zone shielding mechanisms.
+
+================================================================================
+
+W2156794095
+
+Intermittent bonding for high toughness/ high strength composites. High strength
+and high are usually mutually exclusive in brittle filament/brittle matrix
+composites. The high tensile strength characteristic of strong interfacial
+filament/matrix bonding can, however, be combined with the high fracture of weak
+interfacial bonding, when the filaments are arranged to have alternate sections
+of high and low shear stress and low and high toughness. Such weak and strong
+areas can be achieved by appropriate intermittent coating of the fibres. The
+strong regions ensure that the filament strength is picked up; weak areas
+randomly in the path of running cracks serve to blunt them by the Cook/Gordon
+mechanism which, in turn, produces long pull-out lengths with an associated
+large contribution to toughness. Boron-epoxy composites of volume fraction 0.20
+to 0.25 have been made in this way which have fracture toughnesses of over 200
+kd m -2, whilst retaining rule of mixtures tensile strengths ~ 650 MN m-2. At
+the volume fractions used, this apparently represents Kic values greater than
+100 MN m -3/2/, An analysis is presented for and strength which demonstrates, in
+broad terms, the effects of varying the coating parameters of concern. Results
+show that the toughness of interfaces is an important parameter, differences in
+which may not be shown up in terms of interfacial strength. The choice of
+coating material is crucial in getting the desired effect. Some observations are
+made upon methods of measuring the components of in composites.
+
+================================================================================
+
+W2087710483
+
+Reduction of nickel oxide particles by hydrogen studied in an environmental TEM.
+In situ reduction of nickel oxide NiO particles is performed under 1.3mbar of
+hydrogen gas H2 in an environmental transmission electron microscope ETEM.
+Images, diffraction patterns and electron energy-loss spectra EELS are acquired
+to monitor the structural and chemical evolution of the system during reduction,
+whilst increasing the temperature. Ni nucleation on NiO is either observed to be
+epitaxial or to involve the formation of randomly oriented grains. The growth of
+Ni crystallites and the movement of interfaces result in the formation of pores
+within the NiO grains to accommodate the volume shrinkage associated with the
+reduction. Densification is then observed when the sample is nearly fully
+reduced. The reaction kinetics is obtained using EELS by monitoring changes in
+the shapes of the Ni L2,3 white lines. The activation energy for NiO reduction
+is calculated from the EELS data using both a physical model-fitting technique
+and a model-independent method. The results of the model-fitting procedure
+suggest that the reaction is described by Avrami models whereby the growth and
+impingement of Ni domains control the reaction, in agreement with the ETEM
+observations.
+
+================================================================================
+
+W1966352650
+
+Study of copper-alumina bonding. Bonding between copper and alumina can be
+obtained by the solid state bonding process and the liquid phase bonding
+process. The strength of interfaces has been tested mechanically using shear
+tests, tensile tests and fracture toughness tests. The effects of bonding
+parameters on bond strength have been studied. Observations by transmisssion
+electron microscopy have been performed to detect and analyse the nature and
+evolution of interfacial compounds as a function of copper oxidation and bonding
+time. Chemical reactions lead to the formation of the binary oxide CuAlO2. The
+stability of this compound and the reversibility of chemical reactions appear to
+be very dependent on the amount of oxygen present in the system.
+
+================================================================================
+
+W2029832116
+
+Hydrous zirconium dioxide: interfacial properties, the formation of monodisperse
+spherical particles, and its crystallization at high temperatures. The
+characteristics of hydrous zirconia gels obtained by hydrolysis of highly acidic
+ZrOCl28H2O solutions at are described. Under adequate conditions, monodisperse
+spherical hydrous zirconia is obtained. The role of sulphate and chloride ions
+is described. The gel has a large water content, indicating only modest
+crosslinking. Crystallization upon heating takes place with the formation of
+both monoclinic and tetragonal zirconia polymorphs; X-ray line widening studies
+do not indicate a particle size-crystal structure correlation. On the basis of
+this observation and using Stranki's rule, the crystallization sequence upon
+heating is rationalized. Surface properties of hydrous zirconia are discussed on
+the basis of electrophoretic measurements, and compared with those of
+baddeleyte. The site binding model is not very adequate to describe these
+systems, and the existence of a very thin gel-like region at the baddeleyte-
+water interface is postulated.
+
+================================================================================
+
+W2047693528
+
+Thermo-mechanical and fracture properties in single-crystal silicon. Single-
+crystal silicon is extensively used in the semiconductor industry. Even though
+most of the steps during processing involve somehow thermo-mechanical treatment
+of silicon, we will focus on two main domains where these properties play a
+major role: cleaving techniques used to obtain a thin silicon layer for
+photovoltaic applications and MEMS. The evolution and validation of these new
+processes often rely on numerical simulations. The accuracy of these
+simulations, however, requires accurate input data for a wide temperature range.
+Numerous studies have been performed, and most of the needed parameters are
+generally available in the literature, but unfortunately, some discrepancies are
+observed in terms of measured data regarding fracture mechanics parameters. The
+aim of this article is to gather all these data and discuss the validity of
+these properties between room temperature and. Particular attention is given to
+silicon fracture properties depending on crystallographic orientations, and to
+the brittleductile temperature transition which can strongly affect the quality
+of silicon layers.
+
+================================================================================
+
+W2167826649
+
+Fullerene-like models for microporous carbon. Microporous carbons are important
+in a wide variety of applications, ranging from pollution control to
+supercapacitors, yet their structure at the molecular level is poorly
+understood. Over the years, many structural models have been put forward, but
+none has been entirely satisfactory in explaining the properties of the carbons.
+The discovery of fullerenes and fullerene-related structures such as carbon
+nanotubes gave us a new perspective on the structure of solid carbon, and in
+1997 it was suggested that microporous carbon may have a structure related to
+that of the fullerenes. Recently, evidence in support of such a structure has
+been obtained using aberration-corrected transmission electron microscopy,
+electron energy loss spectroscopy and other techniques. This article describes
+the development of ideas about the structure of microporous carbon, and reviews
+the experimental evidence for a fullerene-related structure. Theoretical models
+of the structural evolution of microporous carbon are summarised, and the use of
+fullerene-like models to predict the adsorptive properties of microporous
+carbons are reviewed.
+
+================================================================================
+
+W2054818264
+
+Polymer optical fibres. The background to the development of polymer optical
+fibresand the methods used for their manufacture are described. The optical
+properties of polymers are then discussed in the context of fibres, taking the
+most common POF materials, polymethylmethacrylate and polystyrene, as examples.
+The poor market penetration of due to inadequate performance in terms of
+attenuation, bandwidth and temperature resistance, is then explained. The
+article concludes with a discussion of techniques which show great promise for
+the development of a new generation of high-performancewhich will satisfy market
+demands.
+
+================================================================================
+
+W2085102613
+
+Ultrasound assisted one pot synthesis of nano-sized CuO and its nanocomposite
+with polyvinyl alcohol. The ultrasound US assisted one pot method has used to
+synthesize CuO nanoparticles. The fourier transform infrared spectroscopy FTIR
+spectrum shows a characteristic peak of metaloxygen bond at 535 cm1, which
+confirms the CuO formation. The high resolution transmission electron microscope
+HRTEM images of the synthesized nano-CuO confirms the size of nanorods with the
+length of approximately 2530 nm, and its breadth is less than one nanometer.
+X-ray diffraction XRD pattern of CuO can be readily assigned to those of
+crystalline CuO, indicating the formation of single-phase CuO with monoclinic
+structure. The synthesized nano-CuO is mixed with polyvinyl alcohol PVA to
+prepare the PVA/CuO nanocomposite to improve the thermal stability of PVA. Their
+physico-chemical properties are examined by means of FTIR, XRD, differential
+scanning calorimetry, thermogravimetric analysis, HRTEM, and scanning electron
+microscope SEM techniques.
+
+================================================================================
+
+W2097228157
+
+The fracture of glass-fibre-reinforced epoxy composites using nanoparticle-
+modified matrices. The epoxy polymers used as adhesives and as the matrices of
+composite materials are amorphous and highly-crosslinked thermosetting
+materials. This microstructure results in many useful properties, such as a high
+modulus and failure strength, low creep, and good performance at elevated
+temperatures. However, this microstructure also leads to one highly undesirable
+property in that they are relatively brittle materials, with a poor resistance
+to crack initiation and growth.
+
+================================================================================
+
+W2732114153
+
+A general perspective of FeMnAlC steels. During the last years, the scientific
+and industrial community has focused on the astonishing properties of FeMnAlC
+steels. These high advanced steels allow high-density reductions about ~15%
+lighter than conventional steels, high corrosion resistance, high strength
+ultimate tensile strength UTS ~1 Gpa and at the same time ductilities above 60%.
+The increase of the tensile or yield strength and the ductility at the same time
+is almost a special feature of this kind of new steels, which makes them so
+interesting for many applications such as in the automotive, armor and mining
+industry. The control of these properties depends on a complex relationship
+between the chemical composition of the steel, the test temperature, the
+external loads and the processing parameters of the steel. This review has been
+conceived to tried to elucidate these complex relations and gather the most
+important aspects of FeMnAlC steels developed so far.
+
+================================================================================
+
+W2031582782
+
+The importance of constraint relief caused by rubber cavitation in the
+toughening of epoxy. Many rubber-toughened epoxies are thought to derive the
+bulk of their toughness through the processes of rubber cavitation and plastic
+shear-yielding in the epoxy matrix. Constraint relief has been considered to be
+a key mechanism which allows extra plastic shear deformation to occur. The
+present work attempts to provide direct experimental evidence of the constraint
+relief effect by combining testing geometries that vary the degree of constraint
+with microscopic observations. The results show that the success of a rubber as
+a toughening agent for epoxies is closely related to its ability to cavitate.
+Evidence for local constraint relief is presented. Upon cavitation of the
+rubber, the stress state in a specimen with initial constraint is found to
+change to a plane stress state. The constraint relief circumvents or delays the
+crack initiation in the matrix, which allows more plastic deformation to occur.
+
+================================================================================
+
+W2151977622
+
+Chemical adsorption of NiO nanostructures on nickel foam-graphene for
+supercapacitor applications. Few-layer graphene was synthesized on a nickel foam
+template by chemical vapor deposition. The resulting three-dimensional 3D
+graphene was loaded with nickel oxide nanostructures using the successive ionic
+layer adsorption and reaction technique. The composites were characterized and
+investigated as electrode material for supercapacitors. Raman spectroscopy
+measurements on the sample revealed that the 3D graphene consisted of mostly few
+layers, while X-ray diffractometry and scanning electron microscopy revealed the
+presence of nickel oxide. The electrochemical properties were investigated using
+cyclic voltammetry, electrochemical impedance spectroscopy, and potentiostatic
+chargedischarge in aqueous KOH electrolyte. The novelty of this study is the use
+of the 3D porous cell structure of the nickel foam which allows for the growth
+of highly conductive graphene and subsequently provides support for uniform
+adsorption of the NiO onto the graphene. The NF-G/NiO electrode material showed
+excellent properties as a pseudocapacitive device with a high-specific
+capacitance value of 783Fg1 at a scan rate of 2mVs1. The device also exhibited
+excellent cycle stability, with 84% retention of the initial capacitance after
+1000 cycles. The results demonstrate that composites made using 3D graphene are
+versatile and show considerable promise as electrode materials for
+supercapacitor applications.
+
+================================================================================
+
+W2130123221
+
+A review of the processing, composition, and temperature-dependent mechanical
+and thermal properties of dielectric technical ceramics. The current review uses
+the material requirements of a new space propulsion device, the Variable
+Specific Impulse Magnetoplasma Rocket VASIMR as a basis for presenting the
+temperature-dependent properties of a range of dielectric ceramics, but data
+presented could be used in the engineering design of any ceramic component with
+complementary material requirements. A material is required for the gas
+containment tube GCT of VASIMR to allow it to operate at higher power levels.
+Theoperating conditions place severe constraints on the choice of material. An
+electrically-insulating material is required with a high-thermal conductivity,
+low-dielectric loss factor, and high-thermal shock resistance. There is a lack
+of a representative set of temperature-dependent material property data for
+materials considered for this application and these are required for accurate
+thermo-structural modelling. This modelling would facilitate the selection of an
+optimum material for this component. The goal of this article is to determine
+the best material property data values for use in the materials selection and
+design of such components. A review of both experimentally and theoretically
+determined temperature-dependent and room temperature properties of several
+materials has been undertaken. Data extracted are presented by property.
+Properties reviewed are density, Youngs, bulk and shear moduli, Poissons ratio,
+tensile, flexural and compressive strength, thermal conductivity, specific heat
+capacity, thermal expansion coefficient, and the factors affecting maximum
+service temperature. Materials reviewed are alumina, aluminium nitride,
+beryllia, fused quartz, sialon, and silicon nitride.
+
+================================================================================
+
+W2030238688
+
+pH-sensitive superabsorbent polymers: a potential candidate material for self-
+healing concrete. Superabsorbent polymershave already found their way in many
+applications. These smart polymers undergo major characteristic changes by small
+environmental variations. In the present work, copolymer networks composed of
+acrylic acid, acrylamide and N,N-methylenebisacrylamide have been synthesized
+using free radical precipitation polymerization. The polymers obtained have been
+characterized for their chemical structure, moisture desorption and swelling
+behaviour using, respectively, attenuated total reflectance-infrared
+spectroscopy, high-resolution magic-angle spinning NMR spectroscopy, dynamic
+vapour sorption and swelling studies. The results indicated a remarkable
+moisture uptake capacity at high relative humidities of more than 90 % the
+original polymer weight with a negligible hysteresis. The latter implies that
+thedeveloped are very promising water reservoir candidates, which become useful
+in concrete-related applications. Furthermore, the swelling data revealed that
+polymers with a low cross-linking density result in materials with
+superabsorbent properties. In addition, theseshow a pH-dependent swelling
+behaviour up to 450 times their original weight at pH 12.
+
+================================================================================
+
+W2043995867
+
+Materials analysis of stereolithography resins for use in Rapid Manufacturing.
+The use of Rapid Prototyping RP techniques for the production of end-use parts
+is increasing to a stage where Rapid Manufacturing is being undertaken. This
+paper documents significant initial investigations into the properties of Accura
+SI40 and SL7560 resins which represent two state of the art stereolithography
+resins that are aimed at end-use part manufacture. This information has
+previously been unavailable and is vital for their consideration in end-use part
+manufacture. The impact of various levels of post curing ultraviolet and thermal
+on the tensile, flexural and impact properties are investigated and correlated
+with differential scanning calorimetry DSC analysis. The isotropy/anisotropy
+nature of the two materials and also the effect of the notch creation method on
+the impact resistance were also studied.
+
+================================================================================
+
+W2004128520
+
+Processing and characterization of MWCNT reinforced aluminum matrix composites.
+Metal matrix composites comprising aluminum matrix and multi-wall carbon
+nanotubesas reinforcements are fabricated using cold uniaxial compaction
+followed by sintering and cold extrusion as secondary processes. Theare
+pretreated with sodium dodecyl sulfate for improved adhesion with aluminum
+powder. The effect of sintering temperature on the microstructure is explored
+using differential scanning calorimetric spectrum. The tensile yield and
+ultimate strength of Al-MWCNTs increased to 90% with 2 wt% addition of Various
+theories for the strengthening and stiffening of Al-MWCNTs composites are
+explored.
+
+================================================================================
+
+W2059724438
+
+Electrospinning of alumina nanofibers using different precursors.
+Electrospinning technique is becoming increasingly13; popular for the
+preparation of nanofibers 1x2013;5. The13; process involves the application of a
+strong electrostatic13; field to a capillary connected with a reservoir13;
+containing a polymer solution or melt. Under the13; influence of the
+electrostatic field, a pendant droplet of13; the polymer solution at the
+capillary tip is deformed13; into a conical shape Taylor cone. If the voltage
+surpasses13; a threshold value, electrostatic forces overcome13; the surface
+tension, and a fine charged jet is ejected.13; The jet moves towards a ground
+plate, which acts as a13; counter electrode. The solvent begins to evaporate13;
+immediately after the jet is formed. The result is the13; deposition of
+nanofibers on a substrate located above13; the counter electrode. Initially,
+this technique was used13; for the preparation of polymer nanofibers 6x2013;9.
+In13; recent years; this technique has been used for the13; preparation of metal
+oxide/ceramic nanofibers such as13; silica, zirconia, titania, nickel oxide,
+barium titanate,13; lead zirconate titanate and other oxide materials
+10x2013;13; 30. The nanofibers formed could be aligned parallel13; and cross
+patterns when an insulated cylinder attached13; to the axel of a DC motor is
+used as the substrate 31.13; Xia et al. 32 prepared polymeric and ceramic
+nanofibers13; as axially aligned arrays by the use of a collector13; consisting
+of two pieces of electrically conductive13; substrate separated by a gap. Katta
+et al. used copper13; wires spaced evenly in the form of a circular drum as a13;
+collector of the electro spun nanofibers
+
+================================================================================
+
+W1994086680
+
+Improving interfacial properties of a laser beam welded dissimilar joint of
+aluminium AA6056 and titanium Ti6Al4V for aeronautical applications. Dissimilar
+welds of aluminium alloy AA6056 and titanium alloy Ti6Al4V were produced by a
+novel technique. AA6056 sheet was machined at one end to a U-slot shape,
+enabling the intake of the Ti6Al4V sheet. The Al-alloy U-slot was then butt
+welded by split laser beam without using a filling wire, thus making a weld by
+melting only the Al-alloy. Thereby the intermetallic brittle phase TiAl3 formed
+at the weld interface and affected mechanical properties.a continuation of the
+previous work, the joint design was modified by chamfering Ti6Al4V to reduce the
+formation of interfacial TiAl3. It is shown in this work how this seemingly
+insignificant joint modification has refined microstructure and increased
+hardness and strength. The most impressive feature was the improved resistance
+to fatigue crack propagation whereby the fracture type in the fusion zone of
+AA6056 adjacent to the weld interface changed from partially intercrystalline to
+completely transcrystalline. Possible metallurgical processes leading to the
+property improvements are discussed.
+
+================================================================================
+
+W1965454567
+
+Synthesis and characterization of silicon nitride whiskers. Silicon nitride
+whiskers were synthesized by the carbothermal reduction of silica under nitrogen
+gas flow. The formation of silicon nitride whiskers occurs through a gas-phase
+reaction, 3SiOg +Og + 2N2g - Si3N4/~ +O2g, and the VS mechanism. The generation
+of SiO gas was enhanced by the application of a halide bath. Various nitrogen
+flow rates resulted in different whisker yields and morphologies. A suitable gas
+composition range of N2, SiO and O2 is necessary to make silicon nitride stable
+and grow in a whisker form. The oxygen partial pressure of the gas phase was
+measured by an oxygen sensor and the gas phase was analysed for CO/CO2 by gas
+chromatography. Silicon nitride was first formed as a granule, typically a
+polycrystalline, and then grown as a single crystal whisker from the {1 00}
+plane of the granule along the ~2 1 0 direction. The whiskers were identified
+as/~'-sialon with Z value ranging from 0.8 to 1.1, determined by lattice
+parameter measurements.
+
+================================================================================
+
+W2140543364
+
+The quantitative calculation of SiC polytypes from measurements of X-ray
+diffraction peak intensities. An experimental determination on powder mixtures
+of SiC-3C and 6H polytypes using an X-ray goniometer system showed the
+possibility of quantitative determination of polytype fraction directly from
+peak intensities. In combination with calculated X-ray intensities of 15R and 4H
+polytype, the method yields a simple equation system for the relative quantities
+of SiC polytypes 15R, 6H, 4H and in polycrystalline samples and powder mixtures.
+
+================================================================================
+
+W2030360185
+
+The mechanical behaviour of polyvinyl butyral at different strain magnitudes and
+strain rates. The mechanical behaviour of polyvinyl butyral PVB at small 200% is
+investigated experimentally over a range of strain rates to provide data for the
+development and validation of constitutive models. The small-strain response is
+investigated using dynamic mechanical analysis at frequencies from 1 to 100 Hz
+and temperatures from 80 to. It is found that a generalised Maxwell model
+adequately describes the material behaviour in the small-strain regime. The
+large-strain response is investigated using a high-speed servo hydraulic test
+machine at strain rates from 0.2 to 400 s1. It is found that the PVB response is
+characterised by a time-dependent steep initial rise in stress followed by a
+hyperelastic type response until failure. No current material model completely
+captures this time-dependent behaviour at large strains.
+
+================================================================================
+
+W2034755889
+
+Secondary crystalline phases identification in Cu $$_2$$ 2 ZnSnSe $$_4$$ 4 thin
+films: contributions from Raman scattering and photoluminescence. In this work,
+we present the Raman peak positions of the quaternary pure selenide compound
+Cu\_2\ZnSnSe\_4\ CZTSe and related secondary phases that were grown and studied
+under the same conditions. A vast discussion about the position of the X-ray
+diffraction XRD reflections of these compounds is presented. It is known that by
+using XRD only, CZTSe can be identified but nothing can be said about the
+presence of some secondary phases. Thin films of CZTSe, Cu\_2\SnSe\_3\, ZnSe,
+SnSe, SnSe\_2\, MoSe\_2\ and a-Se were grown, which allowed their investigation
+by Raman spectroscopy RS. Here we present all the Raman spectra of these phases
+and discuss the similarities with the spectra of CZTSe. The effective analysis
+depth for the common back-scattering geometry commonly used in RS measurements,
+as well as the laser penetration depth for photoluminescence PL were estimated
+for different wavelength values. The observed asymmetric PL band on a CZTSe film
+is compatible with the presence of CZTSe single-phase and is discussed in the
+scope of the fluctuating potentials' model. The estimated bandgap energy is
+close to the values obtained from absorption measurements. In general, the phase
+identification of CZTSe benefits from the contributions of RS and PL along with
+the XRD discussion.
+
+================================================================================
+
+W2082414386
+
+Piezoelectric anisotropy: Enhanced piezoelectric response along nonpolar
+directions in perovskite crystals. This paper discusses the mechanisms that can
+contribute to the enhanced longitudinal piezoelectric effect along nonpolar
+directions in perovskite crystals, such as BaTiO3, PbTiO3, KNbO3,
+PbMg1/3Nb2/3O3PbTiO3 and PbZn1/2Nb2/3O3PbTiO3. Piezoelectric anisotropy is
+discussed in relation to temperature induced phase transitions, compositional
+variation in solid solutions with morphotropic phase boundaries, applied
+electric fields, the domain wall structure and domain wall displacement.
+
+================================================================================
+
+W2794211409
+
+Synthesis and sintering of Mg, Co, Ni, Cu, ZnO entropy-stabilized oxides
+obtained by wet chemical methods. Entropy-stabilized oxides represent a novel
+family of advanced ceramic materials with attractive functional properties. In
+this work, entropy-stabilized oxides, in the system Mg, Co, Ni, Cu, ZnO, were
+produced by co-precipitation and hydrothermal synthesis. Although TG/DTA and XRD
+analyses of as-synthetized powders point out complex thermal evolution, in both
+cases the desired single-phase rock salt solid solution was obtained after a
+proper thermal treatment. The dilatometric analysis points out the excellent
+sinterability of the obtained powders, which were successfully consolidated for
+the first time reaching nearly full density ~97% at relatively low temperature
+1050C.
+
+================================================================================
+
+W2040600453
+
+The interlaminar toughness of carbon-fibre reinforced plastic composites using
+hybrid-toughened matrices. The use of nano-SiO2 particles and rubbery particles
+to give 'hybrid-toughened' epoxy polymers has been analyzed to give a range of
+novel matrices which lead to an increased delamination toughness of the
+resulting CFRP composites by resin-transfer molding RTM and vacuum-assisted
+resin-transfer molding VARTM. The rubbery particles magnificently increase the
+toughness of the material via interactions of the stress field ahead of the
+crack tip compared with the pure epoxy polymer. Both particles are introduced to
+give a multiphase 'hybrid-toughened' polymeric materials. The presence of a
+relatively high concentration of the nano-SiO2 toughening particles does not
+lead to a decrease in the modulus of the composite. These mechanisms will lead
+to further increases in the mechanical performance of 'hybrid-toughened' epoxy
+polymers, containing a complex multiphase structure of nano- and micro-sized
+phase inclusions.
+
+================================================================================
+
+W2047027306
+
+Sensitization evaluation of the austenitic stainless steel AISI 304L, 316L, 321
+and 347. This work presents a systematic investigation of the influence of time
+and temperature in the sensitization of stainless steel AISI 304L, AISI 316L,
+AISI 321 and AISI 347 pipes used in petroleum refining plants. The sensitization
+was assessed by Scanning Electron Microscopy SEM according to ASTM A-262 and by
+the Double Loop Electrochemical Potentiokinetic Reactivation test DLEPR. The
+results showed that all steels did not present sensitization at operating
+temperature 380C in the desulfurizers process, but the temperature of was
+critical to the appearing of sensitization for the both low carbon stainless
+steels and AISI 321 SS, while for the AISI 347 the critical temperature was. The
+stabilized steels confirmed to be more resistant to sensitization than the low
+carbon stainless steels, and niobium showed to be more efficient stabilizing
+agent than titanium.
+
+================================================================================
+
+W2083901730
+
+Thermal and mechanical behaviour of flexible polyurethane foams modified with
+graphite and phosphorous fillers. Flexible polyurethane foams FPF are polymer
+materials that have high flammability. Fyrol PNX FPNX and expandable graphite
+EG, have been used to modify the properties of these materials. The aim of this
+study was to assess the possibility of improving the thermal stability and flame
+retardancy of FPF by the addition of FPNX and EG fillers. The prepared foams
+were characterised by their apparent density, hardness, flexibility,
+irreversible strain and linear flammability, as well as thermogravimetric
+analysis TGA, dynamic mechanical analysis, Fourier transform infrared
+spectroscopy FT-IR and pyrolysis combustion flow calorimetry PCFC measurements.
+The apparent density, hardness, flexibility and irreversible strain results
+showed that the addition of graphite and phosphorous fillers to the FPF makes
+slight changes to the mechanical properties, which remain within the acceptable
+norms. It was also observed that reducing the amount of Fyrol PNX and replacing
+it with the same amount of EG allowed similar values of linear flammability to
+be obtained with a simultaneous increase in thermal stability, as shown in the
+TGA study and the PCFC test. Moreover, it was found that the modification of
+flexible polyurethane foam by the addition of a mixture of FPNX and EG fillers
+allows the best properties of this type of materials to be obtained. This result
+indicates that this type of modification could be an effective way to improve
+the thermal stability of FPF.
+
+================================================================================
+
+W2509889353
+
+Morphing in nature and beyond: a review of natural and synthetic shape-changing
+materials and mechanisms. Shape-changing materials open an entirely new solution
+space for a wide range of disciplines: from architecture that responds to the
+environment and medical devices that unpack inside the body, to passive sensors
+and novel robotic actuators. While synthetic shape-changing materials are still
+in their infancy, studies of biological morphing materials have revealed key
+paradigms and features which underlie efficient natural shape-change. Here, we
+review some of these insights and how they have been, or may be, translated to
+artificial solutions. We focus on soft matter due to its prevalence in nature,
+compatibility with users and potential for novel design. Initially, we review
+examples of natural shape-changing materialsskeletal muscle, tendons and plant
+tissuesand compare with synthetic examples with similar methods of operation.
+Stimuli to motion are outlined in general principle, with examples of their use
+and potential in manufactured systems. Anisotropy is identified as a crucial
+element in directing shape-change to fulfil designed tasks, and some
+manufacturing routes to its achievement are highlighted. We conclude with
+potential directions for future work, including the simultaneous development of
+materials and manufacturing techniques and the hierarchical combination of
+effects at multiple length scales.
+
+================================================================================
+
+W1984477164
+
+Interfacial fracture energy and the toughness of composites. The premises upon
+which prevailing composite toughness theories are based are discussed in the
+light of observed strength variations in boron-epoxy composites with differing
+shear strengths of the interfacial bond. None of the extant toughness theories
+pull-out, debonding, stress redistribution successfully predicts the work of
+fracture of the boronepoxy system. However, incorporation of the work to create
+new surfaces into the total toughness analysis gives better agreement with
+experiment, and work of fracture predictions for other sytems, such as carbon-
+polyester, can also be modified. The approach is more generalized than the
+Outwater/Murphy debonding explanation for toughness, which in the way usually
+presented only applies when the filament fracture strain is greater than the
+matrix fracture strain. The present analysis suggests how to tailor the
+interfacial shear strength in order to obtain a reasonable toughness yet still
+maintain strengths of the order of the rule of mixtures.
+
+================================================================================
+
+W1978942225
+
+A combined synchrotron powder diffraction and vibrational study of the thermal
+treatment of palygorskiteindigo to produce Maya blue. The heating process 30200
+C of a palygorskite-indigo mixture has been monitored in situ and simultaneously
+by synchrotron powder diffraction and Raman spectroscopy. During this process,
+the dye and the clay interact to form Maya blue MB, a pigment highly resistant
+to degradation. It is shown that the formation of a very stable pigment occurs
+in the interval;e., when palygorskite starts to loose zeolitic water, and is
+accompanied by a reduction of the crystallographic a parameter, as well as by
+alterations in the C=C and C=O bonds of indigo. Mid- and near-infrared
+spectroscopic work and microporosity measurements, employed to study the
+rehydration process after the complex formation, provide evidence for the
+inhibition of the rehydration of MB as compared with palygorskite. These results
+are consistent with the blocking of the palygorskite tunnel entrance by indigo
+molecules with a possible partial penetration inside the tunnels. The surface
+silanols of palygorskite are not perturbed by indigo, suggesting that MB is not
+a surface complex.
+
+================================================================================
+
+W2138663726
+
+Actual versus apparent within cell wall variability of nanoindentation results
+from wood cell walls related to cellulose microfibril angle. Hardness and
+elastic modulus of spruce wood cell walls parallel to their axial direction were
+investigated by means of nanoindentation. In the secondary cell wall layer S2 of
+individual earlywood and compression wood tracheids, a systematic pattern
+variability was found. Several factors potentially affecting nanoindentation
+results were investigated,e. specimen orientation related to the indenter tip,
+cutting direction during specimen preparation, tip geometry, specimen and fibre
+inclination, respectively, and finally micro fibril orientation. Mechanical
+property measurements were correlated with structural features measured by
+confocal Raman spectroscopy. It was demonstrated that very high variability in
+the measurement of micromechanical cell wall properties can be caused by
+unintentional small fibre misalignment by few degrees with regard to the
+indentation direction caused by sub-optimal specimen preparation.
+
+================================================================================
+
+W2026020033
+
+High performance Bi2Te3 nanocomposites prepared by single-element-melt-spinning
+spark-plasma sintering. The last decade has witnessed nanocomposites becoming a
+new paradigm in the field of thermoelectric TE research. At its core is to
+prepare high performance TE nanocomposites, both p- and n-type, in a time and
+energy efficient way. To this end, we in this article summarize our recent
+effort and results on both p- and n-type Bi2Te3-based nanocomposites prepared by
+a unique single-element-melt-spinning spark-plasma sintering procedure. The
+results of transport measurements, scanning and transmission electronic
+microscopy, and small angle neutron scattering have proved essential in order to
+establish the correlation between the nanostructures and the TE performance of
+the materials. Interestingly, we find that in situ formed nanocrystals with
+coherent boundaries are the key nanostructures responsible for the significantly
+improved TE performance of p-type Bi2Te3 nanocomposites whereas similar
+nanostructures turn out to be less effective for n-type Bi2Te3 nanocomposites.
+We also discuss the alternative strategies to further improve the TE performance
+of n-type Bi2Te3 materials via nanostructuring processes.
+
+================================================================================
+
