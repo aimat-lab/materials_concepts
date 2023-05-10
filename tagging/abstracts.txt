@@ -1723,23 +1723,27 @@ increased exchange interaction in heavily doped derivatives. Dielectric data
 reveal that occupancy of Cu on Ti leads to a decrease in dielectric losses and
 an increase in the electric permittivity as well.
 
-================================================================================
-
-W2010111326
-
-Thermo-Calc Program Interface and Their Applications - Direct Insertion of
-Thermodynamic and Kinetic Data into Modelling of Materials Processing, Structure
-and Property. Thermodynamic and kinetic data are generally essential for
-quantitative modeling of materials processing, structure, and property. Thermo-
-Calc program interfaces, including TQ, TCAPI, and TC MATLAB Toolbox, provides a
-hierarchy offor application programmers to access thermodynamic and kinetic data
-via the kernel of Thermo-Calc and DICTRA, the most widely used software and
-database system for multi-component phase equilibrium and phase transformation
-calculations. With these program interfaces, variation of thermodynamic and
-kinetic properties can be directly obtained in real time as the local
-temperature, pressure, or composition changes. The structure and usage of the
-Thermo-Calc program interfaces will be introduced in this article. Successful
-application examples will be illustrated.
+§
+paramagnetic doping
+dielectric response
+layered ceramic
+layered polycrystalline
+high temperature solid state reaction
+solid state reaction
+X-ray diffractograms
+X-ray
+diffractograms
+phase evolution
+electron paramagnetic resonance
+paramagnetic resonance
+Cu occupancy
+Ti lattice site
+electric dipole
+electric permittivity
+absorption peak
+EPR spectra
+dielectric loss
+§
 
 ================================================================================
 
@@ -1760,6 +1764,38 @@ inhibition zone width was 0.3, 1.6, 2.0 mm for the films with 0, 3.3, 9.1 at%
 Ag, respectively. The bactericidal mechanisms of the MgO and AgMgO films were
 discussed. The present work would provide a facile method for antibacterial
 surface modification of titanium based osteo-implants.
+
+§
+Ag-enhanced antibacterial property
+antibacterial property
+antibacterial
+MgO film
+sol-gel coating
+titanium
+thermal analysis
+powder
+X-ray diffraction analysis
+X-ray diffraction
+X-ray
+silver nanoparticles
+scanning electron microscopy
+microscopy
+x-ray photoelectron spectroscopy
+photoelectron spectroscopy
+spectroscopy
+potentiodynamic polarization test
+Hanks balanced salt solution
+corrosion resistance
+silver nanoparticles dissolution
+dissolution 
+antibacterial test
+E. Coli
+inhibition zone
+bactericidal mechanism
+surface modification
+titanium-based osteo-implants
+osteo-implants
+§
 
 ================================================================================
 
@@ -1784,6 +1820,31 @@ increasing the thickness of the flange slab and changing the anchorage position
 and prestressed steel layout. Some suggestions are provided for avoiding cracks
 based on the results of the research.
 
+§
+mechanical analysis
+parametric analysis
+crack
+polypropylene fiber concrete
+polypropylene fiber
+concrete
+U-shaped girder
+girder
+rail transit engineering
+rail transit
+prestressed steel tensioning
+steel tensioning
+finite element method
+non-linear material property
+steel
+flange slab thickness
+anchorage position
+prestressed steel layout
+web rigidity
+web longitudinal prestressed steel
+risk of crack
+avoiding crack
+§
+
 ================================================================================
 
 W2368366896
@@ -1798,6 +1859,21 @@ synthesized by low-temperature solution condensation between tetracoordinate
 silicon and adipoyl chloride. The influence of different reaction condition on
 structure and performance of silicon-containing polyester was studied. The
 product was characterized and analyzed by FT-IR, TG, GPC, etc.
+
+§
+silicon-containing polyester
+polyester
+pentacoordinate organic silicon complex
+organic silicon complex
+silica
+ethylene glycol
+potassium hydroxide
+tetracoordinate silicon
+ClCH2CH2OH
+low-temperature solution condensation
+solution condensation
+adipoyl chloride
+§
 
 ================================================================================
 
@@ -1816,6 +1892,17 @@ long time solution annealing at or a two-step solution heat treatment has been
 recommended to delay the incipient melting of the alloy. These treatments
 enhance hot workability of the alloy.
 
+§
+incipient melting
+cast Ni base superalloy
+superalloy
+solution annealing
+hot workability
+local melted region
+two-step solution heat treatment
+heat treatment
+§
+
 ================================================================================
 
 W1764627432
@@ -1833,6 +1920,27 @@ hydrogels were 31.92.6 and 2.80.8kPa, respectively, which was formed using
 2.0wt.% concentration solutions. In addition, fibrous hydrogels
 supportedattachment and proliferation over 12days. This study provides important
 insight in the in vitro processing of silk fibroin into useful new materials.
+
+§
+forming hydrogel
+silk fibroin
+fibrous hydrogel
+hydrogel
+nanofibrous structure
+extracellular matrix
+biomaterial
+silk fibroin solution
+nanofibrils
+gelation process
+nanofiber network morphology
+sheet structure
+compressive stress
+modulus
+attachment and proliferation
+proliferation
+in vitro processing
+in vitro
+§
 
 ================================================================================
 
@@ -1859,6 +1967,27 @@ anatase completed at. TiN was the final product in both systems after heating
 to. These results are discussed in light of recent work demonstrating the
 different reductions paths of rutile and anatase.
 
+§
+Titanium Nitride
+Carbothermic Reduction
+Anatase forms
+Rutile forms
+anastase
+rutile
+Graphite
+Tumbling mill
+Argon atmosphere
+Stainless steel ball
+Alumina crucible
+Nitrogen atmosphere
+Thermogravimetric analyzer
+Srilankite
+Anatase to rutile transformation
+Anatase to rutile
+Reduction
+reduction stages
+§
+
 ================================================================================
 
 W2968633223
@@ -1873,6 +2002,26 @@ slippage. The intrusion of the GDL into the channel was estimated. Indeed, with
 orthotropic behavior of the GDL, the proposed nonlinear orthotropic model
 converges towards the models of the literature as a function of the contact
 pressure level between the bipolar plate and the GDL Gas Diffusion Layers.
+
+§
+Numerical Simulation
+Contact Pressure
+Gas Diffusion Layers
+PEM Fuel Cell
+Fuel Cell
+Two-dimensional Finite Element model
+Finite Element model
+Mechanical behavior
+Fuel cell stack deformation
+stack deformation
+GDL
+bipolar plate
+Elastic deformation
+Fibers slippage
+GDL Intrusion
+Orthotropic behavior
+Nonlinear orthotropic model
+§
 
 ================================================================================
 
@@ -1907,6 +2056,39 @@ to different deformation behaviour of both phases and overaging. In the non-
 reinforced alloy global deformation is the dominant mechanism while in thealso
 local mechanisms are significant.
 
+§
+Residual Stress
+Damage Development
+Aluminium Alloy
+Particle Reinforcement
+Thermal Fatigue Loading
+Thermal Fatigue
+Stir Casting
+Hot Extrusion
+Diode Laser
+Temperature Cycling
+X-ray Diffraction
+X-ray
+Diffraction
+Sin2-method
+Heat Treatment
+Residual Compressive Stress
+Tensile Stress
+Light Optical Microscope
+Scanning Electron Microscope
+Electron Microscope
+Grain Boundary Relief
+Grain Boundary
+Intergranular Damage
+Thermal Mismatch
+Mechanical Mismatch
+Damage Mechanism
+Global Deformation
+Local Deformation
+Coefficient of Thermal Expansion (CTE)
+Overaging
+§
+
 ================================================================================
 
 W2377848425
@@ -1919,6 +2101,16 @@ Combined with , relationship between and number average molecular weight was
 estabilished. The phenolphthalein polycyanoarylether in tetrahydrofuran at 60
 were done to determine Mark Houwink constants. The values of K = 1.64 10 -6 and
 = 0.918 are obtained.
+
+§
+Molecular Weight Determination
+Molecular Weight
+Phenolphthalein Polycyanoarylether
+Butylphenol
+1H NMR Technique
+Tetrahydrofuran
+Mark-Houwink Constant
+§
 
 ================================================================================
 
@@ -1934,6 +2126,25 @@ Comparative analyses were conducted for the Vickers hardness, flexural strength,
 fracture toughness, thermal conductivity, thermal residual stresses, and
 frictional wear. Our results show that the squeeze cast composite exhibits
 superior properties to those obtained using powder metallurgy.
+
+§
+mechanical property
+thermal conductivity
+residual stresses
+wear resistance
+aluminum-alumina composites
+aluminum-alumina
+squeeze casting
+powder metallurgy
+lightweight structural material
+automotive industry
+Vickers hardness
+flexural strength
+fracture toughness
+thermal conductivity
+thermal residual stresses
+frictional wear
+§
 
 ================================================================================
 
@@ -1953,6 +2164,31 @@ results obtained indicate a possibility of fabrication of polymeric
 nanocomposites for optoelectronic applications via a relatively inexpensive
 processing route.
 
+§
+nanofiller dispersion method
+nanofiller dispersion
+nanofiller
+properties evaluation
+polyurethane
+optoelectronic application
+optoelectronic
+nanofiller distribution
+polyurethane matrix
+zirconium oxide
+atomic force microscopy
+microscopy
+force modulation
+HRSEM
+thermal properties
+DSC
+TGA
+polyurethane nanocomposite
+nanocomposite
+transmittance
+luminescence
+polymeric nanocomposites
+§
+
 ================================================================================
 
 W2065960663
@@ -1967,6 +2203,23 @@ be classified into three regions: 1 fiber breakage dominated, 2 interfacial
 cracking, matrix cracking and fiber breakage dominated progressive and 3 matrix
 cracking dominated. The microstructural parametes which affect the low cycle
 fatigue behavior of these composites are also discussed.
+
+§
+fiber-reinforced titanium alloy matrix composite
+fiber reinforcement
+titanium alloy matrix
+low cycle fatigue
+fatigue damage initiation
+fatigue damage propagation
+fatigue damage
+SCS-6 fiber
+fatigue damage diagram
+fiber breakage
+interfacial cracking
+matrix cracking
+progressive damage
+microstructural parameter
+§
 
 ================================================================================
 
@@ -1987,6 +2240,33 @@ precision formation capability of PM generates components with near net shape,
 intricate features and good dimensional precision pieces. The results were good
 at all the stages and this present study reveals the estimation of safe factor
 with respect to working stress and ultimate tensile stress.
+
+§
+safe factor
+sintered aluminium alloy
+extrusion process
+powder metallurgy manufacturing
+powder metallurgy
+industrial application
+low density
+corrosion resistance
+passivation
+aerospace industry
+transportation
+structural material
+aluminium oxide
+aluminium sulfate
+powder mix
+compaction
+controlled atmosphere furnace
+atmosphere furnace
+bonding particles
+tensile specimen
+net shape
+intricate features
+working stress
+tensile stress
+§
 
 ================================================================================
 
@@ -2011,6 +2291,22 @@ fatigue life time parameters are derived from a single fatigue crack growth
 experiment instead from normally required sets of fatigue tests for different
 loading conditions.
 
+§
+fracture mechanic
+fatigue lifetime prediction
+fatigue crack growth test
+fatigue
+crack growth
+analytic fracture mechanic
+mechanical load redistribution
+micro-structural bond
+fatigue crack growth
+microstructural load redistribution model
+load redistribution model
+fatigue endurance
+SN curve parameter
+§
+
 ================================================================================
 
 W2146401910
@@ -2034,6 +2330,27 @@ towards design inputs to obtain better performances. A novel investigation of
 the effects upon vibration response of even slight inaccuracies of cutting out
 samples from larger blanks of such materials has also been made.
 
+§
+vibro-acoustic characterization
+vibro-acoustic optimization
+periodic cellular material structure
+cellular material structure
+NVH application
+noise
+vibration
+harshness
+automobile purchaser
+multi-functional structure
+sandwich form
+vibration response
+acoustic response
+vibration behavior
+acoustic behavior
+numerical approach
+noise transmission minimization
+vibration transmission minimization
+§
+
 ================================================================================
 
 W2024683261
@@ -2053,6 +2370,26 @@ contrary, the oxygen-terminated NiO111 p22 polar surface exhibits important
 reconstruction effects and changes of the electronic structure, that provide
 additional stabilization of this polar surface.
 
+§
+electronic property
+structural property
+NiO surface
+reconstruction effect
+wave method
+Car-Parrinello molecular dynamic
+molecular dynamic
+Car-Parrinello
+atomic geometry
+electronic ground state
+correlation effect
+meanfield multi-orbital Hubbard correction
+Hubbard correction
+local spin density Hamiltonian
+spin density
+local-density approximation
+Hubbard interaction
+§
+
 ================================================================================
 
 W2373566506
@@ -2071,6 +2408,27 @@ magnetite particles possess super-paramagnetic behavior.However,the SEM
 micrograph shows that the size and the distribution of the magnetic particles
 inside the lumen for the in situ synthesis papers are much better than that of
 the lumen loading papers.
+
+§ 
+FeO magnetic fiber
+lumen loading
+situ synthesis
+magnetic powder
+pulp powder
+nanosized magnetic particles
+pulp fibres
+chemical coprecipitation process
+chemical coprecipitation
+magnetic paper
+scanning electron microscope
+X-ray diffraction
+vibrating sample magnetometer
+magnetometer
+magnetic property
+super-paramagnetic behavior
+particle size
+particle distribution
+§
 
 ================================================================================
 
@@ -2096,6 +2454,31 @@ applications is an important research area. To obtain a good one implant
 successful therapy the composition, size, form and topography of the alloys are
 extremely important.
 
+§
+HDH Titanium Powder
+Titanium Powder
+Biomaterial Application
+surgical implant
+stainless steel
+cobalt-chromium-molybdenum alloy
+cobalt-chromium-molybdenum
+implant performance
+tissue restoration
+orthopedic prosthesis
+titanium alloys
+non-toxic element
+low modulus of elasticity
+powder metallurgy technique
+controlled porous structure
+porous structure
+porous coating
+dental surgical implants 
+orthopedic surgical implants
+bone tissue growth
+bone tissue
+porous metallic biomaterials
+§
+
 ================================================================================
 
 W2737887370
@@ -2116,6 +2499,30 @@ any co-catalysts or sacrificial reagents, and the photostability can be assured
 after long term illumination. In view of its simplicity and efficiency, this
 structure promises for perspective PEC applications.
 
+§
+Three-dimensional Interconnected Nanoporous NTiO2
+Interconnected Nanoporous NTiO2
+NTiO2
+Photoelectrochemical Water Splitting
+Water Splitting
+Photoelectrochemical
+High Specific Surface Area
+Porous Properties
+N-doped TiO2
+Annealing in Ammonia Atmosphere
+Ammonia Atmosphere
+Light Absorption
+Charge Separation
+Charge Transfer Resistance
+High Photocurrent Density
+Photocurrent Density
+Reversible Hydrogen Electrode
+Hydrogen Electrode
+Photostability
+Long-term Illumination
+Illumination
+§
+
 ================================================================================
 
 W2949199832
@@ -2128,6 +2535,22 @@ formation of front contact on silicon solar cells. Front contact were screen-
 printed using commercial silver paste containing the CuXX additive prepared at
 laboratory. It is the world's first copper based paste appropriate for high-
 temperature production processes of front contact of the solar cell.
+
+§
+Al2O3-Y2O3-Nb2O5 Oxide Mixture
+Oxide Mixture
+Fill Factor
+Solar Cell
+Cu-based Additive
+additive pase
+Paste
+Front Contact Formation
+Silicon Solar Cells
+Screen-printing
+Silver Paste
+Copper-based Paste
+Solar Cell Front Contact
+§
 
 ================================================================================
 
