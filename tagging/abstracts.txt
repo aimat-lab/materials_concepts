@@ -20,20 +20,21 @@ transformation are deduced and presented on the basis of this analysis.
 §
 titanium dioxide
 photocatalytic material
+photocatalytic
 anatase
 rutile
 polymorphs
 photocatalytic performance
 phase transformation
 anatase to rutile phase transformation
-thermodynamics of phase transformation
-synthesis and properties
-dopants
+thermodynamic of phase transformation
+synthesis and property
+dopant
 cationic radius
 valence
-inhibitors
-promoters
-dopant elements
+inhibitor
+promoter
+dopant element
 §
 
 ================================================================================
@@ -56,15 +57,16 @@ events.
 
 §
 liquid phase sintering
-multi-phase components
+sintering
+multi-phase component
 multi-phase formation
-powders
-solid grains
+powder
+solid grain
 wetting liquid
-metal cutting inserts
-engine connecting rods
+metal cutting insert
+engine connecting rod
 mixed powder heating
-computer simulations
+computer simulation
 densification and microstructure evolution
 densification 
 microstructure
@@ -95,17 +97,25 @@ with a view that it would give further impetus to the researchers already
 working in this area and also draw the attention of the others.
 
 §
-lead-free piezoelectric materials
+lead-free piezoelectric material
 lead zirconate titanate
-piezoelectric properties
-perovskite systems
+lead
+zirconate
+titanate
+piezoelectric property
+piezoelectric
+perovskite system
+perovskite
 bismuth sodium titanate
-alkali niobates
-non-perovskites
-bismuth layer-structured ferroelectrics
-piezoelectric materials
+bismuth
+sodium 
+alkali niobate
+non-perovskite
+bismuth layer-structured ferroelectric
+ferroelectric
+piezoelectric material
 toxicity of lead
-lead free materials
+lead free material
 structure-property correlation
 §
 
@@ -127,21 +137,29 @@ crazing as an important toughening mechanism is found. No significant effect of
 rubber particle size or type can be ascertained.
 
 §
-toughening mechanisms
-elastomer-modified epoxies
-brittle epoxies
+toughening mechanism
+elastomer-modified epoxy
+brittle epoxy
 elastomeric phase
 tensile dilatometry
-constant displacement rates
-deformation mechanisms
+dilatometry
+displacement rate
+deformation mechanism
 Diglycidyl ether-bisphenol A
+ether
+bisphenol
 carboxyl-terminated butadiene nitrile liquid rubber
 carboxyl-terminated butadiene nitrile
-liquid rubber
+carboxyl
 butadiene nitrile liquid rubber
-strain rates
-rubber particles
+butadiene
+nitrile
+liquid rubber
+strain rate
+rubber particle
+rubber
 shear deformation
+deformation
 cavitation
 §
 
@@ -170,26 +188,31 @@ fracture event.
 
 §
 microcapsule induced toughening
+microcapsule
 self-healing polymer composite
+self-healing
+polymer composite
+polymer
 grubbs ru catalyst
 epoxy matrix
-self-healing
 fracture toughness
-healing efficiency
 tapered double-cantilever beam specimen
-microcapsules
+beam specimen
+microcapsule
 brittle neat epoxy
+epoxy
 mirror fracture surface
-DCPD-filled urea-formaldehyde microcapsules
+urea-formaldehyde microcapsules
+urea-formaldehyde
 hackle markings
-silica microspheres
-fluid-filled microcapsules
+silica microsphere
+fluid-filled microcapsule
 solid urea-formaldehyde polymer particles
 urea-formaldehyde polymer
-polymer particles
+polymer particle
 subsurface microcracking
 virgin fracture toughness
-embedded microcapsules
+embedded microcapsule
 §
 
 ================================================================================
@@ -209,25 +232,28 @@ studies revealed an extremely good orientation of the macromolecules in the
 fibre direction of the highly drawn polyethylene monofilaments.
 
 §
-high-strength polyethylene filaments
-high-strength polyethylene
-high-strength monofilaments
-polyethylene filaments
+polyethylene filament
+polyethylene
+monofilament
+filament
 solution spinning
 solution drawing
 hot drawing
 draw ratio
-mechanical properties
-thermal properties
+mechanical property
+thermal property
 tensile strength
+tensility
 Young's modulus
 DSC-melting point
+melting point
 scan speed
-morphological studies
-X-ray studies
+morphological study
+X-ray study
+X-ray
 macromolecule orientation
 fibre direction
-polyethylene monofilaments
+polyethylene monofilament
 §
 
 ================================================================================
@@ -250,24 +276,31 @@ studied previously. Scanning electron microscopy and optical microscopy
 techniques corroborate this finding.
 
 §
-toughening mechanisms
-elastomer-modified epoxies
+toughening mechanism
+elastomer-modified epoxy
+elastomer
 matrix ductility
+ductility
 diglycidyl ether of bisphenol A
+ether
+bisphenol
 monomer molecular weight
-epoxide resins
+monomer
+epoxide resin
+resin
 diaminodiphenyl sulphone
 carboxyl-terminated copolymer of butadiene and acrylonitrile
 copolymer of butadiene and acrylonitrile
 butadiene
 acrylonitrile
 fracture toughness
-neat epoxies
+neat epoxy
 tensile dilatometry
-piperidine cured epoxies
+piperidine cured epoxy
 piperidine cured
 scanning electron microscopy
 optical microscopy
+microscopy
 §
 
 ================================================================================
@@ -294,23 +327,26 @@ epoxies containing small and large particles are also examined and no
 synergistic effects are observed.
 
 §
-influence of particle size
 particle size distribution
-toughening mechanisms
-rubber-modified epoxies
+particle size
+toughening mechanism
+rubber-modified epoxy
+rubber
 internal cavitation
-rubber particles
-shear bands
+cavitation
+rubber particle
+shear band
 toughness enhancement
 crack deflection
 particle bridging
 particle size dependence
 fracture toughness
 cavitation-induced shear banding
-critical minimum diameter
-bridging particles
+shear banding
+bridging particle
 neat epoxy
-bimodal epoxy mixtures
+bimodal epoxy mixture
+epoxy
 §
 
 ================================================================================
@@ -326,15 +362,17 @@ interfacial characteristics. The mechanical properties of the magnesium matrix
 composites are also reported.
 
 §
-magnesium matrix composites
-magnesium matrix composite technologies
-conventional fabrication processes
-new fabrication processes
+magnesium matrix composite technology
+magnesium matrix composite
+matrix composite
+conventional fabrication process
+new fabrication process
+fabrication process
 composite microstructure
 grain refinement
 reinforcement distribution
-interfacial characteristics
-mechanical properties
+interfacial characteristic
+mechanical property
 §
 
 ================================================================================
@@ -350,15 +388,20 @@ for any dependence of yielding on the hydrostatic component of the applied
 stress state.
 
 §
+macroscopic yield behaviour of polymer
 macroscopic yield behaviour
-macroscopic yield behaviour of polymers
 polymer yield behaviour
+yield behavior
 yield criterion
 pressure-modified octahedral shear stress criterion
-octahedral shear stress criterion
+octahedral
+shear stress criterion
 von Mises criterion
+von Mises
 tensile yield strength
+tensility
 compressive yield strength
+compression
 hydrostatic component
 applied stress state
 §
@@ -386,28 +429,32 @@ Previous attempts to commercialise glass-ceramics from waste and to scale-up
 production for industrial exploitation are also discussed.
 
 §
-glass-ceramics
-production from wastes
-polycrystalline materials
+glass-ceramic
+production from waste
+polycrystalline material
 microstructure
 controlled crystallisation
 crystallisation
 devitrification
-silicate-based wastes
+silicate-based waste
+silcate
 coal combustion ash
+coal combustion
+ash
 steel production slag
+slag
 fly ash
-waste incinerator filter dusts
+waste incinerator filter dust
+dust
 metal hydrometallurgy mud
+mud
 sludge
 glass cullet
-processing methods
-R&D work
 silcate waste
-building materials
-construction components
-architectural components
-thermo-mechanical properties
+building material
+construction component
+architectural component
+thermo-mechanical property
 commercialization
 industrial exploitation
 §
@@ -437,26 +484,29 @@ range of potential applications are discussed, concluding with a discussion of
 the scope for future developments in the field.
 
 §
-ceramic matrix composites
+ceramic matrix composite
+ceramic
 carbon nanotubes
-physical properties
-mechanical properties
-reinforcements
-structural composites reinforcements
-structural composites
-electrical properties
-thermal properties
-multifunctional applications
-inorganic matrix composites
-toughening elements
+physical property
+mechanical property
+reinforcement
+structural composite reinforcement
+structural composite
+electrical property
+thermal property
+multifunctional application
+inorganic matrix composite
+toughening element
 intrinsic brittleness
-CNT/polymer matrix composites
-CNT/polymer
+CNT polymer matrix composites
+CNT polymer
+polymer
+polymer matrix composites
 CNT-loaded ceramic matrix composite
-brittle matrices
+brittle matrix
 dispersion quality
 density
-composite properties
+composite property
 toughness
 toughening mechanism
 §
@@ -488,24 +538,25 @@ range of materials that have been joined by PTLP bonding is presented.
 liquid phase bonding
 transient liquid phase bonding
 partial transient liquid phase bonding
+bonding
 material joining
 interlayer
 melting
 isothermal solidification
-higher melting point
+melting point
 bonding temperature
-Ni-based superalloys
-process kinetics
+Ni-based superalloy
+process kinetic
 bonding time
 interlayer thickness
 interlayer format
 optimal bonding temperature
-multiple layers
-multiple layers interlayer
+multiple layer
+multiple layer interlayer
 ceramics
 refractory core
-lower-melting layers
-bonding kinetics
+lower-melting layer
+bonding kinetic
 §
 
 ================================================================================
@@ -541,32 +592,34 @@ the toughness of the epoxy bulk polymers, did indeed exist.
 
 §
 toughness
-epoxy polymers
-fibre composites
-rubber microparticles
-silica nanoparticles
+epoxy polymer
+fibre composite
+rubber microparticle
+silica nanoparticle
 anhydride-cured epoxy polymer
-carbon-fibre reinforced composites
-carbon-fibre composites
-glass-fibre reinforced composites
-glass-fibre composites
-hybrid epoxy polymers
-carboxyl-terminated butadiene-acrylonitrile
+carbon-fibre reinforced composite
+carbon-fibre composite
+glass-fibre reinforced composite
+glass-fibre composite
+hybrid epoxy polymer
+carboxyl-terminated 
+carboxyl
+butadiene-acrylonitrile
 butadiene
 acrylonitrile
-toughening mechanisms
+toughening mechanism
 fracture energy
 bulk epoxy polymer
-plastic shear-yield bands
+plastic shear-yield band
 debonding
-matrix
 plastic void-growth
 hybrid materials
-interlaminar fracture energies
+interlaminar fracture energy
 fibre-bridging toughening mechanism
 thermoset polymer
 nano-effect
-micrometre-sized glass particles
+micrometre-sized glass particle
+glass particle
 §
 
 ================================================================================
@@ -590,13 +643,14 @@ of what is known about grain boundary energy anisotropy.
 grain boundary energy anisotropy
 grain boundary energy
 energy anisotropy
+anisotropy
 Herring equation
-measurements
-nucleating discontinuous transitions
-discontinuous transitions
-nucleating transtitions
+nucleating discontinuous transition
+discontinuous transition
+nucleating transtition
+nucleation
 grain boundary structure
-complexion transitions
+complexion transition
 §
 
 ================================================================================
@@ -629,24 +683,26 @@ are also discussed. Finally, the future aspects and challenges on the carbon-
 based materials as supercapacitor electrodes are proposed.
 
 §
-carbon-based materials
-supercapacitor electrodes
+carbon-based material
+supercapacitor electrode
+supercapacitor
 energy consumption
 energy storage
-supercapacitors
 micro-size
 lightweight
 high power density
 long cycle life
-electrode materials
-mechanisms of supercapacitors
-dimensional carbon-based materials
-biomass-derived carbon materials
-fabrication methods
-supercapacitor devices
+electrode material
+dimensional carbon-based material
+biomass-derived carbon material
+biomass
+carbon material
+fabrication method
+supercapacitor device
 conventional supercapacitor
 charge storage mechanism
-hybrid ion capacitors
+hybrid ion capacitor
+capacitor
 §
 
 ================================================================================
@@ -667,14 +723,15 @@ uniformity are presented.
 preparation
 characterization
 alumina membranes
-ultra-fine pores
+ultra-fine pore
+pore
 alumina films
 boehmite sol
 gelation
 drying
 calcination
 pore size distribution
-crack-free layers
+crack-free layer
 microstructure
 sintering temperature
 acid concentration
@@ -698,15 +755,15 @@ in such systems, calcium orthophosphates might play either role, innovative bone
 graft biomaterials can be designed. The review starts with an
 
 §
-calcium orthophosphate-based biocomposites
-calcium biocomposites
-hybrid biomaterials
-biomedical applications
+calcium orthophosphate-based biocomposite
+calcium biocomposite
+hybrid biomaterial
+biomedical application
 hard tissue regeneration
-matrix materials
-fillers
-calcium orthophosphates
-bone graft biomaterials
+matrix material
+filler
+calcium orthophosphate
+bone graft biomaterial
 §
 
 ================================================================================
@@ -735,22 +792,22 @@ effects of strain amplitude and driving frequency on viscoelastic properties
 ofwere analyzed.
 
 §
-magnetorheological elastomers
+magnetorheological elastomer
 natural rubber
-mechanical properties
-electrical properties
-magnetic properties
-applied magnetic fields
+mechanical property
+electrical property
+magnetic property
+applied magnetic field
 smart material
 matrix type
 external magnetic flux density
 magnetic flux density
 plasticizer
-iron particles
+iron particle
 shear modulus
 field-induced increment
 dynamic mechanical analyzer
-viscoelastic properties
+viscoelastic property
 strain amplitude
 driving frequency
 §
@@ -770,6 +827,25 @@ dynamic excitation and the surface structural intensity vector field of the
 structure is determined. The position and shape of the crack are identified by
 the structural intensity maps, which provide a theoretical basis for the damage
 identification of cracked structures with a breathing crack.
+
+§
+nonlinear dynamical analysis
+breathing crack
+plate structures
+vibrations
+open and closing movement
+nonlinear dynamic response
+contact nonlinearity
+nonlinear vibration
+structural intensity
+dynamic excitation
+surface structural intensity vector field
+crack position
+crack shape
+structural intensity maps
+damage identification
+cracked structures
+§
 
 ================================================================================
 
@@ -799,6 +875,45 @@ the above mentioned eco-friendly composites that can ease ways for using
 industrial wastes as new construction materials, with excellent inherent thermal
 and acoustic properties.
 
+§
+eco-friendly gypsum materials
+eco-friendly composites
+gypsum materials
+civil construction
+sustainable economic growth
+alternative products
+architecture
+construction
+green materials
+composite materials
+waste material
+granulated cork
+cork
+cellulose fibers
+composite boards
+non-structural elements
+dry walls
+ceilings
+cork bark
+construction industry
+reduced density
+density
+elasticity
+compressibility
+waterproof
+vibration absorption
+thermal insulation
+acoustic insulation
+gypsum binder
+mineral additions
+physical properties
+mechanical properties
+reinforced composites
+industrial by-products
+thermal properties
+acoustic properties
+§
+
 ================================================================================
 
 W2008608161
@@ -813,6 +928,32 @@ assumed. Strain and stress are tensile in both the transverse and rolling
 directions and very small in the normal direction through the thickness of the
 plate. Shear strain and stress components are compressive and of significant
 magnitude.
+
+§
+strain tensors
+stress tensors
+rolled uranium plate
+uranium plate
+uranium
+Rietveld refinement
+neutron-diffraction data
+macroscopic average strain
+macroscopic average stress
+least-squares refinement
+interplanar spacings
+Bragg reflections
+pole figures
+triclinic sample symmetry
+tensile strain
+tensile stress
+transverse direction
+rolling direction
+normal direction
+plate thickness
+shear strain
+shear stress component
+compressive
+§
 
 ================================================================================
 
@@ -835,6 +976,35 @@ adsorption rate, and increased the maximum amount of adsorbed Pb2+ ions per mass
 in comparison with adsorption on the non-magnetic TiO2 particles. The
 magnetically modified TiO2 particles allow magnetic separation of the sorbents
 with already adsorbed ions of pollutants.
+
+§
+TiO2-based sorbent
+lead ions
+lead ions sorbent
+non-magnetic powder
+magnetically modified powder
+magnetic powder
+sorption experiments
+magnetically responsive
+scanning electron microscopy
+X-ray diffraction
+particle size
+surface area
+batch adsorption experiments
+flame atomic absorption spectrometer
+absorption spectrometer
+Langmuir isotherm
+Freundlich isotherm
+linear regression
+non-linear regression
+magnetic iron oxide particles
+adsorption rate
+maximum adsorbed Pb2+ ions
+magnetic separation
+sorbents
+adsorbed ions
+pollutants
+§
 
 ================================================================================
 
@@ -860,6 +1030,28 @@ temperature, stain rate and initial austenite grain size. The method showed that
 it was possible to predict the flow stress between 50 and 2000s1 where
 mechanical testings results were absent.
 
+§
+high temperature flow stress model
+flow stress model
+flow stress
+AerMet 100
+strain rate
+Hopkinson Pressure Bar compression tests
+Hopkinson Pressure
+martensitic steel
+predictive flow stress model
+austenite grain size
+Hall-Petch relationship
+heat treatment
+microstructural evolution
+friction
+adiabatic heating
+work hardening exponent
+Zener-Hollomon equation
+artificial neural network
+prediction
+§
+
 ================================================================================
 
 W2361236360
@@ -879,6 +1071,23 @@ quantity of eutectic carbide in organization.On the basis of them,the heat-
 treating technology which can improve significantly the impact abrasive
 resistance of forging medium-chrome alloy white cast iron were put forward.
 
+§
+microstructure
+properties
+forged medium-chrome alloy white cast iron
+forged alloy 
+white cast iron
+forging method
+heat treatment
+impact toughness
+chromium alloy
+carbon content
+hot plasticity
+forgeability
+eutectic carbide
+impact abrasive resistance
+§
+
 ================================================================================
 
 W2361620319
@@ -894,6 +1103,24 @@ reaches 200 N.At400 ,the cast steel posseses much lower wear rate than those of
 H13 and H21 steels.It can be suggested that the the cast steel presents markedly
 higher elevated-temperature wear resistance than the conventional hot-forging
 die steels.
+
+§
+wear resistance
+wear mechanism
+hot-forging die steels
+hot-forging
+die steel
+cast steel
+H13 steel
+H21 steel
+pin-on-disk high-temperature wear tester
+pin-on-disk
+wear tester
+unsolved carbide
+carbide
+elevated-temperature wear resistance
+wear resistance
+§
 
 ================================================================================
 
@@ -912,6 +1139,26 @@ thermoforming process. Due to the integration of the moth-eye structures into
 the PDMS stamp, the optical performance of the replicated microlenses can be
 improved and no additional processing steps are necessary after the replication
 process.
+
+§
+moth-eye structures
+moth-eye 
+polydimethylsiloxane stamp
+replication
+functionalized microlense
+microlense
+ultraviolett-nanoimprint lithography
+ultraviolett lithography 
+nanoimprint lithography
+lithiography
+camera modules
+elastomer stamp
+microlens array
+antireflective layer
+thermoforming process
+optical performance
+integration
+§
 
 ================================================================================
 
@@ -937,6 +1184,27 @@ foamed concrete compared to the control mix. Furthermore, the addition of WA and
 SF significantly prolonged the setting times of the blended cement paste of the
 foamed concrete.
 
+§
+compressive strength
+micro-structural features
+foamed concrete
+concrete
+wood ash
+ash
+silica fume
+fume
+cement replacement
+cement
+supplementary binder materials
+concrete production industry
+concrete production
+microstructure
+cement paste matrix
+densification
+setting time
+blended cement paste
+§
+
 ================================================================================
 
 W3000458735
@@ -955,6 +1223,26 @@ HAp/WPC samples were 59.01 and 28.06 MPa, respectively. It is due to continued
 hydration of WPC. The addition of HAp to WPC decreased the compressive strength
 of the sample. Alternatively, it enhanced bone-like apatite formation on the
 surface of the samples.
+
+§
+strength
+bioactivity
+hydroxyapatite
+white Portland cement
+cured cement
+portland cement
+simulated body fluid
+body fluid
+compressive strength
+bone-like apatite formation
+apatite formation
+curing periods
+in vitro testing
+in vitro environment
+in vitro
+hydration
+surface formation
+§
 
 ================================================================================
 
@@ -976,6 +1264,28 @@ propagation. This is attributed to the grain boundary -phase precipitations,
 which were found to be coarser as compared to the -phase precipitations in the
 grain interiors, leading to easier damage accumulation and microcrack formation
 in their vicinity.
+
+§
+creep crack growth
+316N stainless steel
+stainless steel
+steel weld
+delta-ferrite
+structural integrity
+welded components
+micromechanical characterization
+compact tension specimen
+compact tensionge
+creep crack growth rate
+SEM/EBSD analysis
+inter-granular nature
+creep crack propagation
+grain boundary-phase precipitations
+grain boundary-phase
+precipitations
+damage accumulation
+microcrack formation
+§
 
 ================================================================================
 
@@ -999,6 +1309,31 @@ applications is built-up for vibration analysis. Recursive eigenvalue search
 algorithm is used to determine the system frequencies. Numerical examples are
 performed to validate with those published in the open literature.
 
+§
+Free Vibration Modeling
+Reinforced Thermoplastic Pipe
+Thermoplastic Pipe
+offshore and inshore industry application
+offshore application
+inshore application
+marine riser
+cross-country pipeline
+pipeline
+elastic medium
+slender flexible structure
+dynamic modeling
+vibration characteristic
+Transfer Matrix Method for Multibody Systems
+multibody system
+transfer matrix 
+transfer matrix method
+Euler-Bernoulli linear theory
+linear theory
+recursive eigenvalue search algorithm
+eigenvalue algorithm
+system frequency
+§
+
 ================================================================================
 
 W2793657156
@@ -1020,6 +1355,31 @@ strength YS was increased from 145MPa to 210MPa in the FSPed specimens. However,
 tensile elongation was restricted in the FSP processed specimens which may be
 due to limitation of TRIP phenomenon.
 
+§
+microstructure evolution
+mechanical properties
+TRIP steel
+friction stir processing
+transverse welding speed
+microstructural analysis
+scanning electron microscope
+electron backscattered diffraction
+diffraction
+grain refinement
+stir zone
+deformation induced martensite
+deformation
+martensite
+dynamic recrystallization
+recrystallization
+tensile deformation test
+deformation test
+yield strength
+tensile elongation
+elongation
+TRIP phenomenon
+§
+
 ================================================================================
 
 W3110931256
@@ -1037,6 +1397,32 @@ Interestingly, additional transitions, excitonic in nature, are identified at
 All these findings demonstrate the ability of monochromated low-loss electron
 energy loss spectroscopy to reveal unprecedented electronic and excitonic
 transitions in very narrow bandgap semiconductors.
+
+§
+electronic property
+black phosphorus
+monochromated low-loss electron energy loss spectroscopy
+monochromated spectroscopy
+electron energy loss spectroscopy
+spectroscopy
+scanning transmission electron microscope
+transmission electron microscope
+electron microscope
+ab-initio calculation
+bandgap
+exciton energy
+infrared region
+electron beam
+spectrometer
+energy resolution
+narrow bandgap energy
+bandgap energy
+intraband electronic transition
+electronic transition
+excitonic transition
+narrow bandgap semiconductor
+semiconductor
+§
 
 ================================================================================
 
@@ -1059,6 +1445,40 @@ good electrical conductivity and exhibit significant potential as conductive
 additives that improve the specific capacity and cyclic stability of Li-ion
 batteries better than commercial carbon-based conductive particles.
 
+§
+self-grinding exfoliation
+self-grinding
+exfoliation
+small graphene nanosheets
+graphene
+nanosheets
+microcrystalline graphite
+graphite
+microbead milling
+microbead
+milling
+conductive additive
+mass exfoliation
+graphene yield
+commercial application
+mutual shear friction
+shear friction
+graphite particle
+graphite nanocrystal
+high-concentration paste
+graphite graphene conversion
+conversion
+pristine graphite
+electrical conductivity
+Li-ion battery
+lithium battery
+battery
+capacity improvement
+cyclic stability
+carbon-based conductive particle
+conductive particle
+§
+
 ================================================================================
 
 W1993131996
@@ -1071,6 +1491,20 @@ dependent leading to the conclusion that Ni atoms are located mainly in the bulk
 planes adjacent to the grain boundary. From interphase boundary diffusion
 measurements in 110 oriented Ag/Ni interphase boundaries it can be deduced that
 the structure of this interphase boundary is incoherent.
+
+§
+Radiotracer diffusion
+radiotracer
+diffusion
+grain boundary
+interphase boundary
+radiotracer serial sectioning technique
+serial sectioning technique
+serial sectioning
+Ni segregation
+bulk planes
+diffusion measurement
+§
 
 ================================================================================
 
@@ -1088,6 +1522,23 @@ the experimentally measured crack density in The approach using the unit cell
 model was applied to two kinds of and good agreement was obtained between the
 experimental and the calculated results.
 
+§
+Prediction
+stress-strain behavior
+stress-strain
+ceramic matrix composites
+ceramic
+matrix composites
+unit cell model
+unit cell
+fiber bundle
+elastic modulus
+finite element analysis
+stress-strain curve
+degradation
+crack density
+§
+
 ================================================================================
 
 W2135225752
@@ -1104,6 +1555,31 @@ obtained indicate that the calcium oxide enters the glass network as a modifier
 by occupying the interstitial spaces in the network and by increasing the
 nonbridging oxygen atoms 2006 WILEY-VCHVerlag GmbH & Co. KGaA, Weinheim
 
+§
+Structural investigation
+acoustic investigation
+calcium borate glasses
+calcium borate
+ambient temperature
+ultrasonic velocity
+ultrasound
+attenuation
+pulse echo overlap method
+pulse echo
+elastic moduli
+Debye temperature
+Poisson ratio
+acoustic 
+Fourier transform infrared spectroscopic analysis
+Fourier transform
+infrared spectroscopic analysis
+spectroscopic analysis
+glass network
+interstitial space
+non-bridging oxygen atom
+oxygen atom
+§
+
 ================================================================================
 
 W2508726230
@@ -1115,6 +1591,20 @@ thermally-conductive inclusion. It also presents an experimental setup based on
 REOCAMTCM-1000 climate chamber, as well as the obtained results of the
 temperature distribution on the surface of a light building envelope under the
 influence of a cylindrical thermally-conductive inclusion.
+
+§
+Cylindrical Thermally-Conductive Inclusion
+Cylindrical Inclusion
+Thermally-Conductive Inclusion
+Heat Flow
+Light Building Envelope
+light building
+Envelope
+mathematical model
+temperature field distribution
+climate chamber
+temperature distribution
+§
 
 ================================================================================
 
@@ -1139,6 +1629,27 @@ wavelength acoustic modes, and ultrasonic nonlinear parameters are also
 investigated. The predications on the anharmonic properties first given in the
 present work are hoped to serve as a valuable guidance or reference for further
 related investigations.
+
+§
+Non-linear Elastic Response
+Elastic Response
+Anharmonic Properties
+MgO Single Crystal
+single crystal
+Earths Mantle
+seismology
+Mineralogical Mode
+Earths Interior
+Elastic Constant
+Computational Approach
+First-order Pressure Derivatives
+Pressure Derivatives
+Gruneisen Constant
+Long-wavelength Acoustic Mode
+long-wavelength
+acoustic mode
+ultrasound
+§
 
 ================================================================================
 
@@ -1166,23 +1677,36 @@ the rate of FeO reduction in the fast initial reduction stage is controlled by
 the rate of the carbon dissolution/transfer into the metal phase. However, at
 the second slow FeO reduction stage, it is reduced mainly by the solid carbon.
 
-================================================================================
-
-W1988857063
-
-Research on Networked Integrated Manufacturing Based on Heterogeneous Numerical
-Control Systems. Based on heterogeneous numerical control systems in the
-workshop layer, architecture of networked communication is established to meet
-the requirement of networked manufacturing. It realizes the integration and
-information interaction between shop floor equipment and upper layer application
-systems by integrating the information of the equipment layer with the workshop
-application layer. Networked communication mechanism of the architecture was
-constructed. Furthermore, information integration,e., integration of applied
-equipment, integration within enterprise based on Common Object Request Broker
-Architecture CORBA, and integration between enterprises based on web Services,
-is also discussed in detail. Experiment demonstrates that the proposed system
-helps the information integration both within and between enterprises in the
-networked manufacturing system.
+§
+Simultaneous Carbothermic Reduction
+Carbothermic Reduction
+High-Carbon Ferromanganese Slag
+Ferromanganese Slag
+slag
+Sessile Drop Wettability Technique
+Sessile Drop
+Wettability
+Graphite
+Coke
+Charcoal
+Carbon Material Substrate
+Reduction Rate
+Reduction
+Chemical Compositions
+Reduced Slag
+Produced Metal
+Carbon Dissolution
+Carbon Transfer
+Metal Phase
+Thermodynamic Calculation
+Reduction Mechanism
+Metallothermic Reduction
+Fast Initial Reduction Stage
+Initial Reduction Stage
+Slow Reduction Stage
+Solid Carbon
+carbon
+§
 
 ================================================================================
 
