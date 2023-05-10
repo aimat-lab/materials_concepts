@@ -164,16 +164,21 @@ def prepare_df(df):
     return df
 
 
-def main(csv_file, folder, n_jobs):
+def main(csv_file, folder, n_jobs, min_len):
     input_file = os.path.join(folder, csv_file)
     topic = csv_file.split(".")[0]
     output_file = os.path.join(folder, f"{topic}.cleaned.works.csv")
 
     df = pd.read_csv(input_file)
 
+    df.abstract = df.display_name.str.cat(
+        df.abstract, sep=". "
+    )  # add title to abstract
+
     df = apply_in_parallel(df, prepare_df, n_jobs=n_jobs)
 
-    df = df[df.abstract != ""]  # some abstracts are empty after cleaning
+    df = df[df.abstract.str.len() > min_len]  # some abstracts are empty after cleaning
+    # TODO: Ask Pascal whether we should also remove abstracts <= some max length
 
     df.to_csv(output_file, index=False)
 
@@ -198,5 +203,12 @@ if __name__ == "__main__":
         default=8,
     )
 
+    parser.add_argument(
+        "--minlen",
+        help="Minimum length of abstracts. Defaults to 250.",
+        default=250,
+        type=int,
+    )
+
     args = parser.parse_args()
-    main(args.works_file, args.folder, n_jobs=args.njobs)
+    main(args.works_file, args.folder, n_jobs=args.njobs, min_len=args.minlen)

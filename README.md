@@ -72,21 +72,33 @@ e.g.:
 - [x] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
 - [x] Abstract cleaning: Clean chemical elements
 - [ ] Invert filenames: ...cleaned.works.csv -> ...works.cleaned.csv
-- [ ] Add title to abstract (before cleaning)
+- [x] Add title to abstract (before cleaning)
 - [ ] Generate cleaned 'list' of all concepts
-  - [ ] Generate list of all concepts
-  - [ ] Clean with oxford3000?
-- [ ] Build graph with histogram edges
+  - [x] Rake
+  - [ ] LLM
+    - [x] Get access to BWUniCluster
+    - [ ] Annotate 100 abstracts with concepts
+    - [ ] Fine-tune LLM (-> ask Felix Karg) 100 abstracts with 100 epochs each
+    - [ ] Inference: extract concepts from all abstracts
+- [x] Build graph with histogram edges
+  - [x] Start with reduced concept list (keep concepts n>1) and discard materials where an element appears twice
+- [x] Implement Baseline
+- [ ] Implement evaluation (on test set)
+- [ ] Implement validation (on future data)
 - [ ] Implement top performing model from kaggle challange
 - [ ] Store model and graph
 - [ ] Build API to query prediction service
+- [ ] Build Tiny Frontend. Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
 
 ## Optimization
 
 - [ ] Where to store the data?
 - [ ] Data storing for works: How to store concepts (fetched and generated)
-- [ ] How to speed up text processing in pandas? Pandas 2.0 or other option to achieve pyarrow backend
+- [x] How to speed up text processing in pandas? Pandas 2.0 (x) or other option to achieve pyarrow backend
 - [ ] Dockerize what comes after data fetching
+- [ ] How to optimize "concept synergy" query for concept v? (Naive: `O(n * pred(x,v))`)
+  - [ ] Caching: Precalculate and store
+  - [ ] Online Algorithm: Enter new concept (Get embeddings, likely to work better if word embeddings are used in addition)
 
 # My handy tools
 
