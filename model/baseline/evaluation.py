@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-from baseline import BaselineNetwork
+from train import BaselineNetwork
 import pickle
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -50,14 +50,14 @@ def eval_model(model, data, solution, name="AUC", plot=False):
 model = BaselineNetwork().to(DEVICE)
 model.load_state_dict(torch.load("model/baseline/model.pt"))
 
-with open("graph/data.pkl", "rb") as f:
+with open("graph/data_2017_10p.pkl", "rb") as f:
     data = pickle.load(f)
 
-data_train = data["data_train0"] + data["data_train1"]
+data_train = data["data_train"]
 solution_train = data["solution_train"]
 
-data_test = data["data_test0"] + data["data_test1"]
+data_test = data["data_test"]
 solution_test = data["solution_test"]
 
-eval_model(model, data=data_train, solution=solution_train, name="AUC_train")
-eval_model(model, data=data_test, solution=solution_test, name="AUC_test")
+eval_model(model, data=data_train, solution=solution_train, name="AUC_train", plot=True)
+eval_model(model, data=data_test, solution=solution_test, name="AUC_test", plot=True)

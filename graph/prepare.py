@@ -77,6 +77,7 @@ def create_training_data(
     years_delta,
     edges_used=500_000,
     vertex_degree_cutoff=10,
+    ratio_connected=0.5,
 ):
     """
     :param full_graph: Full graph, numpy array dim(n,3) [vertex 1, vertex 2, time stamp]
@@ -96,31 +97,35 @@ def create_training_data(
 
     train_graph, train_sparse_mat = build_graphs(full_graph, until_year=year_start)
 
-    solution_graph, _ = build_graphs(full_graph, until_year=year_end)
+    future_graph, _ = build_graphs(full_graph, until_year=year_end)
 
-    # The .sum(0) function calculates the sum of each column in the matrix,
-    # which is equivalent to finding the degree of each vertex in the graph,
-    # assuming that the graph is undirected.
-    all_degs = np.array(train_sparse_mat.sum(0))[0]
+    edges = train_graph.edges()
+    future_edges = future_graph.edges()
 
-    # Use only vertices with degrees larger than cutoff (10).
+    new_edges = list(set(future_edges) - set(edges))
+    threshold = int(edges_used * ratio_connected)
+    new_edges = new_edges[:threshold]
+
     vertices = np.array(range(NUM_OF_VERTICES))
-    vertices = vertices[all_degs >= vertex_degree_cutoff]
 
     ## Create all edges to be predicted
-    unconnected_vertex_pairs = []
-    unconnected_vertex_pairs_solution = []
+    unconnected_vertex_pairs = list(new_edges)
+    unconnected_vertex_pairs_solution = [1] * len(new_edges)
 
     draw_sample = get_draw_sample(len(vertices))
-    pbar = tqdm(total=edges_used)
+    pbar = tqdm(total=int(edges_used * (1 - ratio_connected)))
     while len(unconnected_vertex_pairs) < edges_used:
         i1, i2 = draw_sample()
         v1, v2 = vertices[i1], vertices[i2]
 
         # graph is undirected: == has_edge(v2,v1)
-        if v1 != v2 and not train_graph.has_edge(v1, v2):
+        if (
+            v1 != v2
+            and not train_graph.has_edge(v1, v2)
+            and not future_graph.has_edge(v1, v2)
+        ):
             unconnected_vertex_pairs.append((v1, v2))
-            unconnected_vertex_pairs_solution.append(solution_graph.has_edge(v1, v2))
+            unconnected_vertex_pairs_solution.append(0)
             pbar.update(1)
 
     pbar.close()
@@ -143,7 +148,9 @@ def create_training_data(
         list(map(int, unconnected_vertex_pairs_solution))
     )
 
-    return unconnected_vertex_pairs, unconnected_vertex_pairs_solution
+    perm = np.random.permutation(len(unconnected_vertex_pairs))
+
+    return unconnected_vertex_pairs[perm], unconnected_vertex_pairs_solution[perm]
 
 
 def retrieve_properties_for_vertex_pair(
@@ -196,10 +203,10 @@ def compute_all_properties_of_list(all_sparse, vlist):
     # compute matrix squares
     AA02 = all_sparse[0] ** 2
     AA02 = AA02 / AA02.max()
-    print("1, ", end="")
+    print("1...")
     AA12 = all_sparse[1] ** 2
     AA12 = AA12 / AA12.max()
-    print("2, ", end="")
+    print("2...")
     AA22 = all_sparse[2] ** 2
     AA22 = AA02 / AA22.max()
     print("3")
@@ -294,9 +301,9 @@ def split_based_on_class(X, y):
 def main():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
     edges_used = 500_000
-    vertex_degree_cutoff = 10
-    year_start = 2011
-    train_years = [2009, 2010, 2011]
+    vertex_degree_cutoff = 10  # not used currently
+    year_start = 2014
+    train_years = [2012, 2013, 2014]
     years_delta = 3
 
     # train graph is until 2011
@@ -306,37 +313,27 @@ def main():
         years_delta=years_delta,
         edges_used=edges_used,
         vertex_degree_cutoff=vertex_degree_cutoff,
+        ratio_connected=0.1,
     )
 
-    X_train, y_train, X_test, solution_test = split_train_test(
+    X_train, solution_train, X_test, solution_test = split_train_test(
         train_edges_for_checking, train_edges_solution, test_size=0.1
     )
 
-    # Perform undersampling: only use 1% of the unconnected edges => increase ratio of positives
-    # Should this be done in "create_training_data" ? (=> Pascal)
-    X_train_smaller, solution_train_smaller = undersample_data(
-        X_train, y_train, ratio=0.01
-    )
-
-    print("Length of training data: ", len(X_train_smaller))
+    print("Length of training data: ", len(X_train))
     print("Length of test data: ", len(X_test))
 
     # Compute train sparse matrices
 
     training_matrices = get_adj_matrices(graph, years=train_years)
-    data_train = compute_all_properties_of_list(training_matrices, X_train_smaller)
+    data_train = compute_all_properties_of_list(training_matrices, X_train)
     data_test = compute_all_properties_of_list(training_matrices, X_test)
 
-    data_train0, data_train1 = split_based_on_class(data_train, solution_train_smaller)
-    data_test0, data_test1 = split_based_on_class(data_test, solution_test)
-
     storage = {}
-    storage["solution_train"] = solution_train_smaller
+    storage["data_train"] = data_train
+    storage["data_test"] = data_test
+    storage["solution_train"] = solution_train
     storage["solution_test"] = solution_test
-    storage["data_train0"] = data_train0
-    storage["data_train1"] = data_train1
-    storage["data_test0"] = data_test0
-    storage["data_test1"] = data_test1
 
     with open("graph/data.pkl", "wb") as f:
         pickle.dump(storage, f)
