@@ -2563,6 +2563,22 @@ low rate of decomposition used in the present study has enabled to understand
 and quantify the decomposition in terms of the different brucite and talc sheets
 of the present mineral sample with chlorite impurity.
 
+§
+thermal characterization of talc
+talc
+thermal analysis
+thermal decomposition
+talc sample
+Luzenac
+vacuum
+decomposition
+brucite sheet
+talc sheets
+mineral sample
+chlorite impurity
+chlorite
+§
+
 ================================================================================
 
 W2066129955
@@ -2584,6 +2600,27 @@ possible to formulate compositions that allow the obtaining of frits for ceramic
 enamels, with 23 % in weight of solid galvanic waste incorporated and good
 coating characteristics.
 
+§
+solid galvanic waste
+galvanic waste
+glass matrix
+alkaline metals
+transition metals
+ecological damage
+health damage
+silicate glass matrix
+recycling galvanic waste
+recycling
+amorphous structure
+silica
+feldspar
+amorphous phases formation
+ceramic enamel
+coating characteristic
+frit
+waste incorporation
+§
+
 ================================================================================
 
 W2000986644
@@ -2599,6 +2636,25 @@ increase. The conductivity may be determined as a tunnel transfer of charge from
 one nanoparticle to another through a thin dielectric layer up to 50 nm of
 polymer matrix.
 
+§
+electric conductivity
+organic film
+nanosize metal particle
+metal particle
+nanodispersed particle
+thin polymer film
+low temperature codeposition
+codeposition
+reactive para-xylylene monomer
+sample annealing
+metal nanoparticle in polymer matrix
+metal nanoparticle
+polymer matrix
+charge tunnel transfer
+tunnel transfer
+dielectric layer
+§
+
 ================================================================================
 
 W2041278108
@@ -2613,6 +2669,20 @@ required. It is, therefore, an absolute method. The frequencies of oscillation
 of droplets of pure iron and nickel in a 6 pct H2He gas mixture were measured by
 high speed cinematography. Surface tensions were obtained for temperatures of
 1550 to for iron and 1475 to for nickel.
+
+§
+surface tension measurement
+liquid iron
+liquid nickel
+oscillating drop technique
+molten metal
+Rayleigh equation
+liquid metal droplet
+electromagnetic levitation
+inert flowing gas
+high speed cinematography
+cinematography
+§
 
 ================================================================================
 
@@ -2633,6 +2703,28 @@ suggest that the role of zeolite as catalyst is pronounced only in the early
 stage of pyrolysis process. Keywords: plastics waste, Polypropylene, Zeolite,
 Friedman, Flynn-Wall-Ozawa
 
+§
+zeolite usage
+thermal degradation
+polypropylene pyrolysis
+polypropylene
+pyrolysis
+plastic material
+elasticity
+formability
+lightweight characteristic
+plastic waste
+environmental problem
+pyrolysis method
+light hydrocarbon
+energy source
+zeolite catalyst
+isoconversional Friedman method
+Friedman
+Flynn-Wall-Ozawa method
+Flynn-Wall-Ozawa
+§
+
 ================================================================================
 
 W3026968676
@@ -2647,6 +2739,21 @@ of work relating to the preparation of surfaces of metal building structures, by
 applying the rust painting method, and creation of anticorrosive materials with
 universal properties combining the functions of rust, primer and basic coating
 modifiers.
+
+§
+mechanochemical method
+metal structure surfaces preparation
+protective coating
+metal building structure
+surface preparation
+labor coefficient reduction
+rust painting method
+rust painting
+anticorrosive material
+anticorrosive
+rust
+primer
+§
 
 ================================================================================
 
@@ -2666,6 +2773,28 @@ probability . For sufficiently high Weibull modulus, the failure occurs
 essentially at the notch tip. For sufficiently low Weibull modulus m < 4, K for
 an FGM is found to vary up to 25% from that of a homogeneous body.
 
+§
+statistical Ritchie-Knott-Rice model
+Ritchie-Knott-Rice
+brittle fracture
+functionally graded material
+slender notch
+linear elastic
+Weibull statistic
+Weibull
+Young's modulus
+modulus variation
+compact tension fracture mechanics specimen
+compact tension
+fracture mechanics specimen
+finite element method
+near-tip stress state
+stress state
+stress intensity
+fracture toughness
+flaw failure
+Weibull modulus
+§
 ================================================================================
 
 W2745134291
@@ -2684,6 +2813,28 @@ successive ionic layer adsorption reaction SILAR cycles. The best power
 conversion efficiency of solar cell based on flower-rod structure with 12 SILAR
 cycles of CdSecan reached to 1.98% under one sun illumination AM 1.5G, 100
 mW/cm2.
+
+§
+CdSe Quantum Dot
+Quantum Dot
+TiO2 Flower-rod Film
+Flower-rod Film
+Quantum Dot-sensitized Solar Cell
+Solar Cell
+one-dimensional nanorods
+nanorods
+fluorine-doped tin oxide conducting glass
+fluorine-doped tin oxide
+conducting glass
+hydrothermal synthesis method
+photoanode
+absorption of light
+direct electrical pathway
+coating cycle
+photovoltaic performance
+successive ionic layer adsorption reaction
+SILAR
+§
 
 ================================================================================
 
@@ -2718,6 +2869,28 @@ and reliable candidate for high-sensitive and small-size biosensors. Also, the
 technical issues on designing the suggested biosensor have been investigated to
 achieve a useful guideline in detection and identification of the target
 
+§
+Label-free DNA detection
+DNA detection
+Armchair-Graphene Nanoribbon Field Effect Transistor
+Nanoribbon
+Field Effect Transistor
+FET
+biosensor
+Nanogap cavitiy
+Sacrificial layer etching
+DNA biomolecule
+Hybridization event
+GNR channel
+DNA sequence detection
+Numerical characterization
+Schrodinger equation
+Non-Equilibrium Green Function method
+Non-Equilibrium Green Function
+NEGF
+Poisson solver
+§
+
 ================================================================================
 
 W2315456739
@@ -2735,6 +2908,22 @@ follows that the abnormal behavior observed in the pressure range of 2030mmHg as
 described in a previous paper is restored to its normal behavior. The formation
 process in the stirred vapor phase is discussed in relation to the change in the
 structural features under the gas pressure.
+
+§
+Stirring vapor phase
+vapor phase
+pyrolytic graphite formation
+pyrolytic graphite
+propane gas pyrolysis
+graphite formation
+graphite structural features
+structural features
+microstructure
+density
+crystal structure
+Deposition temperature
+decomposed gas convection
+§
 
 ================================================================================
 
@@ -2757,6 +2946,22 @@ variables weight fraction X1 &amp; Particle Size X2 have a significant effect on
 hardening. Moreover, the hardening increases with increasing weight fraction.
 While hardening value decreases gradient with down eggshell particle size.
 
+§
+hardness improvement
+improved hardness
+aluminum metal matrix composite
+aluminum metal matrix
+eggshell particle
+hardening
+MINITAB 16
+powder technology method
+aluminum powder
+sintering
+inert gas
+variable weight fraction
+particle size effect on hardening
+§
+
 ================================================================================
 
 W2040449849
@@ -2776,6 +2981,26 @@ elastic limit depends on the properties of the internal DoFs while the threshold
 for failure is very insensitive to them. These results have implications on the
 results of all-atom MD simulations, whose classical nature leads to a
 significant overestimation of the specific heat of molecular materials.
+
+§
+coarse grain modeling
+spall failure
+molecular crystal
+intra-molecular degrees of freedom
+mesodynamical method
+mesoparticle
+shock compression
+failure spall
+shockwave
+shocked material
+Hugoniot elastic limit
+Hugoniot
+plastic deformation threshold
+plastic deformation
+all-atom mesodynamical simulations
+mesodynamical simulations
+molecular materials
+§
 
 ================================================================================
 
@@ -2803,6 +3028,27 @@ insulation with high quality using heat shrink tubing. The suitable processes of
 insulating longer lengths of samples with additional dielectric benefits are
 discussed.
 
+§
+high-temperature superconducting cable design
+high-temperature
+superconducting cable
+insulated conductor
+high-temperature superconducting tape
+superconducting tape
+dielectric design
+cable manufacturing
+insulation material
+heat shrink insulation
+cryogenic dielectric characteristic
+liquid nitrogen environment
+liquid nitrogen
+gaseous helium environment
+gaseous helium
+single layer insulation
+multiple layer insulation
+layered insulation
+§
+
 ================================================================================
 
 W1976871376
@@ -2822,6 +3068,35 @@ incorporation of nitrogen atoms in thewith an atomic ratio of 1.2%. The present
 study indicates that it is possible to grow high quality carbon nanotube arrays
 over a cheap alumina substrate of a rough surface.
 
+§
+N-doped carbon nanotube array growth
+N-doped carbon nanotube
+carbon nanotube array growth
+carbon nanotube
+array growth
+CNT
+sintered Al2O3 substrate
+sintering
+nitrogen-containing carbon nanotube
+alumina substrate
+injection chemical vapor deposition
+chemical vapor deposition
+CVD
+carbon source ethanol
+carbon source
+ethanol
+nitrogen source ethylenediamine
+nitrogen source
+ethylenediamine
+polycrystalline Al2O3 micro-grain
+polycrystalline micro-grain
+micro-grain
+ferrocene concentration
+X-ray photoelectronic spectrum
+X-ray 
+photoelectronic spectrum
+§
+
 ================================================================================
 
 W2330064257
@@ -2838,6 +3113,28 @@ revealed the fact, on the other hand, that when vulcanized rubber is impregnated
 with radical acceptor its cross-linking density gets remarkably reduced in the
 rate of increment.It is conceivable, all things considered, that some mechanical
 reaction has taken place on the degraded rubber radicals to recombine.
+
+§
+chemorheological study
+vulcanized rubber
+rubber
+mechanical-curve treatment
+mechanical-curve
+external force strain
+glass transition temperature
+cleavage
+polymer chain network
+natural rubber
+cross-linking density
+Maxwellian type deformation
+Maxwellian type
+radical acceptor impregnation
+radical acceptor
+impregnation
+mechanical reaction
+rubber radical
+radical recombination 
+§
 
 ================================================================================
 
@@ -2857,6 +3154,26 @@ the other which could be due to the presence of higher dislocation density. Slip
 lines associated with dislocations, stacking faults, cellular structure of
 dislocations and double positioning boundaries were found in the X-ray
 topography from the GaN films.
+
+§
+high resolution X-ray diffraction
+X-ray diffraction
+X-ray
+X-ray topography
+GaN on sapphire
+sapphire
+GaN thin films
+sapphire substrate
+metalorganic vapor phase epitaxy
+MOVPE
+thermal expansion coefficient
+buffer layer
+carrier concentration
+mobility
+slip lines
+stacking faults
+cellular structure
+§
 
 ================================================================================
 
@@ -2881,6 +3198,29 @@ processed. The FEM analysis demonstrated that the strain state changed
 significantly from tension to compression when the modified die was used,
 facilitating the processing of the piece by ECAP.
 
+§
+optimized die design
+die design
+finite element method 
+nanostructured material
+FEM
+equal channel angular pressing
+ECAP
+finite element method simulation
+simulation
+plastic deformation
+die channel configuration
+deformation homogeneity
+friction coefficient
+extrusion speed
+die channel geometry
+tensile strain area
+compressive stress
+cracking tendency
+fracture
+strain state
+§
+
 ================================================================================
 
 W2002906089
@@ -2898,6 +3238,30 @@ investigations showed the distinct nanostructures and molecular rearrangement
 depended on the molecular spacers and aggregation modes. For both process, the
 aromatic spacers in gemini amphiphiles have predominant effect in regulating the
 aggregation modes and spectral changes in organized molecular films.
+
+§
+Interfacial Assembly
+gemini-type Schiff base amphiphile
+Schiff base amphiphile
+aromatic spacer
+Organized Molecular Film
+Molecular Film
+Gemini amphiphile
+Langmuir-Blodgett film
+Langmuir-Blodgett
+multilayer film
+phase behavior
+water surface
+ion subphase
+in-situ coordination
+ligand
+spectral measurement
+morphological investigation
+nanostructure
+molecular rearrangement
+molecular spacer
+aggregation mode
+§
 
 ================================================================================
 
@@ -2922,6 +3286,33 @@ temperature on plateau stress and energy absorption capacity for lower relative
 density was more as compared to the higher relative density. The densification
 strain was almost invariant 0.020.03 on varying strain rate for the same
 relative density.
+
+§
+High temperature deformation
+closed cell ZnAl27 hybrid foam
+closed cell hybrid foam
+hybrid foam
+foam
+stir casting technique
+stir casting
+foaming agent
+cenosphere particle
+thickening agent
+microporosity
+microstructural characterization
+cenosphere particle distribution
+compression test
+deformation behavior
+linear elastic region
+plateau region
+densification region
+stress-strain curve
+plateau stress
+energy absorption capacity
+energy absorptions
+densification strain
+strain rate
+§
 
 ================================================================================
 
