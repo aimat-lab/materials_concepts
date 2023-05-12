@@ -7,3 +7,13 @@
 - [ ] Generate concepts for 300 more abstracts
 - [ ] Correct 300 concepts
 - [ ] Fine-tune on these 300 abstracts
+
+## Commands
+
+`cd $(ws_find matconcepts)`
+
+`sinfo_t_idle`
+
+`sbatch --partition=dev_single --mem=96000 job.sh`
+
+`scontrol show job <id>`
