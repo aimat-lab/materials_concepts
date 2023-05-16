@@ -10,17 +10,14 @@ from peft import (
     TaskType,
     get_peft_model,
     prepare_model_for_int8_training,
-    get_peft_model_state_dict,
 )
 
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, random_split
 import pandas as pd
 import logging
 from importlib import reload
 
 import torch
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 reload(logging)
 logging.basicConfig(
@@ -28,6 +25,9 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 print("Loading tokenizer...")
 tokenizer = LlamaTokenizer.from_pretrained("./HF/", return_tensors="pt")
@@ -60,48 +60,59 @@ class ConceptDataset(Dataset):
         text_encodings = tokenizer(
             text,
             return_tensors="pt",
+            padding="max_length",
+            max_length=2048,
         )
 
         return {
             "input_ids": text_encodings["input_ids"].flatten().to(device),
             "attention_mask": text_encodings["attention_mask"].flatten().to(device),
+            "labels": text_encodings["input_ids"].flatten().to(device),
         }
 
 
 print("Loading dataset...")
-train_dataset = ConceptDataset(pd.read_csv("train.csv"))
+dataset = ConceptDataset(pd.read_csv("train.csv"))
 
-data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+dataset_size = len(dataset)
+train_size = int(0.9 * dataset_size)  # Let's say we want 80% of the data for training
+test_size = dataset_size - train_size
+
+train_dataset, val_dataset = random_split(dataset, [train_size, test_size])
+
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer, mlm=False, pad_to_multiple_of=8
+)
 
 
 ## Setup LORA
 
 config = LoraConfig(
     task_type=TaskType.CAUSAL_LM,
-    r=8,  # attention heads
-    lora_alpha=16,  # alpha scaling
+    r=16,  # attention heads
+    lora_alpha=32,  # alpha scaling
     target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.1,
+    lora_dropout=0.05,
     inference_mode=False,
 )
 
+model = prepare_model_for_int8_training(model)
 model = get_peft_model(model, config)
 model.print_trainable_parameters()
-model = prepare_model_for_int8_training(model)
 
 # define training arguments
 training_args = TrainingArguments(
     output_dir="./results",
     overwrite_output_dir=True,
-    num_train_epochs=10,
+    num_train_epochs=2,
     weight_decay=0.01,
-    per_device_train_batch_size=16,  # reduce the batch size
-    gradient_accumulation_steps=1,  # add gradient accumulation
+    per_device_train_batch_size=1,  # reduce the batch size
     logging_dir="./logs",
-    logging_steps=10,
+    logging_steps=1,
+    logging_strategy="steps",
     optim="adamw_torch",
-    save_strategy="epoch",
-    learning_rate=1e-4,
+    learning_rate=0.0005,
+    evaluation_strategy="epoch",
 )
 
 
@@ -110,21 +121,14 @@ trainer = Trainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,  # your own training dataset
+    eval_dataset=val_dataset,  # your own evaluation dataset
     data_collator=data_collator,
+    # compute metrics
 )
-
-
-## PEFT
-model.config.use_cache = False
-old_state_dict = model.state_dict
-model.state_dict = (
-    lambda self, *_, **__: get_peft_model_state_dict(self, old_state_dict())
-).__get__(model, type(model))
-
-model = torch.compile(model)
 
 print("Training...")
 # fine-tune the model
+model.train()
 trainer.train()
 
 model.save_pretrained("./results")

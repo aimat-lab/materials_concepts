@@ -35,6 +35,8 @@ python3 -u fine-tune_model_trainer.py
 
 ## Commands
 
+`du -shx *`
+
 `cd $(ws_find matconcepts)`
 
 `sinfo_t_idle`
@@ -43,7 +45,11 @@ python3 -u fine-tune_model_trainer.py
 
 `cp $HOME/fine-tune_model_trainer.py .`
 
+`sbatch --partition=dev_gpu_4_a100 job_train.sh`
+
 `sbatch --partition=gpu_4_a100 job_train.sh`
+
+`sbatch --partition=dev_gpu_4_a100 job_inf.sh`
 
 `sbatch --partition=gpu_4_a100 job_inf.sh`
 
