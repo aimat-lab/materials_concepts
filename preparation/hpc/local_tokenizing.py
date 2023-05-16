@@ -4,12 +4,10 @@ from transformers import (
 )
 import pandas as pd
 
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, random_split
 
 tokenizer = LlamaTokenizer.from_pretrained("./HF/", return_tensors="pt")
 tokenizer.pad_token_id = 0  # unk. we want this to be different from the eos token
-
-CUTOFF_LENGTH = 2048
 
 
 class ConceptDataset(Dataset):
@@ -36,8 +34,15 @@ class ConceptDataset(Dataset):
 
 
 print("Loading dataset...")
-train_dataset = ConceptDataset(pd.read_csv("train.csv"))
+dataset = ConceptDataset(pd.read_csv("train.csv"))
 data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+
+dataset_size = len(dataset)
+train_size = int(0.8 * dataset_size)  # Let's say we want 80% of the data for training
+test_size = dataset_size - train_size
+
+train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
 dataloader = DataLoader(
     train_dataset, batch_size=4, shuffle=True, collate_fn=data_collator
 )
