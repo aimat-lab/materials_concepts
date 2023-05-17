@@ -3335,6 +3335,30 @@ amorphouscrystalline interface. The effects of fluorine dose and anneal
 temperature on the F precipitation are described and compared to results for BF
 + 2 implants.
 
+§
+diffusion
+ion-implanted boron impurity
+implantation
+boron impurity
+pre-amorphized silicon
+amorphized silicon
+silicon
+boron ion implantation
+pre-amorphization
+F+ implantation
+Si+ implantation
+B+ implantation
+boron profile
+crystalline silicon
+annealing
+rapid diffusion
+shallower junction
+dual implantation
+fluorine segregation
+fluorine profile peak
+amorphous-crystalline interface
+§
+
 ================================================================================
 
 W2000917888
@@ -3352,6 +3376,31 @@ transmittance of the transparent ceramics is close to 85 % at visible and
 nearinfrared wavelengths. The strong and broad absorptions peaks corresponding
 to characteristic absorption of trivalent erbium ions make the ceramics a
 potential candidate for infrared and upconversion laser operating.
+
+§
+highly-transparent ceramic
+Er:CaF2
+Er:CaF2 ceramic
+transparent ceramic
+hot-pressing technique
+erbium ion doped calcium fluoride
+trivalent erbium ion
+erbium ion
+calcium floride 
+doping
+Er:CaF2 nanoparticle
+co-precipitation method
+nanoparticle sintering
+sintering
+vacuum
+lithium fluoride (LiF)
+sintering additive
+high density
+pore-free microstructure
+optical transmittance
+infrared laser operation
+upconversion laser operation
+§
 
 ================================================================================
 
@@ -3384,6 +3433,29 @@ In particular, abrasive polishing is an attractive method due to it being a
 simple, rapid and inexpensive method that can be used to produce surfaces having
 features on a comparable scale to more expensive, multi-step methods.
 
+§
+abrasive polishing
+laser processing
+polyurethane surface
+fibroblast cell behavior
+fibroblast cell
+micro-scale feature
+nano-scale feature
+cell proliferation
+cell migration
+cell adhesion
+polyurethane substrate
+ploughed field effect
+sub-micron scale feature
+linear feature
+random feature
+cell adhesion promotion
+cell migration level
+lithographic technique
+patterned surface
+rapid and inexpensive method
+§
+
 ================================================================================
 
 W1972226079
@@ -3399,6 +3471,28 @@ material shows similar peaks, but a metallic preponderance is observed. Thermal
 annealing of the junction is done at much lower temperature, because it melts in
 the range-170C, when a whitish smoke begins to show up along with strong sulfur
 odor.
+
+§
+powder diffraction
+corrosion
+fuse cutout
+ceramic insulation
+saline environment
+X-ray diffraction
+X-ray
+ceramic material
+bond material
+thermal annealing
+DRX peak
+Al6Si2O13 Mullite
+Mullite
+SiO2 Quartz
+Quartz
+junction bond material
+metallic preponderance
+whitish smoke
+strong sulfur odor
+§
 
 ================================================================================
 
@@ -3418,6 +3512,27 @@ hexagonal cell composed of the six {11-20} planes on the vicinal off wafer, and
 actually an extremely low channel resistance was demonstrated on the hexagonal
 UMOSFET with the six {11-20} planes on the vicinal off wafer.
 
+§
+isotropic channel mobility
+isotropic channel
+vicinal off-angle
+UMOSFET
+on-resistance
+SiC UMOSFET
+cell structure
+wafer trench
+wafer off-angle
+wafer
+trench orientation
+MOS properties
+channel resistance
+instability of threshold voltage
+{11-20} plane
+hexagonal UMOSFET
+MOSFET properties
+SiC wafer
+§
+
 ================================================================================
 
 W207426220
@@ -3432,6 +3547,27 @@ either fcc-Al at low La content or a bcc phase at high La concentration of yet
 unknown composition. Micro hardness changes significantly during annealing and
 can be correlated to the different stages of microstructural transformation as
 observed by XRD.
+
+§
+amorphous alloy
+crystallisation behaviour
+melt spun Al-alloy
+melt spun alloy
+annealed Al-alloy
+annealed alloy
+differential scanning calorimetry
+calorimetry
+X-ray diffractometry
+X-ray
+XRD
+crystallisation stage
+fcc-Al formation
+fcc-Al
+bcc phase formation
+bcc
+La concentration
+micro hardness change
+§
 
 ================================================================================
 
@@ -3456,6 +3592,32 @@ that the grain refinement achieved leads to the improvement of the properties of
 high pressure die cast Mg automotive components and has the potential to enhance
 the mechanical properties of cast Mg alloys.
 
+§
+Mg alloy
+crystal structure refinement
+refinement
+Nb-based heterogeneous substrates
+lightness
+high specific strength
+transportation industry
+automotive sector
+emission regulation
+carbon dioxide emission 
+wrought magnesium
+hexagonal close-packed lattice
+hexagonal lattice
+MgAl binary system
+casting
+grain refinement
+NbB inoculation
+nucleated primary Mg grains
+grain size reduction
+high pressure die cast
+die cast
+mechanical property
+mechanical property enhancement
+§
+
 ================================================================================
 
 W1752495894
@@ -3470,6 +3632,25 @@ morphology, composition, and thickness. The effect of substrate has been
 assessed in relation to structure and morphology. Field emission scanning
 electron microscope of a Pr0.7Ca0.3MnO3 film deposited at on MgO001 .
 
+§
+Pr1-xCaxMnO3 thin films
+MOCVD
+Metal Organic Chemical Vapor Deposition
+molten multi-metal source
+in-situ metal
+Prhfa3diglyme
+Cahfa2tetraglyme
+Mntmhd3 precursor
+crystal substrate
+LaAlO3
+MgO
+Field Emission Scanning Electron Microscope
+Electron Microscope
+film morphology
+film composition
+film thickness
+§
+
 ================================================================================
 
 W2100961929
@@ -3481,6 +3662,17 @@ g , and the calorimetric characterization of a -glass transition well below T g
 alternative formulations of the mode coupling equations, and microheterogeneity-
 based interpretations of the origin of strong and fragile liquid
 characteristics.
+
+§
+glass transition
+microscopic inhomogeneity
+calorimetric characterization
+master equation approach
+mode coupling equation
+microheterogeneity-based interpretation
+strong liquid characteristic
+fragile liquid characteristic
+§
 
 ================================================================================
 
@@ -3511,6 +3703,47 @@ previously shown superelastic behavior, low Young's modulus and high corrosion
 resistance, recommend Ti-25Ta-25Nb as good candidate for applications in bone
 implantology.
 
+§
+osteoblast cell behavior
+Ti25Ta25Nb alloy
+Ti25Ta25Nb
+bone substitute
+titanium
+low modulus
+high corrosion resistance
+corrosion resistance
+biocompatibility
+in-vitro cytocompatibility
+cytocompatibility
+human osteoblast
+Ti-6Al-4V biomaterial
+biomaterial
+Tissue Culture Polystyrene
+TCPS
+X-ray diffraction
+X-ray
+atomic force microscopy
+X-ray photoelectron spectroscopy
+spectroscopy
+cellular response
+cell viability
+cell attachment
+cell spreading
+cell morphology
+fibronectin organization
+fibronectin
+cell proliferation
+equiaxed grain microstructure
+nanometer scale surface roughness
+survival rates
+cell adhesion
+fibronectin matrix
+superelastic behavior
+Young's modulus
+bone implantology
+implant
+§
+
 ================================================================================
 
 W2064625603
@@ -3532,6 +3765,34 @@ rotation in soft PZT ceramics by electric field applied at an angle to the
 original poling direction show good agreement between the predictions of the
 viscoplastic model and experimental data.
 
+§
+viscoplastic behavior
+perovskite type ferroelectric
+perovskite
+ferroelectric
+rate-dependent constitutive model
+constitutive model
+hysteretic behavior
+sub-coercive behavior
+ferroelectric ceramic
+viscoplastic model
+rate equation
+distribution function
+grain orientation
+polarization reversal
+polycrystalline ferroelectric
+cubic-to-tetragonal phase transition
+phase transition
+domain switching
+orientation effect
+poled ferroelectric
+multi-axial loading
+rate effect
+polarization rotation
+soft PZT ceramic
+PZT ceramic
+PZT
+§
 ================================================================================
 
 W2508302308
@@ -3549,6 +3810,31 @@ photocatalytic efficiency. Increasing coating thickness leads to a rough surface
 with more reaction sites. Photodegradation conversion of Methylene blue Mb
 decreases with an increase in the initial concentration of Mb.
 
+§
+operational parameter
+TiO2 photocatalytic degradation
+photocatalytic degradation
+Methylene Blue
+thin films of titanium oxide
+titanium oxide
+dip-coating
+sol-gel method
+TiO2 powder Degussa
+P25
+polyethylene glycol
+PEG
+photocatalytic property
+coating
+degradation efficiency
+photocatalytic activity
+electron-hole pair photogeneration
+photogeneration
+irradiation energy
+irradiation
+photocatalytic efficiency
+coating thickness
+photodegradation conversion
+§
 ================================================================================
 
 W2078720651
@@ -3582,6 +3868,27 @@ process, and understand fully the mechanism of influences of airarc cutting on
 the plate; it is also very valuable for engineering application of the airarc
 cutting process.
 
+§
+temperature
+stress
+microstructure
+10Ni5CrMoV steel plate
+steel plate
+Airarc cutting
+Material processing engineering
+finite element model
+Micro-mechanical property
+Heat affected zone
+HAZ
+Residual stress field
+Cooling velocity
+groove temperature gradient
+Multiphase transformation
+Coarse microstructure
+Butt welding
+flat plate
+§
+
 ================================================================================
 
 W2089157330
@@ -3606,6 +3913,27 @@ specific orientation is corroded. Moreover, the smaller the interplanar spacing
 along the orientation with the free boundary condition is, the larger the
 deflection and the macro tensile stress are.
 
+§
+Molecular dynamic simulation
+simulation
+Anisotropic corrosion-induced stress
+Anisotropic stress
+corrosion-induced stress
+Pipeline steel
+macro tensile stress
+tensile stress
+Fe single crystal
+molecular dynamic
+Stress corrosion cracking
+SCC
+crystallographic direction
+Periodic boundary condition
+Free boundary condition
+free end Deflection 
+porous layer
+Interplanar spacing
+Surface corrosion
+§
 ================================================================================
 
 W2058262138
@@ -3633,6 +3961,38 @@ samples. Research is in progress to extend the technique to allow the
 determination of the elastic strain and stress tensors on a grain-by-grain
 basis.
 
+§
+Diffraction Contrast Tomography
+Tomography
+Synchrotron radiation technique
+radiation technique
+Mapping polycrystalline microstructure
+polycrystalline microstructure
+Mapping
+3D grain maps
+Annealed aluminium alloy
+Annealed aluminium
+Stainless steel
+Absorption contrast tomography
+3D X-ray diffraction microscopy
+X-ray diffraction
+3DXRD
+Monochromatic synchrotron x-ray beam
+Extinction contrast
+Diffraction and extinction
+Diffraction
+extinction
+Grain indexing
+Algebraic reconstruction
+Crystallographic orientation
+Diffraction geometry
+Non-destructive technique
+In-situ study
+mapped sample
+Elastic strain
+stress tensor
+§
+
 ================================================================================
 
 W2015671969
@@ -3647,6 +4007,28 @@ Electropulsing favors refinement of the grain structure of the alloy. Effects of
 electropulsing on strength and elongation of the alloy were discussed from the
 point view of dislocation dynamics, microstructural changes, and electropulsing
 kinetics.
+
+§
+Electropulsing
+Recrystallization
+Mechanical property
+Silicon steel strip
+Silicon steel
+Electropulsing-induced recrystallization
+Oriented silicon steel
+Optical microscopy
+Scanning electron microscopy
+Electron back-scatter diffraction
+diffraction
+Acceleration of recrystallization
+Decreased recrystallization temperature
+recrystallization temperature
+Grain structure refinement
+Dislocation dynamic
+Microstructural change
+Electropulsing kinetic
+Effect of electropulsing
+§
 
 ================================================================================
 
@@ -3671,6 +4053,37 @@ Copper. Evaluation of microstructure-mechanical properties of the recrystallized
 samples expresses that the bimodal grain size distribution at for 30min offers a
 good tensile strength-ductility UTS: 491MPa, elt: 19% at ambient temperature.
 
+§
+Brass-texture
+Grain structure evolution
+Grain structure
+ODS copper
+Fusion material
+Mechanical property
+Y2O3 oxide particle
+room temperature rolling
+Subsequent annealing
+Texture development
+Tensile property
+EBSD
+TEM
+Tensile test
+Microstructure evolution
+Coarsening grain structure
+Brass texture enhancement
+Rolling reduction
+Single crystal-like brass-texture deformed structure
+Deformation mechanism
+Partial slip
+Dislocation
+ODS copper recrystallization
+copper recrystallization
+recrystallization 
+Tensile 
+strength
+ductility
+§
+
 ================================================================================
 
 W2012349680
@@ -3682,6 +4095,25 @@ observed in powder-processed MoSi2 consists of amorphous SiO2 and that formation
 of this phase is intrinsic to powder processing. In addition, the Mo5Si3 phase,
 which is often present in MoSi2 , is found to be a carbon-stabilized form of
 approximate composition CMo5Si3 .
+
+§
+Intrinsic second-phase particle
+second-phase particle
+Powder-processed MoSi2
+Hot pressing
+Commercial powder
+In-house powder
+Arc melting
+Pure molybdenum
+molybdenum
+Silicon
+Glassy phase
+Amorphous SiO2
+phase formation
+Powder processing
+Mo5Si3 phase
+Carbon-stabilized form
+§
 
 ================================================================================
 
@@ -3701,6 +4133,27 @@ was obtained, resulting in a narrow size distribution of final Cu powder
 product. The effect parameters on the growth such as Pd2+ concentration and
 temperature were also investigated.
 
+§
+cu particle growth
+particle growth
+semibatch process
+Monodispersed particle
+nucleation step
+nucleation
+growth step
+growth
+particle formation
+Copper powder
+CuO slurry
+Wet chemical reduction
+Hydrazine
+reductant Hydrazine
+Rapid nucleation
+fast reduction
+Pd2+ reduction
+Batch process
+§
+
 ================================================================================
 
 W3031018044
@@ -3716,6 +4169,29 @@ individual cords. Belt behaviour under tension is studied and optimal cord
 distribution is proposed to decrease the risk of the failure. FEM software MSC
 Marc/Mentat is employed as a calculation tool.
 
+§
+FEM simulation
+OTR tyre
+steel belt
+Steel belt of tyres
+Radial tyres
+off-the-road
+Heavy-duty off-the-road tyres
+off-the-road tyres
+Rubber material Steel reinforcement Composite
+Composite
+Rubber material
+Steel reinforcement
+Peak stress
+Cracks
+Tyre failure
+Belt behaviour
+Tension
+cord distribution
+cord
+FEM software MSC Marc/Mentat
+simulation
+§
 ================================================================================
 
 W2045741260
@@ -3735,6 +4211,24 @@ fits the experimental creep strain time data for different test conditions over
 transient and steady state regimes has been obtained in terms of correlation
 coefficients.
 
+§
+First order reaction kinetic
+reaction kinetic
+Transient creep
+NiAl hardened austenitic steel
+hardened austenitic steel
+austenitic steel
+Stress
+Transient creep parameter
+Steady state creep rate
+state creep
+equation
+deformation mechanism
+deformation
+Creep stages
+creep strain time data
+§
+
 ================================================================================
 
 W2333338403
@@ -3748,6 +4242,35 @@ microscopy and UV-vis diffuse reflectance spectra characterization. The
 photocatalytic studies suggested that the SnO2 -TiO2 /zeolite Y showed enhanced
 photocatalytic efficiency of photodegradation of methyl orange compared with
 TiO2 / zeolite Y and SnO2 /zeolite Y under UV light irradiation.
+
+§
+SnO2-TiO2/Zeolite Y composites
+Zeolite
+SnO2-TiO2
+Enhanced Photocatalytic Activity
+Photocatalytic Activity
+tin chloride impregnation
+impregnation
+tetrabutyl titanate solution
+Impregnation of tin chloride
+Tetrabutyl titanate solution
+Zeolite Y
+Calcination
+X-ray diffraction
+X-ray
+diffraction
+transmission electron microscopy
+UV-vis diffuse reflectance spectra
+diffuse reflectance spectra
+Photodegradation of methyl orange
+Photodegradation
+Enhanced Photocatalytic efficiency
+Photocatalytic efficiency
+methyl orange
+Enhanced photocatalytic efficiency
+UV light irradiation
+irradiation
+§
 
 ================================================================================
 
