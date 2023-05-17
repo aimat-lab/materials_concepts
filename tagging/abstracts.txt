@@ -4293,6 +4293,42 @@ temperature, rotating and/or magnetic field effects during crystal growth.
 Oxygen concentration in grown crystals is also discussed how melt convection
 affects.
 
+§
+heat transfer
+mass transfer
+crystal growth
+semiconductor crystal
+oxide crystal
+crystal
+electronic device
+optical device
+crystal quality
+growth furnace
+Czochralski method
+horizontal Bridgman method
+melt convection
+simulation
+numerical calculation
+X-ray radiography
+X-ray
+radiography
+large scale simulation
+flow instability
+low Prandtl number ratio
+Prandtl
+momentum diffusivity
+thermal diffusivity
+baroclinic instability
+Rayleigh-Benard instability
+Rayleigh-Benard
+Marangoni-Benard instability
+Marangoni-Benard
+temperature effect
+rotating field effect
+magnetic field effect
+oxygen concentration in crystal
+§
+
 ================================================================================
 
 W2097063279
@@ -4310,6 +4346,32 @@ metallic character and conductivity was mostly governed by Li-d and M-d states.
 Furthermore, Debye temperature, Gruneisen constant and molar heat capacity in
 terms of coefficients of the electronic and lattice heat capacities were
 estimated.
+
+§
+binary intermetallic system
+Li intermetallic
+intermetallic
+tight binding linear muffin tin orbital method
+tight binding linear muffin tin orbital
+TB-LMTO 
+lattice constant
+bulk modulus
+pressure derivative
+LiAg
+LiHg
+LiTl
+electronic band structure
+partial state density
+total state density
+B2CsCl phase
+metallic character
+conductivity
+Debye temperature
+Debye
+Gruneisen constant
+Gruneisen
+molar heat capacity
+§
 
 ================================================================================
 
@@ -4331,6 +4393,35 @@ increasing temperature. In addition, the amorphous structure remained unchanged
 at T 275 C, while a triplex-phase structure developed after the oxidation at
 higher temperatures, consisting of Pd_2Ni_2P, Cu_3P, and Pd_3P.
 
+§
+oxidation behavior
+Pd43Cu27Ni10P20 bulk metallic glass
+Pd43Cu27Ni10P20
+bulk metallic glass
+foam
+foam in dry air
+Pd4BMG
+amorphous foam
+porosity
+temperature range
+dry air
+favorable oxidation resistance
+oxidation resistance
+oxidation kinetic
+parabolic-rate
+porous structure
+scale formation
+amorphous structure
+triplex-phase structure
+Pd2Ni2P
+Cu3P
+Pd3P
+temperature effect on oxidation
+oxidation in dry air
+bulk metallic glass oxidation
+foam oxidation
+§
+
 ================================================================================
 
 W2529603541
@@ -4351,6 +4442,34 @@ designed material shows a high catalytic activity for the reaction of I3 /I when
 the Cu2 atom in CZTS is replaced by VVCu2 . Thus, the findings could help to
 promote novel, high-efficiency CZTS-based CE in
 
+§
+doping effect
+doping
+copper zinc tin sulphide
+counter electrode
+dye-sensitized solar cell
+solar cell
+CE
+catalysis
+CZTS
+density functional theory
+DFT
+geometrical property
+electronic property
+iodine atom adsorption
+charge transport performance
+charge transport
+cation site
+K-doped CZTS
+V-doped CZTS
+Ir-doped CZTS
+Pt-doped CZTS
+adsorption energy
+desorption energy
+catalytic activity
+CZTS-based counter electrode
+§
+
 ================================================================================
 
 W2067434605
@@ -4366,37 +4485,22 @@ lithiation process and beginning of delithiation process respectively. The SEI
 film enhanced with the increasing amount of lithium and silicon-carbon composite
 material was severely decomposed with the cycles increase.
 
-================================================================================
-
-W2057874092
-
-Effect of magnesium on the heterogeneous nucleation of cadmium solidification by
-aluminium. Melt-spun and melt-spun-and-heat-treated alloys of hypomonotectic
-Al-4.5wt.%Cd and hypermonotectic Al-9wt.%Cd-1.5wt.%Mg have been examined by
-transmission electron microscopy. In each case, the alloy microstructures
-consist of a homogeneous distribution of faceted CdMg particles embedded in an
-AlMg matrix. The CdMg particles exhibit an orientation relationship of {111}
-AlMg {0001} CdMg and 110 AlMg112 dMg with the AlMg matrix, with four CdMg
-particle variants depending upon which of the four {111} AlMg planes is parallel
-to the {0001} CdMg plane. The as-melt-spun CdMg particles exhibit a distorted
-truncated octahedral shape bounded by {111} AlMg and {100} AlMg facets. After
-equilibration by heat treatment, the CdMg particles become elongated to increase
-the surface area and to decrease the separation of the two {111} AlMg {0001}
-CdMg facets. Addition of magnesium to cadmium particles embedded in aluminium
-increases the anisotropy of the surface energy. The lattice disregistries
-between the CdMg particles and the AlMg matrix on the {111} AlMg {0001} CdMg
-facets are 4% and 7% in Al-4.5wt.%Cd and Al-9wt.%Cd-1.5wt.%Mg respectively. The
-solidification behaviour of the CdMg particles in melt-spun alloys of
-hypomonotectic Al-4.5wt.%Cd and hypermonotectic Al-9wt.%Cd-1.5wt.%Mg has been
-investigated by heating and cooling experiments in a differential scanning
-calorimeter. The solidification of the CdMg particles is heterogeneously
-nucleated by the {111} planes of the surrounding AlMg matrix, at undercoolings
-of and below the CdMg particle melting point in Al-4.5wt.%Cd and
-Al-9wt.%Cd-1.5wt.%Mg, respectively. Addition of magnesium to cadmium particles
-embedded in aluminium increases the lattice disregistry but decreases the
-undercooling before the onset of CdMg particle solidification, indicating that
-chemical interactions dominate over structural factors in determining the
-catalytic efficiency of nucleating solidification in AlCdMg alloys.
+§
+lithiation process
+lithiation
+delithiation process
+delithiation
+silicon-carbon composite
+silicon-carbon
+mechanical alloying
+graphite-doped silicon
+MA
+capacity retention ability
+anode
+SEI film
+lithium
+cycling process
+§
 
 ================================================================================
 
@@ -4416,6 +4520,23 @@ purpose is to develop new cavity filling materials from recycling materials. It
 is experimentally confirmed that some of by-products can be successfully
 utilized as cavity filling materials.
 
+§
+abandoned lignite mine
+Japan
+Tokai
+lignite mine
+cavity filling material
+filling material
+slurry state
+solidification
+by-products
+recycling material
+regulatory restriction
+suitability assessment
+development of new filling materials
+by-products
+§
+
 ================================================================================
 
 W1989654987
@@ -4432,6 +4553,29 @@ The average relative error of dimension of wax patterns can be reduced from
 1.76% to 0.66%. Surface roughness improvement rate of wax patterns of up to
 85.71% can be achieved. Advantages of this technique include low manufacturing
 cost, simple manufacturing process and flexible process capability.
+
+§
+cost-effective approach
+cost-effective
+rapid manufacturing
+low pressure wax injection mold
+wax injection mold
+high surface finish
+high dimensional accuracy
+investment casting
+mass production
+metal part
+fused deposition rapid tooling
+improved mold quality
+geometric accuracy
+wax patterns
+surface roughness improvement
+surface roughness
+low manufacturing cost
+low cost
+simple manufacturing process
+flexible process capability
+§
 
 ================================================================================
 
@@ -4456,135 +4600,40 @@ coatings compared to that for neat Mg alloys. The nanostructured nHA embedded
 hybrid PLA nanofiber coating can therefore be a suitable coating material for Mg
 alloy as a potential material for biodegradable metallic orthopedic implants.
 
-================================================================================
-
-W2380104257
-
-Martensitic transformation in therNi3MoV low-alloy ultra-high strength steel.
-Martensitic phase transformation characteristics in therNi3MoV low-alloy ultra-
-high strength steel were investigated by means of microstructure observation and
-dilatometric measurements.The results showed that the transformation products in
-the quenchedrNi3MoV steel were two kinds of martensite with different
-morphologies,lath martensite and acicular martensite,formation of which clearly
-separate each other in transformation dynamics curves.Lath martensites form in
-the relatively high temperature range310~260 below theduring which diffusion of
-carbon atoms occurred and resulted into carbon-rich austenite micro regions
-around martensite lath bunches.Acicular martensites form in the relatively low
-temperature range260~170 below thewhich are transformed from the carbon-rich
-austenite micro regions retained after the formation of lath
-martensites.Transformation rate of the lath martensite is obviously higher than
-that of the acicular martensite.
-
-================================================================================
-
-W3157950279
-
-Development of a mechanically matched silk scaffolded 3D clear cell renal cell
-carcinoma model. Development of a 3D, biomaterials-based model for clear cell
-renal cell carcinoma ccRCC would be advantageous for understanding disease
-progression in vitro. This study demonstrated the development of lyophilized
-silk scaffolds that mechanically match the experimentally determined Young's
-modulus for ex vivo ccRCC samples and normal kidney tissue. Scaffolds fabricated
-from silk solutions ranging from 3 to 12% w / v were evaluated through
-mechanical testing. Following mechanical characterization of ccRCC samples, it
-was demonstrated that 6% silk scaffolds mechanically matched ccRCC samples. No
-impact of pathological grade and stage on the calculated ccRCC modulus was
-observed and all tumors evaluated mechanically matched the 6% silk scaffold
-formulation. Stratifying tissue specimens based upon histological observations
-e.g. evidence of high levels of collagen deposition resulted in no significant
-differences between groups. To investigate the impact of a mechanically matched
-culturing environment on in vitro ccRCC disease characteristics a model ccRCC
-cell line, 786-O, was utilized. Scaffolded 786-O cells demonstrated increased
-lipid droplet accumulation, a hallmark of ccRCC, compared to standard two-
-dimensional 2D culture conditions. Additionally, scaffolded 786-O cells
-demonstrated increased expression of genes associated with ccRCC aggressiveness
-ex. VEGFA, TNF, and IL-6 or immune markers under investigation as therapeutic
-targets ex. PDL1 , CTLA4 . Comparison with 786-O cells grown on non-mechanically
-matched scaffolds demonstrated that these improved ccRCC characteristics were
-driven by scaffold modulus. Overall, our findings support the use of silk
-scaffolds in replicating physiologic tumor behavior for clear cell renal cell
-carcinoma and provide a platform for investigating disease progression. The
-mechanics of ccRCC tumors and healthy kidney samples were determined.
-Mechanically matched lyophilized silk scaffolds were developed for in vitro
-ccRCC cell culture. Scaffolded 786-O cells demonstrated improved ccRCC
-characteristics compared to 2D culture.
-
-================================================================================
-
-W3082496568
-
-Perovskite Quantum Dots for Photovoltaic Applications. Perovskite solar cell
-with easy solution processing and high efficiency has been considered as a
-promising photovoltaic technology, but the material instability makes it
-questionable for practical applications. Perovskite quantum dotsprovide new
-possibilities to resolve these concerns. In this chapter, we will discuss the
-backgrounds, fundamentals, synthesis methods and device physics of the
-perovskitebased solar cells.
-
-================================================================================
-
-W2007951498
-
-Microstructure, corrosion properties and bio-compatibility of calcium zinc
-phosphate coating on pure iron for biomedical application. In order to improve
-the biocompatibility and the corrosion resistance in the initial stage of
-implantation, a phosphate CaZn2PO422H2O coating was obtained on the surface of
-pure iron by a chemical reaction method. The anti-corrosion property, the blood
-compatibility and the cell toxicity of the coated pure iron specimens were
-investigated. The coating was composed of some fine phosphate crystals and the
-surface of coating was flat and dense enough. The electrochemical data indicated
-that the corrosion resistance of the coated pure iron was improved with the
-increase of phosphating time. When the specimen was phosphated for 30min, the
-corrosion resistance Rp increased to 8006 . Compared with that of the naked pure
-iron, the anti-hemolysis property and cell compatibility of the coated specimen
-was improved significantly, while the anti-coagulant property became slightly
-worse due to the existence of element calcium. It was thought that phosphating
-treatment might be an effective method to improve the biocompatibility of pure
-iron for biomedical application.
-
-================================================================================
-
-W2109045785
-
-Hierarchical Porous TiO2Fibre Synthesized by Cotton Template and its
-Photocatalytic Performance. Hierarchical porous TiO2 fibre was successfully
-synthesized using cotton as template. Microstructures of product were
-characterized by Field Emission Scanning Electron Microscope FESEM, nitrogen
-absorption-desorption technique and transmission electron microscopy TEM.
-Titanium oxide material was characterized by repetitious networks consisting of
-the fibres with diameter of ca.m. The results showed that the products were
-composednm piled pores stacked by polycrystalline TiO2 nanoparticles. The small
-crystallite diameter 6-10 nm and the high specific surface area 83.7 m 2 g -1 of
-sample was believed to be resulted from wide-angle X-ray Diffraction XRD, high
-resolution TEM HRTEM and the BET method. While the concentration of
-methylthionine chloride solution was 20 mg/L, catalyst amount 0.1 g/L, the
-reaction had a higher decoloring rate following irradiation with a UV light
-source, the decoloring rate can reach over 100% after 250 min.
-
-================================================================================
-
-W2805199677
-
-Osteogenic and angiogenic potentials of the cell-laden hydrogel/mussel-inspired
-calcium silicate complex hierarchical porous scaffold fabricated by 3D
-bioprinting. 3D printing has been popularly used in the bone tissue engineering,
-as many of the biomaterials for this field of study can be prepared for and
-produced from this additive manufacturing technique. In this study, we
-strategized a solvent-free processing to fabricate the polydopamine-modified
-calcium silicate PDACS/poly-caprolactone PCL scaffold with Wharton's jelly
-mesenchymal stem cellsincorporated with human umbilical vein endothelial cells
-HUVEC-laden hydrogel. The PDACS/PCL/hydrogel 3D scaffold yielded a Young's
-modulus of the 3D scaffolds as high as 75 MPa. In addition, the vascular
-morphogenesis and cellular behaviors regulated by our hybrid scaffolds were also
-intricately evaluated. Furthermore, the HUVEC in the bioink exhibited higher
-levels of angiogenic biomarkers and showed potential for the formation of
-complex vascular networks. Higher levels of bone formation proteins were also
-observed in our composites. Such a hybrid of synthetic materials with cell
-constituents not only enhances osteogenesis but also stimulates vessel network
-development in angiogenesis, presenting the fact that 3D printing can be further
-applied in improving bone tissue regeneration in numerous aspects. We believe
-that this method may serve as a useful and effective approach for the
-regeneration of defective complex hard tissues in deep bone structures.
-
-================================================================================
-
+§
+biocorrosion behavior
+biocorrosion
+biodegradable nanocomposite fiber
+biodegradable
+nanocomposite fiber
+layer-by-layer coating
+AM50 magnesium implant
+magnesium implant
+hybrid nanofiber
+improved biodegradation rate
+biodegradation rate
+improved biocompatibility
+biocompatibility
+nano-hydroxyapatite particle
+nano-hydroxyapatite
+nHA
+polylactide nanofiber
+PLA
+air jet spinning approach
+air jet spinning
+AJS
+corrosion performance
+electrochemical measurement
+biocorrosion resistance
+adhesion strength
+Hank's balanced salt solution
+Hanks balanced salt solution
+HBSS
+cytocompatibility
+AJS coating
+air jet spinning coating
+nanostructured nHA embedded hybrid PLA nanofiber coating
+biodegradable metallic orthopedic implant
+orthopedic implant
+implant
+§
