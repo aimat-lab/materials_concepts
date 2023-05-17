@@ -6,10 +6,10 @@ import pandas as pd
 
 from torch.utils.data import Dataset, DataLoader, random_split
 
-tokenizer = LlamaTokenizer.from_pretrained("./llama-7B/", return_tensors="pt")
+tokenizer = LlamaTokenizer.from_pretrained(
+    "./llama-7B/", return_tensors="pt", padding_side="left"
+)
 tokenizer.pad_token_id = 0
-tokenizer.bos_token_id = 1
-tokenizer.eos_token_id = 2
 
 
 class ConceptDataset(Dataset):
@@ -22,12 +22,14 @@ class ConceptDataset(Dataset):
     def __getitem__(self, idx):
         row = self.data.iloc[idx]
 
-        text = row["abstract"] + " ==> " + str(row["tags"].split(","))
+        text = "<s>" + row["abstract"] + " ==> " + str(row["tags"].split(",")) + "</s>"
 
         text_encodings = tokenizer(
             text,
             return_tensors="pt",
-            add_special_tokens=True,
+            max_length=1024,
+            add_special_tokens=False,
+            padding="max_length",
         )
 
         return {
