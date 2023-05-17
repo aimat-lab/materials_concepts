@@ -7,7 +7,9 @@ import pandas as pd
 from torch.utils.data import Dataset, DataLoader, random_split
 
 tokenizer = LlamaTokenizer.from_pretrained("./HF/", return_tensors="pt")
-tokenizer.pad_token_id = 0  # unk. we want this to be different from the eos token
+tokenizer.pad_token_id = 0
+tokenizer.bos_token_id = 1
+tokenizer.eos_token_id = 2
 
 
 class ConceptDataset(Dataset):
@@ -25,6 +27,7 @@ class ConceptDataset(Dataset):
         text_encodings = tokenizer(
             text,
             return_tensors="pt",
+            add_special_tokens=True,
         )
 
         return {
@@ -46,3 +49,11 @@ train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 dataloader = DataLoader(
     train_dataset, batch_size=4, shuffle=True, collate_fn=data_collator
 )
+
+
+import numpy as np
+
+tensor = list(train_dataset)[1]["input_ids"]
+np_tensor = tensor.cpu().numpy()
+np.set_printoptions(threshold=np.inf)
+print(np_tensor)
