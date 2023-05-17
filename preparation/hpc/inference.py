@@ -6,6 +6,7 @@ from peft import PeftModel
 import pandas as pd
 import time
 import fire
+import os
 
 
 def main(
@@ -37,6 +38,7 @@ def main(
     )  # prepare
 
     abstracts = list(df.abstract)
+    df["generated"] = None
 
     start_time = time.time()
     for i in range(0, len(abstracts), batch_size):
@@ -61,6 +63,8 @@ def main(
             generated_ids, skip_special_tokens=True
         )
 
+        df.loc[i : i + batch_size - 1, "generated"] = generated_texts
+
         for index, text in enumerate(generated_texts):
             work_id = df.loc[i + index, "id"]
             print(work_id)
@@ -78,6 +82,16 @@ def main(
         "max_new_tokens": max_new_tokens,
     }
     print("Settings:", settings)
+
+    df = df[["id", "generated", "abstract"]]
+    df.generated = df.generated.apply(
+        lambda t: t.split("###\nKEYWORDS:\n###")[1].strip()
+    )  # postprocess, only keep generated text
+    current_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+    OUTPUT_PATH = f"./data/inference_{llama_variant}/{model_id}/"
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
+
+    df.to_csv(f"{OUTPUT_PATH}{current_time}_{model_id}.csv", index=False)
 
 
 if __name__ == "__main__":
