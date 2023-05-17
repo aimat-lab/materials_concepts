@@ -9,7 +9,7 @@ def extract_tags(lines):
     return lines[start_index:end_index]
 
 
-def main(input_file, output_file, separator_length=80):
+def main(input_file, output_file, abstract_file, separator_length=80):
     with open(input_file) as f:
         text = f.read()
 
@@ -32,7 +32,9 @@ def main(input_file, output_file, separator_length=80):
             tags = []
         data.append(dict(id=work_id, tags=",".join(tags)))
 
-    df = pd.DataFrame(data)
+    tags = pd.DataFrame(data)
+    abstracts = pd.read_csv(abstract_file)[["id", "abstract"]]
+    df = tags.join(abstracts.set_index("id"), on="id", how="left")
     df.to_csv(output_file, index=False)
 
 
@@ -48,7 +50,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--separator-length", help="Length of the separator", default=80
     )
+    parser.add_argument(
+        "--abstract_file",
+        help="Path to the abstract file",
+        default="data/materials-science.elements.works.csv",
+    )
 
     args = parser.parse_args()
 
-    main(args.input_file, args.output_file, args.separator_length)
+    main(args.input_file, args.output_file, args.abstract_file, args.separator_length)
