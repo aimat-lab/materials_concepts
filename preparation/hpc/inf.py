@@ -4,7 +4,6 @@ from transformers import (
 )
 from peft import PeftModel
 import torch
-import pandas as pd
 
 USE_FINE_TUNED_MODEL = True
 
@@ -39,7 +38,10 @@ text = text.replace("\n", " ")
 with torch.no_grad():
     outputs = model.generate(
         input_ids=tokenizer(text, return_tensors="pt")["input_ids"].to("cuda"),
-        max_new_tokens=512,
+        max_length=1024,
+        temperature=0,
+        top_k=50,
+        top_p=0.3,
     )
     print(
         tokenizer.batch_decode(
