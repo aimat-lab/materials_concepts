@@ -83,7 +83,7 @@ def main(
     }
     print("Settings:", settings)
 
-    df = df[["id", "generated", "abstract"]]
+    df = df[["id", "generated"]]
     df.generated = df.generated.apply(
         lambda t: t.split("###\nKEYWORDS:\n###")[1].strip()
     )  # postprocess, only keep generated text
