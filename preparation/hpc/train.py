@@ -89,7 +89,13 @@ def main(
         def __getitem__(self, idx):
             row = self.data.iloc[idx]
 
-            text = row["abstract"] + " ==> " + str(row["tags"].split(","))
+            text = (
+                "<s>"
+                + row["abstract"]
+                + "\n\n\n###\nKEYWORDS:\n###\n\n\n"
+                + str(row["tags"].split(","))
+                + "</s>"
+            )
 
             # Tokenize text and tags separately
             text_encodings = tokenizer(
@@ -161,7 +167,7 @@ def main(
 
     model.save_pretrained(OUTPUT_MODEL_PATH)
 
-    settings_dict = {
+    settings = {
         "size_train_dataset": size_train_dataset,
         "tokenizer_max_length": tokenizer_max_length,
         "num_epochs": num_epochs,
@@ -171,7 +177,7 @@ def main(
     }
 
     with open(f"{OUTPUT_MODEL_PATH}/settings.json", "w") as outfile:
-        json.dump(settings_dict, outfile)
+        json.dump(settings, outfile)
 
 
 if __name__ == "__main__":
