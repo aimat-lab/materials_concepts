@@ -5,54 +5,80 @@ from transformers import (
 from peft import PeftModel
 import pandas as pd
 import time
-
-USE_FINE_TUNED_MODEL = True
-
-MODEL_ID = "./models/working/"
-
-model = LlamaForCausalLM.from_pretrained(
-    "./llama-7B/", load_in_8bit=True, device_map="auto"
-)
-tokenizer = LlamaTokenizer.from_pretrained("./llama-7B/", return_tensors="pt")
-tokenizer.pad_token_id = 0
-tokenizer.paddding_side = "left"
-
-if USE_FINE_TUNED_MODEL:
-    model = PeftModel.from_pretrained(model, MODEL_ID)
-
-model.eval()
-
-df = pd.read_csv("./data/inference.csv").head(10)
-df.abstract = df.abstract.apply(lambda text: text + " ==> ")  # prepare
+import fire
 
 
-batch_size = 5
-abstracts = list(df.abstract)
+def main(
+    llama_variant="7B",
+    model_id="finetuned",
+    use_base_model=False,
+    batch_size=5,
+    inf_limit=5,
+    max_new_tokens=512,
+):
+    MODEL_PATH = f"./models/{llama_variant}/{model_id}"
 
-start_time = time.time()
-for i in range(0, len(abstracts), batch_size):
-    batch = abstracts[i : i + batch_size]
-
-    # Pad the sequences in the batch to the same length
-    inputs = tokenizer(batch, padding="longest", return_tensors="pt").to("cuda")
-
-    outputs = model.generate(
-        input_ids=inputs["input_ids"],
-        max_new_tokens=512,
-        temperature=0,
+    tokenizer = LlamaTokenizer.from_pretrained(
+        f"./llama-{llama_variant}/", return_tensors="pt", paddding_side="left"
     )
+    tokenizer.pad_token_id = 0
 
-    generated_ids = [output.detach().cpu().numpy() for output in outputs]
-    generated_texts = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+    model = LlamaForCausalLM.from_pretrained(
+        f"./llama-{llama_variant}/", load_in_8bit=True, device_map="auto"
+    )
+    if not use_base_model:
+        model = PeftModel.from_pretrained(model, MODEL_PATH)
 
-    # assign batch to df
-    # df.loc[i : i + batch_size - 1, "generated"] = generated_texts
+    model.eval()
 
-    for index, text in enumerate(generated_texts):
-        id = df.loc[i + index, "id"]
-        print(id)
-        print(text)
-        print("=====================================")
+    df = pd.read_csv("./data/inference.csv").head(inf_limit)
+    df.abstract = df.abstract.apply(
+        lambda text: "<s>" + text + "\n\n\n###\nKEYWORDS:\n###\n\n\n"
+    )  # prepare
 
-    print("Batch processing took: ", time.time() - start_time, "\n")
+    abstracts = list(df.abstract)
+
     start_time = time.time()
+    for i in range(0, len(abstracts), batch_size):
+        batch = abstracts[i : i + batch_size]
+
+        # Pad the sequences in the batch to the same length
+        inputs = tokenizer(
+            batch,
+            padding="longest",
+            return_tensors="pt",
+            add_special_tokens=False,
+        ).to("cuda")
+
+        outputs = model.generate(
+            input_ids=inputs["input_ids"],
+            max_new_tokens=max_new_tokens,
+            temperature=0,
+        )
+
+        generated_ids = [output.detach().cpu().numpy() for output in outputs]
+        generated_texts = tokenizer.batch_decode(
+            generated_ids, skip_special_tokens=True
+        )
+
+        for index, text in enumerate(generated_texts):
+            work_id = df.loc[i + index, "id"]
+            print(work_id)
+            print(text)
+            print("=====================================\n\n")
+
+    print("Inference took: ", time.time() - start_time, "\n")
+
+    settings = {
+        "llama_variant": llama_variant,
+        "model_id": model_id,
+        "use_base_model": use_base_model,
+        "batch_size": batch_size,
+        "inf_limit": inf_limit,
+        "max_new_tokens": max_new_tokens,
+    }
+    print("Settings:", settings)
+
+
+if __name__ == "__main__":
+    fire.Fire(main)
