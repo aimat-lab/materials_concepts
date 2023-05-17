@@ -11,7 +11,8 @@ from peft import (
     get_peft_model,
     prepare_model_for_int8_training,
 )
-
+import numpy as np
+import random
 from torch.utils.data import Dataset, random_split
 import pandas as pd
 import logging
@@ -26,25 +27,46 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+
+def set_seed(seed_value):
+    random.seed(seed_value)
+    np.random.seed(seed_value)
+    torch.manual_seed(seed_value)
+    torch.cuda.manual_seed_all(seed_value)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
+## Deterministic training
+seed = 42
+set_seed(seed)
+
+
+## Constants
+DATA_PATH = "./data/train.csv"
+MODEL_PATH = "./llama-7B/"
+OUTPUT_MODEL_PATH = "./models/testing-train/"
+SIZE_TRAIN_DATASET = 0.9
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
+## Setup
 print("Loading tokenizer...")
-tokenizer = LlamaTokenizer.from_pretrained("./HF/", return_tensors="pt")
+tokenizer = LlamaTokenizer.from_pretrained(MODEL_PATH, return_tensors="pt")
 tokenizer.pad_token_id = 0
 tokenizer.bos_token_id = 1
 tokenizer.eos_token_id = 2
+tokenizer.paddding_side = "left"
 
+data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
 print("Loading model...")
 model = LlamaForCausalLM.from_pretrained(
-    "./HF/",
+    MODEL_PATH,
     load_in_8bit=True,
     torch_dtype=torch.float16,
     device_map="auto",
 )
-
-## Dataset
 
 
 class ConceptDataset(Dataset):
@@ -62,7 +84,7 @@ class ConceptDataset(Dataset):
         # Tokenize text and tags separately
         text_encodings = tokenizer(
             text,
-            add_special_tokens=True,
+            add_special_tokens=False,
             return_tensors="pt",
             padding="max_length",
             max_length=1024,
@@ -75,20 +97,17 @@ class ConceptDataset(Dataset):
         }
 
 
+## Dataset
 print("Loading dataset...")
-dataset = ConceptDataset(pd.read_csv("train.csv"))
+dataset = ConceptDataset(pd.read_csv(DATA_PATH))
 
 dataset_size = len(dataset)
-train_size = int(0.9 * dataset_size)
+train_size = int(SIZE_TRAIN_DATASET * dataset_size)
 test_size = dataset_size - train_size
-
 train_dataset, val_dataset = random_split(dataset, [train_size, test_size])
-
-data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
 
 ## Setup LORA
-
 config = LoraConfig(
     task_type=TaskType.CAUSAL_LM,
     r=16,  # attention heads
@@ -102,35 +121,33 @@ model = prepare_model_for_int8_training(model)
 model = get_peft_model(model, config)
 model.print_trainable_parameters()
 
-# define training arguments
+## Arguments
 training_args = TrainingArguments(
-    output_dir="./results",
+    output_dir=OUTPUT_MODEL_PATH,
     overwrite_output_dir=True,
     num_train_epochs=2,
     weight_decay=0.005,
-    per_device_train_batch_size=1,  # reduce the batch size
+    per_device_train_batch_size=4,
     logging_dir="./logs",
     logging_steps=1,
     logging_strategy="steps",
     optim="adamw_torch",
-    learning_rate=1e-4,
+    learning_rate=1e-3,
     evaluation_strategy="epoch",
 )
 
 
-# define trainer
+## Training
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,  # your own training dataset
-    eval_dataset=val_dataset,  # your own evaluation dataset
+    train_dataset=train_dataset,
+    eval_dataset=val_dataset,
     data_collator=data_collator,
-    # compute metrics
 )
 
 print("Training...")
-# fine-tune the model
 model.train()
 trainer.train()
 
-model.save_pretrained("./results")
+model.save_pretrained(OUTPUT_MODEL_PATH)

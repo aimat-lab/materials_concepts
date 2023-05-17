@@ -6,7 +6,7 @@ import pandas as pd
 
 from torch.utils.data import Dataset, DataLoader, random_split
 
-tokenizer = LlamaTokenizer.from_pretrained("./HF/", return_tensors="pt")
+tokenizer = LlamaTokenizer.from_pretrained("./llama-7B/", return_tensors="pt")
 tokenizer.pad_token_id = 0
 tokenizer.bos_token_id = 1
 tokenizer.eos_token_id = 2

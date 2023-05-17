@@ -33,28 +33,31 @@ source $HOME/miniconda3/etc/profile.d/conda.sh
 python3 -u fine-tune_model_trainer.py
 ```
 
+## Convert Weights
+
+`python3 conversion_script.py --input_dir ./LlamaW --model_size 13B --output_dir ./llama-13B`
+
 ## Commands
 
+File size:
 `du -shx *`
 
+Go to Workspace:
 `cd $(ws_find matconcepts)`
 
+Available resources at the moment:
 `sinfo_t_idle`
 
-`cp $HOME/fine-tune_model.py .`
+Copy files from $HOME to WS:
+`cp $HOME/train.py .`
+`cp $HOME/inference.py .`
 
-`cp $HOME/fine-tune_model_trainer.py .`
-
-`sbatch --partition=dev_gpu_4_a100 job_train.sh`
-
+Dispatch jobs:
 `sbatch --partition=gpu_4_a100 job_train.sh`
-
-`sbatch --partition=dev_gpu_4_a100 job_inf.sh`
-
 `sbatch --partition=gpu_4_a100 job_inf.sh`
 
-`sbatch --partition=dev_single --mem=96000 job.sh`
-
+List current jobs:
 `squeue`
 
+Detailed information:
 `scontrol show job <id>`
