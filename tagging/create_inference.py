@@ -5,6 +5,7 @@ import pandas as pd
 def main(
     base_file="data/materials-science.elements.works.csv",
     ground_truth_file="tagging/out.csv",
+    output_file="preparation/hpc/data-inference/untagged.csv",
     n_samples=500,
 ):
     all_works = pd.read_csv(base_file)
@@ -14,7 +15,7 @@ def main(
     print(f"Found {len(untagged_works)} untagged works. From total of {len(all_works)}")
 
     sample = untagged_works.sample(n_samples)
-    sample.to_csv("tagging/inference.csv", index=False)
+    sample.to_csv(output_file, index=False)
 
 
 if __name__ == "__main__":
