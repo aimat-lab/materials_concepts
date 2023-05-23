@@ -76,27 +76,11 @@ def create_training_data(
     year_start,
     years_delta,
     edges_used=500_000,
-    vertex_degree_cutoff=10,
     ratio_connected=0.5,
 ):
-    """
-    :param full_graph: Full graph, numpy array dim(n,3) [vertex 1, vertex 2, time stamp]
-    :param year_start: year of graph
-    :param years_delta: distance for prediction in years (prediction on graph of year_start+years_delta)
-    :param edges_used: optional filter to create a random subset of edges for rapid prototyping (default: 500,000)
-    :param vertex_degree_cutoff: optional filter, for vertices in training set
-                                 having a minimal degree of at least vertex_degree_cutoff  (default: 10)
-
-    :return:
-    unconnected_vertex_pairs: potential edges for year_start+years_delta
-    unconnected_vertex_pairs_solution: numpy array with integers
-        (0=unconnected, 1=connected), solution, length = len(unconnected_vertex_pairs)
-    """
-
     year_end = year_start + years_delta
 
-    train_graph, train_sparse_mat = build_graphs(full_graph, until_year=year_start)
-
+    train_graph, _ = build_graphs(full_graph, until_year=year_start)
     future_graph, _ = build_graphs(full_graph, until_year=year_end)
 
     edges = train_graph.edges()
@@ -113,7 +97,7 @@ def create_training_data(
     unconnected_vertex_pairs_solution = [1] * len(new_edges)
 
     draw_sample = get_draw_sample(len(vertices))
-    pbar = tqdm(total=int(edges_used * (1 - ratio_connected)))
+    pbar = tqdm(total=int(edges_used - len(new_edges)))
     while len(unconnected_vertex_pairs) < edges_used:
         i1, i2 = draw_sample()
         v1, v2 = vertices[i1], vertices[i2]
@@ -130,19 +114,6 @@ def create_training_data(
 
     pbar.close()
 
-    print(
-        "Number of unconnected vertex pairs for prediction: ",
-        len(unconnected_vertex_pairs_solution),
-    )
-    print(
-        "Number of vertex pairs that will be connected: ",
-        sum(unconnected_vertex_pairs_solution),
-    )
-    print(
-        "Ratio of vertex pairs that will be connected: ",
-        sum(unconnected_vertex_pairs_solution) / len(unconnected_vertex_pairs_solution),
-    )
-
     unconnected_vertex_pairs = np.array(unconnected_vertex_pairs)
     unconnected_vertex_pairs_solution = np.array(
         list(map(int, unconnected_vertex_pairs_solution))
@@ -151,6 +122,40 @@ def create_training_data(
     perm = np.random.permutation(len(unconnected_vertex_pairs))
 
     return unconnected_vertex_pairs[perm], unconnected_vertex_pairs_solution[perm]
+
+
+def create_test_data(full_graph, year_start, years_delta, edges_used=500_000):
+    year_end = year_start + years_delta
+
+    train_graph, _ = build_graphs(full_graph, until_year=year_start)
+    solution_graph, _ = build_graphs(full_graph, until_year=year_end)
+
+    vertices = np.array(range(NUM_OF_VERTICES))
+
+    ## Create all edges to be predicted
+    unconnected_vertex_pairs = []
+    unconnected_vertex_pairs_solution = []
+
+    draw_sample = get_draw_sample(len(vertices))
+    pbar = tqdm(total=edges_used)
+    while len(unconnected_vertex_pairs) < edges_used:
+        i1, i2 = draw_sample()
+        v1, v2 = vertices[i1], vertices[i2]
+
+        # graph is undirected: == has_edge(v2,v1)
+        if v1 != v2 and not train_graph.has_edge(v1, v2):
+            unconnected_vertex_pairs.append((v1, v2))
+            unconnected_vertex_pairs_solution.append(solution_graph.has_edge(v1, v2))
+            pbar.update(1)
+
+    pbar.close()
+
+    unconnected_vertex_pairs = np.array(unconnected_vertex_pairs)
+    unconnected_vertex_pairs_solution = np.array(
+        list(map(int, unconnected_vertex_pairs_solution))
+    )
+
+    return unconnected_vertex_pairs, unconnected_vertex_pairs_solution
 
 
 def retrieve_properties_for_vertex_pair(
@@ -188,7 +193,7 @@ def retrieve_properties_for_vertex_pair(
     all_properties.append(AA12[v1, v2])  # 13
     all_properties.append(AA22[v1, v2])  # 14
 
-    return all_properties
+    return np.array(all_properties).astype(np.float32)
 
 
 def compute_all_properties_of_list(all_sparse, vlist):
@@ -263,7 +268,7 @@ def split_train_test(X, y, test_size=0.2):
     print("Training, connected  : ", sum(y_train == 1))
     print("Training, unconnected: ", sum(y_train == 0))
 
-    return X_train, y_train, X_test, y_test
+    return X_train, X_test, y_train, y_test
 
 
 def undersample_data(X, y, ratio=0.01):
@@ -300,42 +305,66 @@ def split_based_on_class(X, y):
 
 def main():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
-    edges_used = 500_000
-    vertex_degree_cutoff = 10  # not used currently
-    year_start = 2014
-    train_years = [2012, 2013, 2014]
+    edges_used = 4_000_000
+    year_start = 2011
+    train_years = [2009, 2010, 2011]
     years_delta = 3
 
-    # train graph is until 2011
     train_edges_for_checking, train_edges_solution = create_training_data(
         graph,
         year_start=year_start,
         years_delta=years_delta,
         edges_used=edges_used,
-        vertex_degree_cutoff=vertex_degree_cutoff,
-        ratio_connected=0.1,
+        ratio_connected=0.5,
     )
-
-    X_train, solution_train, X_test, solution_test = split_train_test(
-        train_edges_for_checking, train_edges_solution, test_size=0.1
-    )
-
-    print("Length of training data: ", len(X_train))
-    print("Length of test data: ", len(X_test))
 
     # Compute train sparse matrices
 
     training_matrices = get_adj_matrices(graph, years=train_years)
-    data_train = compute_all_properties_of_list(training_matrices, X_train)
-    data_test = compute_all_properties_of_list(training_matrices, X_test)
+    data_all = compute_all_properties_of_list(
+        training_matrices, train_edges_for_checking
+    )
+
+    data_train, data_test, solution_train, solution_test = split_train_test(
+        np.array(data_all), np.array(train_edges_solution), test_size=0.1
+    )
 
     storage = {}
-    storage["data_train"] = data_train
-    storage["data_test"] = data_test
-    storage["solution_train"] = solution_train
-    storage["solution_test"] = solution_test
+    storage["data_train"] = np.array(data_train)
+    storage["data_test"] = np.array(data_test)
+    storage["solution_train"] = np.array(solution_train)
+    storage["solution_test"] = np.array(solution_test)
 
-    with open("graph/data.pkl", "wb") as f:
+    with open("graph/data_training.pkl", "wb") as f:
+        pickle.dump(storage, f)
+
+
+def main_test():
+    graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
+    edges_used = 500_000
+    year_start = 2011
+    train_years = [2009, 2010, 2011]
+    years_delta = 3
+
+    train_edges_for_checking, train_edges_solution = create_test_data(
+        graph,
+        year_start=year_start,
+        years_delta=years_delta,
+        edges_used=edges_used,
+    )
+
+    # Compute train sparse matrices
+
+    training_matrices = get_adj_matrices(graph, years=train_years)
+    data_test = compute_all_properties_of_list(
+        training_matrices, train_edges_for_checking
+    )
+
+    storage = {}
+    storage["data_test"] = data_test
+    storage["solution_test"] = train_edges_solution
+
+    with open("graph/data_test.pkl", "wb") as f:
         pickle.dump(storage, f)
 
 
