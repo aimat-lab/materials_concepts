@@ -155,6 +155,9 @@ for index, concept in enumerate(sorted(concept_list)):
     concept = concept.strip()
     lookup[concept] = index
 
+# save lookup as csv
+lookup_df = pd.DataFrame.from_dict(lookup, orient="index", columns=["id"])
+lookup_df.to_csv("graph/lookup.csv")
 
 # encode publication date as days since origin
 df["pub_date_days"] = pd.to_datetime(df.publication_date).apply(
