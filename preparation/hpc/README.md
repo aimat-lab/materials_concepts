@@ -10,28 +10,12 @@
 
 ## Cuda Compatible Installation
 
-For CUDA 10.2:
-`pip install torch==1.12.1+cu102 torchvision==0.13.1+cu102 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu102`
+For CUDA 11.8:
+`pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118`
 
-## Job.sh
+## Workspace: Matconcepts
 
-```
-#!/bin/sh
-​#SBATCH --partition=gpu_4_a100
-#SBATCH --gres=gpu:1
-#SBATCH --time=06:00:00
-#SBATCH --job-name=gpu_job
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --output=logs/fine_tune%j.output
-#SBATCH --mail-user=fb6372@partner.kit.edu
-​
-module load devel/cuda/10.2
-​
-source $HOME/miniconda3/etc/profile.d/conda.sh
-​
-python3 -u fine-tune_model_trainer.py
-```
+`/pfs/work7/workspace/scratch/fb6372-matconcepts`
 
 ## Convert Weights
 
