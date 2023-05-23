@@ -1,6 +1,6 @@
 from transformers import (
     LlamaForCausalLM,
-    LlamaTokenizer,
+    LlamaTokenizerFast,
 )
 from peft import PeftModel
 import pandas as pd
@@ -10,6 +10,7 @@ import os
 
 
 def main(
+    input_file="./data/inference.csv",
     llama_variant="7B",
     model_id="finetuned",
     use_base_model=False,
@@ -19,7 +20,7 @@ def main(
 ):
     MODEL_PATH = f"./models/{llama_variant}/{model_id}"
 
-    tokenizer = LlamaTokenizer.from_pretrained(
+    tokenizer = LlamaTokenizerFast.from_pretrained(
         f"./llama-{llama_variant}/", return_tensors="pt", paddding_side="left"
     )
     tokenizer.pad_token_id = 0
@@ -32,7 +33,7 @@ def main(
 
     model.eval()
 
-    df = pd.read_csv("./data/inference.csv").head(inf_limit)
+    df = pd.read_csv(input_file).head(inf_limit)
     df.abstract = df.abstract.apply(
         lambda text: "<s>" + text + "\n\n\n###\nKEYWORDS:\n###\n\n\n"
     )  # prepare
@@ -64,12 +65,6 @@ def main(
         )
 
         df.loc[i : i + batch_size - 1, "generated"] = generated_texts
-
-        for index, text in enumerate(generated_texts):
-            work_id = df.loc[i + index, "id"]
-            print(work_id)
-            print(text)
-            print("=====================================\n\n")
 
     print("Inference took: ", time.time() - start_time, "\n")
 
