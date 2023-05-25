@@ -15,7 +15,14 @@ For CUDA 11.8:
 
 ## Workspace: Matconcepts
 
+Path:
 `/pfs/work7/workspace/scratch/fb6372-matconcepts`
+
+Copy files:
+`scp file.txt fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconcepts`
+`ctc file.txt`
+`scp file.txt $WS`
+`scp $WS/file.txt .`
 
 ## Convert Weights
 
