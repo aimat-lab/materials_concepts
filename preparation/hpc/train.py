@@ -146,10 +146,10 @@ def main(
         per_device_train_batch_size=batch_size,
         logging_dir="./logs",
         logging_steps=1,
-        logging_strategy="steps",
+        logging_strategy="epoch",
         optim="adamw_torch",
         learning_rate=lr,
-        evaluation_strategy="epoch",
+        evaluation_strategy="epoch" if size_train_dataset < 1 else "no",
     )
 
     ## Training
