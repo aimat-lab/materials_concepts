@@ -341,9 +341,9 @@ def main():
 
 def main_test():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
-    edges_used = 500_000
-    year_start = 2011
-    train_years = [2009, 2010, 2011]
+    edges_used = 4_000_000
+    year_start = 2014
+    train_years = [2012, 2013, 2014]
     years_delta = 3
 
     train_edges_for_checking, train_edges_solution = create_test_data(
