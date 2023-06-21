@@ -265,9 +265,12 @@ def main(
 
     print("Building edge list")
     all_edges = []
-    for concept_list, pub_date in tqdm(list(zip(df[colname], df.pub_date_days))):
+    for concept_list, element_list, pub_date in tqdm(
+        list(zip(df[colname], df.elements, df.pub_date_days))
+    ):
+        works_concepts = list(concept_list) + list(element_list)
         concept_ids = {
-            lookup[c] for c in concept_list if lookup.get(c) is not None
+            lookup[c] for c in works_concepts if lookup.get(c) is not None
         }  # set comprehension because rake/llms don't necessarily filter out duplicates
 
         for v1, v2 in get_pairs(concept_ids):
