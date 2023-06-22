@@ -33,7 +33,7 @@ Output
 
 ## The Task
 
-Given 100.000 vertex pairs (m) embedded in their graph (g) until year 2017 (y), decide whether they are connected or not in next 3 years.
+Given 1.000.000 vertex pairs (m) embedded in their graph (g) until year 2017 (y), decide whether they are connected or not in next 3 years.
 
 Consult output.pkl (m, X_train, y_train) and edges.npz (graph). Slice graph according to year. Generate embeddings for vertex pairs. Train model on embeddings (again 0.9:0.1 split on training data).
 
