@@ -2,6 +2,7 @@
 
 - [ ] Generate training data
 - [ ] Training/Test Split 0.9 / 0.1 (real probs)
+- [ ] For 10.000.000 Vertex Pairs <= 10
 - [ ] Undersample training data
 - [ ] Pickle data
 
@@ -11,10 +12,14 @@ Input
 def create_training_data(
     full_graph,
     year_start,
-    years_delta,
+    years_delta: (1,3,5),
     edges_used=500_000,
-    ratio_connected=0.5,
-):
+    c (0,5,25)
+    w (1,3)
+)
+
+def create_test_data -> real probabilities, 10.000.000 vertex pairs, only if
+degree >= 10?
 ```
 
 Output

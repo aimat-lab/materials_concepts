@@ -1,8 +1,12 @@
 from torch import nn
 import torch
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
+from sklearn.metrics import (
+    roc_auc_score,
+    precision_recall_fscore_support,
+    confusion_matrix,
+)
+import pickle
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -34,43 +38,10 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-def train_model(model, data_train, solution_train, lr_enc, batch_size):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    optimizer_predictor = torch.optim.Adam(model.parameters(), lr=lr_enc)
-
-    data_train = torch.tensor(data_train, dtype=torch.float).to(device)
-    solution_train = torch.tensor(solution_train, dtype=torch.float).to(device)
-
-    criterion = torch.nn.BCELoss()
-
-    print("Starting Training...")
-    running_loss = 0.0
-    for i in range(10000):  # should be much larger, with good early stopping criteria
-        model.train()
-
-        idx = torch.randint(0, len(data_train), (batch_size,))
-        data_train_samples = data_train[idx]
-        output = model(data_train_samples)
-        target = torch.tensor(solution_train[idx], dtype=torch.float).to(device)
-
-        target = target.unsqueeze(1)
-        loss = criterion(output, target)  # unsqueeze to match dimensions
-        loss = torch.clamp(loss, min=0.0, max=50000.0).double()  # is this needed?
-
-        optimizer_predictor.zero_grad()
-        loss.backward()
-        optimizer_predictor.step()
-        running_loss += loss.item()
-
-        if i % 50 == 0:
-            print("Iteration: ", i, " Loss: ", running_loss / 50)
-            running_loss = 0
-
-    return True
-
-
-def train_model_x(model, X_train, y_train, learning_rate, batch_size, num_epochs):
+def train_model(
+    model, X_train, y_train, X_test, y_test, learning_rate, batch_size, num_epochs
+):
+    print(f"Training model... ({len(X_train):,})")
     X_train = torch.Tensor(np.array(X_train))
     y_train = torch.Tensor(np.array(y_train))
 
@@ -147,66 +118,89 @@ def train_model_x(model, X_train, y_train, learning_rate, batch_size, num_epochs
         # Print the average loss for the epoch
         print(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
 
+    print(f"Evaluating model on test data... ({len(X_test):,})")
+    X_test = torch.tensor(np.array(X_test), dtype=torch.float).to(device)
+    predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
-def flatten(t):
-    return [item for sublist in t for item in sublist]
-
-
-def eval_model(model, data, solution, name="Metrics"):
-    data = torch.tensor(np.array(data), dtype=torch.float).to(device)
-    predictions = np.array(flatten(model(data).detach().cpu().numpy()))
-
-    auc = roc_auc_score(solution, predictions)
+    auc = roc_auc_score(y_test, predictions)
 
     THRESHOLD = 0.5
     precision, recall, fscore, _ = precision_recall_fscore_support(
-        solution, predictions > THRESHOLD, average="binary"
+        y_test, predictions > THRESHOLD, average="binary"
     )
 
-    print("\n" + name)
     print("AUC", f"{auc:.4f}")
     print("Precision", f"{precision:.4f}")
     print("Recall", f"{recall:.4f}")
     print("F1", f"{fscore:.4f}")
 
 
-def main():
-    import pickle
+def flatten(t):
+    return [item for sublist in t for item in sublist]
 
+
+def load_data(year):
     print("Loading data...")
-    with open("graph/data_training.pkl", "rb") as f:
+    with open(f"model/data_{year}.pkl", "rb") as f:
         data = pickle.load(f)
+
+    print("Loading embeddings...")
+    with open(f"model/baseline/embeddings_{year}.pkl", "rb") as f:
+        embeddings = pickle.load(f)
+
+    return data, embeddings
+
+
+def main():
+    data, embeddings = load_data(2016)
 
     model = BaselineNetwork().to(device)
 
     print("Training...")
     model.train()
-    train_model_x(
+    train_model(
         model,
-        data["data_train"],
-        data["solution_train"],
+        X_train=embeddings["X_train"],
+        y_train=data["y_train"],
+        X_test=embeddings["X_test"],
+        y_test=data["y_test"],
         learning_rate=0.001,
         batch_size=100,
-        num_epochs=2,
-    )
-
-    eval_model(
-        model,
-        data=data["data_test"],
-        solution=data["solution_test"],
-        name="Training Dist",
-    )
-
-    # evaluate model: currently non-sense
-    with open("graph/data_test.pkl", "rb") as f:
-        test = pickle.load(f)
-
-    eval_model(
-        model, data=test["data_test"], solution=test["solution_test"], name="Real Dist"
+        num_epochs=1,
     )
 
     torch.save(model.state_dict(), "model/baseline/model.pt")
 
 
+def eval():
+    """Load the pytorch model and evaluate it on the test set"""
+    print("Loading model...")
+    model = BaselineNetwork().to(device)
+    model.load_state_dict(torch.load("model/baseline/model.pt"))
+
+    data, embeddings = load_data(2019)
+
+    print("Evaluating...")
+    X_test = torch.tensor(np.array(embeddings["X_test"]), dtype=torch.float).to(device)
+    predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
+
+    auc = roc_auc_score(data["y_test"], predictions)
+
+    THRESHOLD = 0.5
+    precision, recall, fscore, _ = precision_recall_fscore_support(
+        data["y_test"], predictions > THRESHOLD, average="binary"
+    )
+
+    print("AUC", f"{auc:.4f}")
+    print("Precision", f"{precision:.4f}")
+    print("Recall", f"{recall:.4f}")
+    print("F1", f"{fscore:.4f}")
+
+    print("Confusion matrix:")
+    tn, fp, fn, tp = confusion_matrix(data["y_test"], predictions > THRESHOLD).ravel()
+    # tn, fp, fn, tp
+    print(f"tn: {tn}, fp: {fp}, fn: {fn}, tp: {tp}")
+
+
 if __name__ == "__main__":
-    main()
+    eval()  # main()
