@@ -7,7 +7,7 @@ from tqdm import tqdm
 import pickle
 
 DAY_ORIGIN = date(1970, 1, 1)
-NUM_OF_VERTICES = 125_019
+NUM_OF_VERTICES = 60_000  # 80_201
 
 
 def get_until(graph, day):
@@ -307,7 +307,7 @@ def main():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
     edges_used = 4_000_000
     year_start = 2011
-    train_years = [2009, 2010, 2011]
+    train_years = [2010, 2013, 2016]
     years_delta = 3
 
     train_edges_for_checking, train_edges_solution = create_training_data(
@@ -321,6 +321,8 @@ def main():
     # Compute train sparse matrices
 
     training_matrices = get_adj_matrices(graph, years=train_years)
+
+    print("Computing properties of matrix with shape", training_matrices[0].shape)
     data_all = compute_all_properties_of_list(
         training_matrices, train_edges_for_checking
     )
