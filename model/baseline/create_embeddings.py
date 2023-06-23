@@ -11,15 +11,14 @@ class Graph:
     def __init__(self, path, num_of_vertices):
         self.num_of_vertices = num_of_vertices
         self.edges = Graph.load(path)  # todo load from pickled file
-        self.adj_mat = Graph.build_adj_matrix(self.edges)
+        self.adj_mat = self.build_adj_matrix(self.edges)
         self.degrees = Graph.calc_degrees(self.adj_mat)
 
     @staticmethod
     def load(path):
         return np.load(path, allow_pickle=True)["arr_0"]
 
-    @staticmethod
-    def build_adj_matrix(edge_list):
+    def build_adj_matrix(self, edge_list):
         """Build a symmetric adjacency matrix from edge list."""
 
         symmetric_edges = np.vstack((edge_list, edge_list[:, [1, 0, 2]]))
@@ -32,6 +31,7 @@ class Graph:
                 data,
                 (rows, cols),
             ),
+            shape=(self.num_of_vertices, self.num_of_vertices),
         )
 
     @staticmethod
@@ -53,7 +53,7 @@ class Graph:
         cutoff_date = date(until_year, 12, 31)
 
         edges = self.get_until(cutoff_date)
-        adj_mat = Graph.build_adj_matrix(edges)
+        adj_mat = self.build_adj_matrix(edges)
         return adj_mat
 
     def get_nx_graph(self, until_year):
@@ -70,7 +70,7 @@ class Graph:
 
     def get_adj_matrices(self, years):
         return [
-            Graph.build_adj_matrix(self.get_until(date(year, 12, 31))) for year in years
+            self.build_adj_matrix(self.get_until(date(year, 12, 31))) for year in years
         ]
 
 
@@ -175,7 +175,7 @@ def compute_all_properties_of_list(all_sparse, vlist):
 
 
 def calculate_embeddings(X_train, X_test):
-    graph = Graph("graph/edges.npz", 57.460)
+    graph = Graph("graph/edges.npz", 80201)
 
     matrices = graph.get_adj_matrices([2010, 2013, 2016])
     embeddings = compute_all_properties_of_list(
@@ -189,12 +189,12 @@ if __name__ == "__main__":
     import pickle
 
     print("Loading data...")
-    with open("model/data_2019.pkl", "rb") as f:
+    with open("model/data_2016_r.pkl", "rb") as f:
         data = pickle.load(f)
 
     print("Calculating embeddings...")
     X_train, X_test = calculate_embeddings(data["X_train"], data["X_test"])
 
     print("Saving embeddings...")
-    with open("model/baseline/embeddings_2019.pkl", "wb") as f:
+    with open("model/baseline/embeddings_2016_r.pkl", "wb") as f:
         pickle.dump({"X_train": X_train, "X_test": X_test}, f)

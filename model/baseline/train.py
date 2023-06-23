@@ -141,11 +141,11 @@ def flatten(t):
 
 def load_data(year):
     print("Loading data...")
-    with open(f"model/data_{year}.pkl", "rb") as f:
+    with open(f"model/data_{year}_r.pkl", "rb") as f:
         data = pickle.load(f)
 
     print("Loading embeddings...")
-    with open(f"model/baseline/embeddings_{year}.pkl", "rb") as f:
+    with open(f"model/baseline/embeddings_{year}_r.pkl", "rb") as f:
         embeddings = pickle.load(f)
 
     return data, embeddings
@@ -203,4 +203,4 @@ def eval():
 
 
 if __name__ == "__main__":
-    eval()  # main()
+    main()

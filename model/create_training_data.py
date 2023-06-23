@@ -29,7 +29,6 @@ class Graph:
         self.num_of_vertices = num_of_vertices
         self.edges = Graph.load(path)  # todo load from pickled file
         self.adj_mat = Graph.build_adj_matrix(self.edges)
-        print(self.adj_mat.shape)
         self.degrees = Graph.calc_degrees(self.adj_mat)
 
     @staticmethod
@@ -219,7 +218,7 @@ def create_training_data(
     }
 
     # pickle store
-    with open("data.pkl", "wb") as f:
+    with open("model/data_2016_r.pkl", "wb") as f:
         pickle.dump(store, f)
 
 
