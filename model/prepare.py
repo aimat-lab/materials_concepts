@@ -306,8 +306,8 @@ def split_based_on_class(X, y):
 def main():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
     edges_used = 4_000_000
-    year_start = 2011
-    train_years = [2010, 2013, 2016]
+    year_start = 2015
+    train_years = [2011, 2013, 2015]
     years_delta = 3
 
     train_edges_for_checking, train_edges_solution = create_training_data(
@@ -344,8 +344,8 @@ def main():
 def main_test():
     graph = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
     edges_used = 4_000_000
-    year_start = 2014
-    train_years = [2012, 2013, 2014]
+    year_start = 2019
+    train_years = [2015, 2017, 2019]
     years_delta = 3
 
     train_edges_for_checking, train_edges_solution = create_test_data(
@@ -371,4 +371,5 @@ def main_test():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    main_test()
