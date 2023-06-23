@@ -278,7 +278,8 @@ def main(
 
     all_edges = np.array(all_edges)
 
-    print(f"# edges: {len(all_edges): .0f}")
+    print(f"# nodes: {len(lookup):,.0f}")
+    print(f"# edges: {len(all_edges):,.0f}")
 
     np.savez_compressed("graph/edges.npz", all_edges)
 
