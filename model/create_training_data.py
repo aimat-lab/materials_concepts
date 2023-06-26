@@ -10,30 +10,17 @@ from collections import Counter
 DAY_ORIGIN = date(1970, 1, 1)
 
 
-def get_draw_sample(n):
-    bag = range(n)
-    drawn = set()
-
-    def draw_sample():
-        while (comb := frozenset(random.sample(bag, 2))) in drawn:
-            pass
-
-        drawn.add(comb)
-        return comb
-
-    return draw_sample
-
-
 class Graph:
-    def __init__(self, path, num_of_vertices):
-        self.num_of_vertices = num_of_vertices
-        self.edges = Graph.load(path)  # todo load from pickled file
+    def __init__(self, path):
+        self.num_of_vertices, self.edges = Graph.load(path)
         self.adj_mat = Graph.build_adj_matrix(self.edges)
         self.degrees = Graph.calc_degrees(self.adj_mat)
 
     @staticmethod
     def load(path):
-        return np.load(path, allow_pickle=True)["arr_0"]
+        with open(path, "rb") as f:
+            data = pickle.load(f)
+        return data["num_of_vertices"], data["edges"]
 
     @staticmethod
     def build_adj_matrix(edge_list):
@@ -56,7 +43,7 @@ class Graph:
         return nx.from_scipy_sparse_array(
             adj_mat,
             parallel_edges=False,
-            edge_attribute="weight",  # weight = number of edges between nodes
+            edge_attribute="links",
         )
 
     @staticmethod
@@ -83,151 +70,112 @@ class Graph:
         return np.array(range(self.num_of_vertices))
 
     def get_vertices(self, max_degree):
+        if max_degree is None:
+            return self.vertices()
+
         return np.where(self.degrees <= max_degree)[0]
 
 
-def random_generator(n):
-    for idx in np.random.permutation(n * n):
-        yield divmod(idx, n)
+class TrainingDataGenerator:
+    def __init__(self, path_to_graph: str, year_start: int, year_delta: int):
+        self.year_start = year_start
+        self.year_delta = year_delta
+        year_end = year_start + year_delta
 
+        self.graph = Graph(path_to_graph)
+        self.past_graph = self.graph.get_nx_graph(until_year=year_start)
+        self.future_graph = self.graph.get_nx_graph(until_year=year_end)
 
-def split_array(array, train_split=0.1):
-    n = len(array)
-    split_index = int(n * train_split)  # Calculate the index to split at
+    def generate(self, edges_used: int, min_links: int = 1, max_v_degree: int = 25):
+        """Generate training data by taking all positive samples and randomly drawing negative samples until the desired number of samples is reached.
 
-    part_1 = array[:split_index]  # First 90% of elements
-    part_2 = array[split_index:]  # Last 10% of elements
+        Parameters:
+        edges_used: number of vertex pairs to generate
+        min_links: minimum number of links (at time = year_start + delta) between vertex pairs to be counted as positive sample
+        max_v_degree: maximum degree of vertices which are considered for sampling
 
-    return part_1, part_2
+        Returns:
+        X: array of vertex pairs with vertex [0, len(self.graph.num_of_vertices)]
+        y: array of labels (1 = connected, 0 = unconnected)
+        """
+        filtered_vertices = self.graph.get_vertices(max_degree=max_v_degree)
 
+        pos_samples = self._get_pos_samples(filtered_vertices, min_links)
+        to_draw_neg = edges_used - len(pos_samples)
+        neg_samples = self._get_neg_samples(to_draw_neg, filtered_vertices)
 
-def generate_vertex_pairs(
-    vertices,
-    edges_used,
-    past_graph,
-    future_graph,
-    train_split=0.9,
-    pos_samples_ratio=0.4,
-):
-    new_edges = list(set(future_graph.edges()) - set(past_graph.edges()))
-    new_edges = new_edges[
-        : int(len(new_edges) * pos_samples_ratio)
-    ]  # take only a fraction of the new edges
+        X = np.array(pos_samples + neg_samples)
+        y = np.array([1] * len(pos_samples) + [0] * len(neg_samples))
+        return self.shuffle(X, y)
 
-    print("Found pos samples:", len(new_edges))
-    no_edges_train = []
+    def _get_pos_samples(self, filtered_vertices, min_links):
+        """Positive samples of vertex pairs: {year_start} unconnected, {year_start + delta} connected
 
-    draw_sample = get_draw_sample(len(vertices))
-    print("Drawing neg samples for training:", edges_used)
+        Aproach:
+        All edges which exist at {year_start + delta} and didn't exist at {year_start} are candidates.
+        Filter out all edges which have less than {min_links} links at {year_start + delta}
+        and check if the vertices are in the filtered set of vertices.
+        """
+        pos_samples = set(self.future_graph.edges()) - set(self.past_graph.edges())
 
-    pbar = tqdm(total=int(edges_used))
-    while len(no_edges_train) < edges_used:
-        i1, i2 = draw_sample()
-        v1, v2 = vertices[i1], vertices[i2]
+        lookup = {elem: True for elem in filtered_vertices}
+        pos_samples = [
+            (v1, v2) for v1, v2 in pos_samples if lookup.get(v1) and lookup.get(v2)
+        ]
 
-        # graph is undirected: == has_edge(v2,v1)
-        if (
-            v1 != v2
-            and not past_graph.has_edge(v1, v2)
-            and not future_graph.has_edge(v1, v2)
-        ):
-            no_edges_train.append((v1, v2))
-            pbar.update(1)
+        pos_samples = [
+            (v1, v2)
+            for v1, v2 in pos_samples
+            if self.future_graph.edges[v1, v2]["links"] >= min_links
+        ]
 
-    pbar.close()
+        return pos_samples
 
-    amt_new_edges_test = len(new_edges) / pos_samples_ratio * (1 - train_split)
-    amt_no_edges_test = int(
-        100 / (amt_new_edges_test / (len(vertices) ** 2)) * pos_samples_ratio
-    )
+    def _get_neg_samples(self, to_draw, vertices):
+        """Negative samples of vertex pairs: {year_start} unconnected, {year_start + delta} unconnected"""
+        X = []
 
-    print("Drawing neg samples for test: ", amt_no_edges_test)
-    pbar = tqdm(total=int(amt_no_edges_test))
-    no_edges_test = []
-    while len(no_edges_test) < amt_no_edges_test:
-        i1, i2 = draw_sample()
-        v1, v2 = vertices[i1], vertices[i2]
+        draw_sample = self.get_draw_sample(len(vertices))
+        pbar = tqdm(total=to_draw)
+        while len(X) < to_draw:
+            i1, i2 = draw_sample()
+            v1, v2 = vertices[i1], vertices[i2]
 
-        # graph is undirected: == has_edge(v2,v1)
-        if (
-            v1 != v2
-            and not past_graph.has_edge(v1, v2)
-            and not future_graph.has_edge(v1, v2)
-        ):
-            no_edges_test.append((v1, v2))
-            pbar.update(1)
+            if (
+                v1 != v2
+                and not self.past_graph.has_edge(v1, v2)
+                and not self.future_graph.has_edge(v1, v2)
+                # order of vertices in call doesn't matter as networkx Graph is undirected
+            ):
+                X.append((v1, v2))
+                pbar.update(1)
 
-    pbar.close()
+        pbar.close()
 
-    new_edges_train, new_edges_test = split_array(new_edges, train_split=train_split)
+        return X
 
-    return {
-        "new_edges_train": new_edges_train,
-        "no_edges_train": no_edges_train,
-        "new_edges_test": new_edges_test,
-        "no_edges_test": no_edges_test,
-    }
+    @staticmethod
+    def get_draw_sample(n):
+        bag = range(n)
+        drawn = set()
 
+        def draw_sample():
+            while (comb := frozenset(random.sample(bag, 2))) in drawn:
+                pass
 
-def create_training_data(
-    path_to_graph,
-    year_start,
-    years_delta,  # delta
-    max_vertex_degree,  # c: 25
-    amount_links,  # w
-    edges_used=10_000_000,  # ?
-):
-    year_end = year_start + years_delta
+            drawn.add(comb)
+            return comb
 
-    graph = Graph(path_to_graph, 57.460)
+        return draw_sample
 
-    past_graph = graph.get_nx_graph(until_year=year_start)
-    future_graph = graph.get_nx_graph(until_year=year_end)
-
-    vertices = graph.get_vertices(max_degree=max_vertex_degree)
-
-    data = generate_vertex_pairs(vertices, edges_used, past_graph, future_graph)
-
-    X_train = np.array(data["new_edges_train"] + data["no_edges_train"])
-    y_train = np.array(
-        [1] * len(data["new_edges_train"]) + [0] * len(data["no_edges_train"])
-    )
-
-    permutation_index = np.random.permutation(len(X_train))
-
-    X_train = X_train[permutation_index]
-    y_train = y_train[permutation_index]
-
-    X_test = np.array(data["new_edges_test"] + data["no_edges_test"])
-    y_test = np.array(
-        [1] * len(data["new_edges_test"]) + [0] * len(data["no_edges_test"])
-    )
-
-    permutation_index = np.random.permutation(len(X_test))
-
-    X_test = X_test[permutation_index]
-    y_test = y_test[permutation_index]
-
-    store = {
-        "year": year_start,
-        "delta": years_delta,
-        "X_train": X_train,
-        "y_train": y_train,
-        "X_test": X_test,
-        "y_test": y_test,
-    }
-
-    # pickle store
-    with open("model/data_2016_r.pkl", "wb") as f:
-        pickle.dump(store, f)
+    @staticmethod
+    def shuffle(X, y):
+        """Shuffle X and y in unison"""
+        assert len(X) == len(y)
+        p = np.random.permutation(len(X))
+        return X[p], y[p]
 
 
 if __name__ == "__main__":
-    create_training_data(
-        "graph/edges.npz",
-        year_start=2019,
-        years_delta=3,
-        edges_used=1_000_000,
-        max_vertex_degree=25,
-        amount_links=1,  # >= ?
-    )
+    generator = TrainingDataGenerator("graph/edges.pkl", year_start=2019, year_delta=3)
+    X, y = generator.generate(edges_used=1_000_000, min_links=1, max_v_degree=None)
