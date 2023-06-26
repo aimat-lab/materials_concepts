@@ -6,6 +6,7 @@ from ast import literal_eval
 from nltk import pos_tag
 import re
 from fire import Fire
+import pickle
 
 ORIGIN_DAY = pd.to_datetime("1970-01-01")
 
@@ -281,10 +282,14 @@ def main(
     print(f"# nodes: {len(lookup):,.0f}")
     print(f"# edges: {len(all_edges):,.0f}")
 
-    np.savez_compressed("graph/edges.npz", all_edges)
-
-    # load edges
-    # edges = np.load("graph/edges.npz", allow_pickle=True)["arr_0"]
+    with open("graph/edges.pkl", "wb") as f:
+        pickle.dump(
+            {
+                "num_of_vertices": len(lookup),
+                "edges": all_edges,
+            },
+            f,
+        )
 
 
 if __name__ == "__main__":
