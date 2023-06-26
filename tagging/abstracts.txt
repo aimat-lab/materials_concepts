@@ -20,20 +20,13 @@ transformation are deduced and presented on the basis of this analysis.
 §
 titanium dioxide
 photocatalytic material
-photocatalytic
-anatase
-rutile
-polymorphs
 photocatalytic performance
 phase transformation
 anatase to rutile phase transformation
+anatase to rutile
 thermodynamic of phase transformation
 synthesis and property
-dopant
 cationic radius
-valence
-inhibitor
-promoter
 dopant element
 §
 
@@ -57,10 +50,8 @@ events.
 
 §
 liquid phase sintering
-sintering
 multi-phase component
 multi-phase formation
-powder
 solid grain
 wetting liquid
 metal cutting insert
@@ -68,8 +59,6 @@ engine connecting rod
 mixed powder heating
 computer simulation
 densification and microstructure evolution
-densification 
-microstructure
 §
 
 ================================================================================
@@ -99,20 +88,12 @@ working in this area and also draw the attention of the others.
 §
 lead-free piezoelectric material
 lead zirconate titanate
-lead
-zirconate
-titanate
 piezoelectric property
-piezoelectric
 perovskite system
 perovskite
 bismuth sodium titanate
-bismuth
-sodium 
 alkali niobate
-non-perovskite
 bismuth layer-structured ferroelectric
-ferroelectric
 piezoelectric material
 toxicity of lead
 lead free material
@@ -142,24 +123,16 @@ elastomer-modified epoxy
 brittle epoxy
 elastomeric phase
 tensile dilatometry
-dilatometry
 displacement rate
 deformation mechanism
 Diglycidyl ether-bisphenol A
-ether
-bisphenol
 carboxyl-terminated butadiene nitrile liquid rubber
 carboxyl-terminated butadiene nitrile
-carboxyl
 butadiene nitrile liquid rubber
-butadiene
-nitrile
 liquid rubber
 strain rate
 rubber particle
-rubber
 shear deformation
-deformation
 cavitation
 §
 
@@ -188,11 +161,9 @@ fracture event.
 
 §
 microcapsule induced toughening
-microcapsule
 self-healing polymer composite
 self-healing
 polymer composite
-polymer
 grubbs ru catalyst
 epoxy matrix
 fracture toughness
@@ -233,9 +204,6 @@ fibre direction of the highly drawn polyethylene monofilaments.
 
 §
 polyethylene filament
-polyethylene
-monofilament
-filament
 solution spinning
 solution drawing
 hot drawing
@@ -278,29 +246,19 @@ techniques corroborate this finding.
 §
 toughening mechanism
 elastomer-modified epoxy
-elastomer
 matrix ductility
-ductility
 diglycidyl ether of bisphenol A
-ether
-bisphenol
 monomer molecular weight
-monomer
 epoxide resin
-resin
 diaminodiphenyl sulphone
 carboxyl-terminated copolymer of butadiene and acrylonitrile
 copolymer of butadiene and acrylonitrile
-butadiene
-acrylonitrile
 fracture toughness
 neat epoxy
 tensile dilatometry
 piperidine cured epoxy
-piperidine cured
 scanning electron microscopy
 optical microscopy
-microscopy
 §
 
 ================================================================================
@@ -328,10 +286,8 @@ synergistic effects are observed.
 
 §
 particle size distribution
-particle size
 toughening mechanism
 rubber-modified epoxy
-rubber
 internal cavitation
 cavitation
 rubber particle
@@ -346,7 +302,6 @@ shear banding
 bridging particle
 neat epoxy
 bimodal epoxy mixture
-epoxy
 §
 
 ================================================================================
@@ -394,14 +349,10 @@ polymer yield behaviour
 yield behavior
 yield criterion
 pressure-modified octahedral shear stress criterion
-octahedral
 shear stress criterion
 von Mises criterion
-von Mises
 tensile yield strength
-tensility
 compressive yield strength
-compression
 hydrostatic component
 applied stress state
 §
@@ -413,7 +364,6 @@ W2006113459
 Glass-ceramics: Their production from wastesA Review. Glass-ceramics are
 polycrystalline materials of fine microstructure that are produced by the
 controlled crystallisation devitrification of a glass. Numerous silicate based
-wastes, such as coal combustion ash, slag from steel production, fly ash and
 filter dusts from waste incinerators, mud from metal hydrometallurgy, different
 types of sludge as well as glass cullet or mixtures of them have been considered
 for the production of glass-ceramics. Developments of glass-ceramics from waste
@@ -437,26 +387,14 @@ controlled crystallisation
 crystallisation
 devitrification
 silicate-based waste
-silcate
 coal combustion ash
-coal combustion
-ash
-steel production slag
-slag
 fly ash
 waste incinerator filter dust
-dust
 metal hydrometallurgy mud
-mud
-sludge
 glass cullet
 silcate waste
 building material
-construction component
-architectural component
 thermo-mechanical property
-commercialization
-industrial exploitation
 §
 
 ================================================================================
@@ -485,29 +423,23 @@ the scope for future developments in the field.
 
 §
 ceramic matrix composite
-ceramic
 carbon nanotubes
 physical property
 mechanical property
-reinforcement
 structural composite reinforcement
-structural composite
 electrical property
 thermal property
 multifunctional application
 inorganic matrix composite
 toughening element
 intrinsic brittleness
-CNT polymer matrix composites
+CNT polymer matrix composite
 CNT polymer
-polymer
-polymer matrix composites
+polymer matrix composite
 CNT-loaded ceramic matrix composite
 brittle matrix
 dispersion quality
-density
 composite property
-toughness
 toughening mechanism
 §
 
@@ -538,10 +470,8 @@ range of materials that have been joined by PTLP bonding is presented.
 liquid phase bonding
 transient liquid phase bonding
 partial transient liquid phase bonding
-bonding
 material joining
-interlayer
-melting
+interlayer element
 isothermal solidification
 melting point
 bonding temperature
@@ -551,9 +481,7 @@ bonding time
 interlayer thickness
 interlayer format
 optimal bonding temperature
-multiple layer
 multiple layer interlayer
-ceramics
 refractory core
 lower-melting layer
 bonding kinetic
@@ -591,7 +519,6 @@ were investigated to establish whether a nano-effect, with respect to increasing
 the toughness of the epoxy bulk polymers, did indeed exist.
 
 §
-toughness
 epoxy polymer
 fibre composite
 rubber microparticle
@@ -602,22 +529,16 @@ carbon-fibre composite
 glass-fibre reinforced composite
 glass-fibre composite
 hybrid epoxy polymer
-carboxyl-terminated 
-carboxyl
-butadiene-acrylonitrile
-butadiene
-acrylonitrile
+carboxyl-terminated butadiene-acrylonitrile rubber
+carboxyl-terminated butadiene-acrylonitrile
 toughening mechanism
 fracture energy
 bulk epoxy polymer
 plastic shear-yield band
-debonding
 plastic void-growth
-hybrid materials
 interlaminar fracture energy
 fibre-bridging toughening mechanism
 thermoset polymer
-nano-effect
 micrometre-sized glass particle
 glass particle
 §
@@ -642,13 +563,10 @@ of what is known about grain boundary energy anisotropy.
 §
 grain boundary energy anisotropy
 grain boundary energy
-energy anisotropy
-anisotropy
 Herring equation
 nucleating discontinuous transition
 discontinuous transition
 nucleating transtition
-nucleation
 grain boundary structure
 complexion transition
 §
@@ -685,24 +603,19 @@ based materials as supercapacitor electrodes are proposed.
 §
 carbon-based material
 supercapacitor electrode
-supercapacitor
 energy consumption
 energy storage
-micro-size
-lightweight
 high power density
 long cycle life
 electrode material
 dimensional carbon-based material
 biomass-derived carbon material
-biomass
 carbon material
 fabrication method
 supercapacitor device
 conventional supercapacitor
 charge storage mechanism
 hybrid ion capacitor
-capacitor
 §
 
 ================================================================================
@@ -720,19 +633,15 @@ model of the microstructure of the membranes and an explanation of its
 uniformity are presented.
 
 §
-preparation
-characterization
-alumina membranes
+alumina membrane
 ultra-fine pore
-pore
-alumina films
+alumina film
 boehmite sol
 gelation
 drying
 calcination
 pore size distribution
 crack-free layer
-microstructure
 sintering temperature
 acid concentration
 precursor sol
@@ -761,7 +670,6 @@ hybrid biomaterial
 biomedical application
 hard tissue regeneration
 matrix material
-filler
 calcium orthophosphate
 bone graft biomaterial
 §
@@ -831,8 +739,7 @@ identification of cracked structures with a breathing crack.
 §
 nonlinear dynamical analysis
 breathing crack
-plate structures
-vibrations
+plate structure
 open and closing movement
 nonlinear dynamic response
 contact nonlinearity
@@ -842,9 +749,8 @@ dynamic excitation
 surface structural intensity vector field
 crack position
 crack shape
-structural intensity maps
+structural intensity map
 damage identification
-cracked structures
 §
 
 ================================================================================
@@ -876,42 +782,30 @@ industrial wastes as new construction materials, with excellent inherent thermal
 and acoustic properties.
 
 §
-eco-friendly gypsum materials
-eco-friendly composites
-gypsum materials
+eco-friendly gypsum material
+eco-friendly composite
+gypsum material
 civil construction
 sustainable economic growth
-alternative products
-architecture
-construction
-green materials
-composite materials
+green material
+composite material
 waste material
 granulated cork
-cork
-cellulose fibers
-composite boards
-non-structural elements
+cellulose fiber
+composite board
+non-structural element
 dry walls
-ceilings
 cork bark
-construction industry
-reduced density
-density
-elasticity
-compressibility
-waterproof
 vibration absorption
 thermal insulation
 acoustic insulation
 gypsum binder
 mineral additions
-physical properties
-mechanical properties
-reinforced composites
-industrial by-products
-thermal properties
-acoustic properties
+physical property
+mechanical property
+reinforced composite
+thermal property
+acoustic property
 §
 
 ================================================================================
@@ -930,11 +824,10 @@ plate. Shear strain and stress components are compressive and of significant
 magnitude.
 
 §
-strain tensors
-stress tensors
+strain tensor
+stress tensor
 rolled uranium plate
 uranium plate
-uranium
 Rietveld refinement
 neutron-diffraction data
 macroscopic average strain
@@ -942,7 +835,7 @@ macroscopic average stress
 least-squares refinement
 interplanar spacings
 Bragg reflections
-pole figures
+pole figure
 triclinic sample symmetry
 tensile strain
 tensile stress
@@ -950,9 +843,6 @@ transverse direction
 rolling direction
 normal direction
 plate thickness
-shear strain
-shear stress component
-compressive
 §
 
 ================================================================================
@@ -979,18 +869,16 @@ with already adsorbed ions of pollutants.
 
 §
 TiO2-based sorbent
-lead ions
-lead ions sorbent
+lead ion sorbent
 non-magnetic powder
 magnetically modified powder
 magnetic powder
-sorption experiments
-magnetically responsive
+sorption experiment
 scanning electron microscopy
 X-ray diffraction
 particle size
 surface area
-batch adsorption experiments
+batch adsorption experiment
 flame atomic absorption spectrometer
 absorption spectrometer
 Langmuir isotherm
@@ -1001,9 +889,6 @@ magnetic iron oxide particles
 adsorption rate
 maximum adsorbed Pb2+ ions
 magnetic separation
-sorbents
-adsorbed ions
-pollutants
 §
 
 ================================================================================
@@ -1013,7 +898,6 @@ W2278398872
 Development of a high temperature flow stress model for AerMet 100 covering
 several orders of magnitude of strain rate. Constant strain rate, constant
 velocity and Hopkinson Pressure Bar compression tests were carried out on AerMet
-100 martensitic steel between and spanning strain rates from 0.01s1 to 4000s1.
 The results were used to generate a predictive flow stress model over the entire
 range of test conditions. The effect of initial austenite grain size on flow
 stress was found to follow the HallPetch relationship. This dependency was then
@@ -1033,23 +917,19 @@ mechanical testings results were absent.
 §
 high temperature flow stress model
 flow stress model
-flow stress
 AerMet 100
 strain rate
-Hopkinson Pressure Bar compression tests
+Hopkinson Pressure Bar compression test
 Hopkinson Pressure
-martensitic steel
 predictive flow stress model
 austenite grain size
 Hall-Petch relationship
 heat treatment
 microstructural evolution
-friction
 adiabatic heating
 work hardening exponent
 Zener-Hollomon equation
 artificial neural network
-prediction
 §
 
 ================================================================================
@@ -1072,8 +952,6 @@ treating technology which can improve significantly the impact abrasive
 resistance of forging medium-chrome alloy white cast iron were put forward.
 
 §
-microstructure
-properties
 forged medium-chrome alloy white cast iron
 forged alloy 
 white cast iron
@@ -1093,14 +971,7 @@ impact abrasive resistance
 W2361620319
 
 Wear resistance and wear mechanism of hot-forging die steels. Wear tests were
-performed for a new-type cast steel,H13 and H21 steels on a pin-on-disk high-
 temperature wear tester.Their wear resistances were compared,and wear mechanism
-discussed.Compared with the cast steel and H13 steel,high wear resistance of H21
-steel at room temperature is attributed to many unsolved carbides.At,the cast
-steel and H13 steel present a lower wear rate and increased rate with an
-increase of load,while the wear rate of H21 steel abruptly increases as the load
-reaches 200 N.At400 ,the cast steel posseses much lower wear rate than those of
-H13 and H21 steels.It can be suggested that the the cast steel presents markedly
 higher elevated-temperature wear resistance than the conventional hot-forging
 die steels.
 
@@ -1109,15 +980,10 @@ wear resistance
 wear mechanism
 hot-forging die steels
 hot-forging
-die steel
-cast steel
-H13 steel
-H21 steel
 pin-on-disk high-temperature wear tester
 pin-on-disk
 wear tester
 unsolved carbide
-carbide
 elevated-temperature wear resistance
 wear resistance
 §
@@ -1142,22 +1008,17 @@ process.
 
 §
 moth-eye structures
-moth-eye 
 polydimethylsiloxane stamp
-replication
 functionalized microlense
-microlense
 ultraviolett-nanoimprint lithography
 ultraviolett lithography 
 nanoimprint lithography
-lithiography
 camera modules
 elastomer stamp
 microlens array
 antireflective layer
 thermoforming process
 optical performance
-integration
 §
 
 ================================================================================
@@ -1186,19 +1047,14 @@ foamed concrete.
 
 §
 compressive strength
-micro-structural features
+micro-structural feature
 foamed concrete
-concrete
 wood ash
-ash
 silica fume
-fume
 cement replacement
-cement
-supplementary binder materials
+supplementary binder material
 concrete production industry
 concrete production
-microstructure
 cement paste matrix
 densification
 setting time
@@ -1225,7 +1081,6 @@ of the sample. Alternatively, it enhanced bone-like apatite formation on the
 surface of the samples.
 
 §
-strength
 bioactivity
 hydroxyapatite
 white Portland cement
@@ -1236,11 +1091,9 @@ body fluid
 compressive strength
 bone-like apatite formation
 apatite formation
-curing periods
+curing period
 in vitro testing
 in vitro environment
-in vitro
-hydration
 surface formation
 §
 
@@ -1248,12 +1101,10 @@ surface formation
 
 W2810996823
 
-Study of creep crack growth behaviour of a type 316N stainless steel weld and
 its mechanism. the high temperature structural integrity of the welded
 components is often decided by the extent of crack growth in the weld itself,
 the evaluation of the creep crack growth CCG rate and its micromechanical
 characterization in the welds are of importance to the designers. This study
-presents the CCG characterization of a type 316N stainless steel SS weld
 containing about 5 FN ferrite number of delta-ferrite. Constant load CCG tests
 using compact tension CT specimens have been carried out in the temperature
 range of as per ASTM E1457-15. The creep crack growth rate a vs. C* a -C* plots,
@@ -1267,12 +1118,9 @@ in their vicinity.
 
 §
 creep crack growth
-316N stainless steel
-stainless steel
-steel weld
 delta-ferrite
 structural integrity
-welded components
+welded component
 micromechanical characterization
 compact tension specimen
 compact tensionge
@@ -1280,9 +1128,8 @@ creep crack growth rate
 SEM/EBSD analysis
 inter-granular nature
 creep crack propagation
-grain boundary-phase precipitations
+grain boundary-phase precipitation
 grain boundary-phase
-precipitations
 damage accumulation
 microcrack formation
 §
@@ -1318,12 +1165,9 @@ offshore application
 inshore application
 marine riser
 cross-country pipeline
-pipeline
-elastic medium
 slender flexible structure
-dynamic modeling
 vibration characteristic
-Transfer Matrix Method for Multibody Systems
+Transfer Matrix Method for Multibody System
 multibody system
 transfer matrix 
 transfer matrix method
@@ -1338,10 +1182,8 @@ system frequency
 
 W2793657156
 
-Evolution of microstructure and mechanical properties of Fe-24Ni-0.3C TRIP steel
 during friction stir processing. In this study, the effect of friction stir
 processing FSP by various transverse welding speeds of 50150mm/min on mechanical
-properties and microstructure of Fe-24Ni-0.3C TRIP steel was investigated. The
 results showed that defectless FSPed specimen was obtained at the transverse
 speed of 100mm/min. Microstructural analysis was carried out by scanning
 electron microscope equipped with electron backscattered diffraction EBSD
@@ -1358,13 +1200,11 @@ due to limitation of TRIP phenomenon.
 §
 microstructure evolution
 mechanical properties
-TRIP steel
 friction stir processing
 transverse welding speed
 microstructural analysis
 scanning electron microscope
 electron backscattered diffraction
-diffraction
 grain refinement
 stir zone
 deformation induced martensite
@@ -1376,7 +1216,6 @@ tensile deformation test
 deformation test
 yield strength
 tensile elongation
-elongation
 TRIP phenomenon
 §
 
@@ -1404,16 +1243,13 @@ black phosphorus
 monochromated low-loss electron energy loss spectroscopy
 monochromated spectroscopy
 electron energy loss spectroscopy
-spectroscopy
 scanning transmission electron microscope
 transmission electron microscope
 electron microscope
 ab-initio calculation
-bandgap
 exciton energy
 infrared region
 electron beam
-spectrometer
 energy resolution
 narrow bandgap energy
 bandgap energy
@@ -1421,7 +1257,6 @@ intraband electronic transition
 electronic transition
 excitonic transition
 narrow bandgap semiconductor
-semiconductor
 §
 
 ================================================================================
@@ -1447,16 +1282,10 @@ batteries better than commercial carbon-based conductive particles.
 
 §
 self-grinding exfoliation
-self-grinding
-exfoliation
 small graphene nanosheets
-graphene
-nanosheets
+graphene nanosheets
 microcrystalline graphite
-graphite
 microbead milling
-microbead
-milling
 conductive additive
 mass exfoliation
 graphene yield
@@ -1467,12 +1296,10 @@ graphite particle
 graphite nanocrystal
 high-concentration paste
 graphite graphene conversion
-conversion
 pristine graphite
 electrical conductivity
 Li-ion battery
 lithium battery
-battery
 capacity improvement
 cyclic stability
 carbon-based conductive particle
@@ -1494,8 +1321,6 @@ the structure of this interphase boundary is incoherent.
 
 §
 Radiotracer diffusion
-radiotracer
-diffusion
 grain boundary
 interphase boundary
 radiotracer serial sectioning technique
@@ -1523,19 +1348,14 @@ model was applied to two kinds of and good agreement was obtained between the
 experimental and the calculated results.
 
 §
-Prediction
 stress-strain behavior
-stress-strain
-ceramic matrix composites
-ceramic
-matrix composites
+ceramic matrix composite
+matrix composite
 unit cell model
-unit cell
 fiber bundle
 elastic modulus
 finite element analysis
 stress-strain curve
-degradation
 crack density
 §
 
@@ -1556,20 +1376,16 @@ by occupying the interstitial spaces in the network and by increasing the
 nonbridging oxygen atoms 2006 WILEY-VCHVerlag GmbH & Co. KGaA, Weinheim
 
 §
-Structural investigation
+structural investigation
 acoustic investigation
-calcium borate glasses
-calcium borate
+calcium borate glass
 ambient temperature
 ultrasonic velocity
-ultrasound
-attenuation
 pulse echo overlap method
-pulse echo
+pulse echo overlap
 elastic moduli
 Debye temperature
 Poisson ratio
-acoustic 
 Fourier transform infrared spectroscopic analysis
 Fourier transform
 infrared spectroscopic analysis
@@ -1577,7 +1393,6 @@ spectroscopic analysis
 glass network
 interstitial space
 non-bridging oxygen atom
-oxygen atom
 §
 
 ================================================================================
@@ -1599,7 +1414,6 @@ Thermally-Conductive Inclusion
 Heat Flow
 Light Building Envelope
 light building
-Envelope
 mathematical model
 temperature field distribution
 climate chamber
@@ -1635,20 +1449,16 @@ Non-linear Elastic Response
 Elastic Response
 Anharmonic Properties
 MgO Single Crystal
-single crystal
 Earths Mantle
 seismology
 Mineralogical Mode
 Earths Interior
 Elastic Constant
 Computational Approach
-First-order Pressure Derivatives
-Pressure Derivatives
+First-order Pressure Derivative
+Pressure Derivative
 Gruneisen Constant
 Long-wavelength Acoustic Mode
-long-wavelength
-acoustic mode
-ultrasound
 §
 
 ================================================================================
@@ -1656,7 +1466,6 @@ ultrasound
 W2041922524
 
 Kinetics and Mechanism of the Simultaneous Carbothermic Reduction of FeO and MnO
-from High-Carbon Ferromanganese Slag. The carbothermic reduction of 38.7 pct
 MnO-12.1 pct CaO-5.4 pct MgO-9.3 pct Al2O3-24.1 pct SiO2-10.4 pct FeO slag in Ar
 at was studied using the sessile drop wettability technique. Pure graphite,
 coke, and charcoal were used as the carbon material substrates. The reduction
@@ -1680,32 +1489,19 @@ the second slow FeO reduction stage, it is reduced mainly by the solid carbon.
 §
 Simultaneous Carbothermic Reduction
 Carbothermic Reduction
-High-Carbon Ferromanganese Slag
-Ferromanganese Slag
-slag
 Sessile Drop Wettability Technique
-Sessile Drop
-Wettability
-Graphite
-Coke
-Charcoal
+Sessile Drop Wettability
 Carbon Material Substrate
 Reduction Rate
-Reduction
-Chemical Compositions
-Reduced Slag
-Produced Metal
 Carbon Dissolution
 Carbon Transfer
 Metal Phase
 Thermodynamic Calculation
-Reduction Mechanism
 Metallothermic Reduction
 Fast Initial Reduction Stage
 Initial Reduction Stage
 Slow Reduction Stage
 Solid Carbon
-carbon
 §
 
 ================================================================================
@@ -1730,9 +1526,7 @@ layered ceramic
 layered polycrystalline
 high temperature solid state reaction
 solid state reaction
-X-ray diffractograms
-X-ray
-diffractograms
+X-ray diffractogram
 phase evolution
 electron paramagnetic resonance
 paramagnetic resonance
@@ -1768,26 +1562,18 @@ surface modification of titanium based osteo-implants.
 §
 Ag-enhanced antibacterial property
 antibacterial property
-antibacterial
 MgO film
 sol-gel coating
-titanium
 thermal analysis
-powder
 X-ray diffraction analysis
-X-ray diffraction
-X-ray
-silver nanoparticles
+silver nanoparticle
 scanning electron microscopy
-microscopy
 x-ray photoelectron spectroscopy
 photoelectron spectroscopy
-spectroscopy
 potentiodynamic polarization test
 Hanks balanced salt solution
 corrosion resistance
 silver nanoparticles dissolution
-dissolution 
 antibacterial test
 E. Coli
 inhibition zone
@@ -1807,42 +1593,26 @@ which is used in urban rail transit engineering. Although it employs
 polypropylene fiber concrete to avoid cracks, the girder is still easier to
 crack than other traditional structures owing to its special open thin-walled
 cross section. In this study, a cracking accident of a U-shaped girder, which
-happened during the prestressed steel tensioning, was studied by field
 investigation and mechanical analysis through the finite element FE method. An
 outline of the cracks was presented. The nonlinear material properties of the
-polypropylene fiber concrete and steel were discussed and used in the finite
 element model. The effects of the main design parameters, such as the flange
-slab thickness, anchorage position, and prestressed steel layout, were evaluated
 based on the results of the FE analysis. The results indicate that the extremely
 low rigidity of the web and oversize of the web longitudinal prestressed steels
 are the main reasons for the cracks. The risk of cracks can be reduced by
 increasing the thickness of the flange slab and changing the anchorage position
-and prestressed steel layout. Some suggestions are provided for avoiding cracks
 based on the results of the research.
 
 §
 mechanical analysis
 parametric analysis
-crack
 polypropylene fiber concrete
 polypropylene fiber
-concrete
 U-shaped girder
-girder
 rail transit engineering
-rail transit
-prestressed steel tensioning
-steel tensioning
 finite element method
 non-linear material property
-steel
 flange slab thickness
-anchorage position
-prestressed steel layout
 web rigidity
-web longitudinal prestressed steel
-risk of crack
-avoiding crack
 §
 
 ================================================================================
@@ -1862,16 +1632,12 @@ product was characterized and analyzed by FT-IR, TG, GPC, etc.
 
 §
 silicon-containing polyester
-polyester
 pentacoordinate organic silicon complex
 organic silicon complex
-silica
 ethylene glycol
 potassium hydroxide
 tetracoordinate silicon
-ClCH2CH2OH
 low-temperature solution condensation
-solution condensation
 adipoyl chloride
 §
 
@@ -1895,7 +1661,6 @@ enhance hot workability of the alloy.
 §
 incipient melting
 cast Ni base superalloy
-superalloy
 solution annealing
 hot workability
 local melted region
@@ -1922,24 +1687,19 @@ supportedattachment and proliferation over 12days. This study provides important
 insight in the in vitro processing of silk fibroin into useful new materials.
 
 §
+silk fibroin fibrous hydrogel
 forming hydrogel
 silk fibroin
 fibrous hydrogel
-hydrogel
 nanofibrous structure
 extracellular matrix
-biomaterial
 silk fibroin solution
-nanofibrils
 gelation process
 nanofiber network morphology
 sheet structure
 compressive stress
-modulus
 attachment and proliferation
-proliferation
 in vitro processing
-in vitro
 §
 
 ================================================================================
@@ -1951,7 +1711,6 @@ Rutile Forms of Titanium Dioxide. Two types of titanium oxide were used, rutile
 &gt;99.9% TiO2 and anatase &gt;99% TiO2. Both samples were mixed with graphite
 in accordance with the required stoichiometry, and then milled in a tumbling
 mill for 50 hours in an argon atmosphere to ensure thorough mixing. The mill
-vial was loaded with five 25.4 mm diameter stainless steel balls giving a powder
 to ball mass ratio of 1:43. After milling, samples were heated to in an alumina
 crucible at min-1 under a flowing nitrogen 100 mL min-1 atmosphere in a
 thermogravimetric analyser TGA. Srilankite was detected in the as-milled anatase
@@ -1970,22 +1729,15 @@ different reductions paths of rutile and anatase.
 §
 Titanium Nitride
 Carbothermic Reduction
-Anatase forms
-Rutile forms
-anastase
-rutile
-Graphite
+Anatase form
+Rutile form
 Tumbling mill
 Argon atmosphere
-Stainless steel ball
 Alumina crucible
 Nitrogen atmosphere
 Thermogravimetric analyzer
-Srilankite
 Anatase to rutile transformation
 Anatase to rutile
-Reduction
-reduction stages
 §
 
 ================================================================================
@@ -2008,14 +1760,11 @@ Numerical Simulation
 Contact Pressure
 Gas Diffusion Layers
 PEM Fuel Cell
-Fuel Cell
 Two-dimensional Finite Element model
 Finite Element model
 Mechanical behavior
 Fuel cell stack deformation
 stack deformation
-GDL
-bipolar plate
 Elastic deformation
 Fibers slippage
 GDL Intrusion
@@ -2062,14 +1811,10 @@ Damage Development
 Aluminium Alloy
 Particle Reinforcement
 Thermal Fatigue Loading
-Thermal Fatigue
 Stir Casting
 Hot Extrusion
 Diode Laser
-Temperature Cycling
 X-ray Diffraction
-X-ray
-Diffraction
 Sin2-method
 Heat Treatment
 Residual Compressive Stress
@@ -2078,7 +1823,6 @@ Light Optical Microscope
 Scanning Electron Microscope
 Electron Microscope
 Grain Boundary Relief
-Grain Boundary
 Intergranular Damage
 Thermal Mismatch
 Mechanical Mismatch
@@ -2086,7 +1830,6 @@ Damage Mechanism
 Global Deformation
 Local Deformation
 Coefficient of Thermal Expansion (CTE)
-Overaging
 §
 
 ================================================================================
@@ -2104,10 +1847,9 @@ were done to determine Mark Houwink constants. The values of K = 1.64 10 -6 and
 
 §
 Molecular Weight Determination
-Molecular Weight
 Phenolphthalein Polycyanoarylether
 Butylphenol
-1H NMR Technique
+1HNMR Technique
 Tetrahydrofuran
 Mark-Houwink Constant
 §
@@ -2130,10 +1872,9 @@ superior properties to those obtained using powder metallurgy.
 §
 mechanical property
 thermal conductivity
-residual stresses
+residual stress
 wear resistance
-aluminum-alumina composites
-aluminum-alumina
+aluminum-alumina composite
 squeeze casting
 powder metallurgy
 lightweight structural material
@@ -2141,8 +1882,7 @@ automotive industry
 Vickers hardness
 flexural strength
 fracture toughness
-thermal conductivity
-thermal residual stresses
+thermal residual stress
 frictional wear
 §
 
@@ -2167,23 +1907,17 @@ processing route.
 §
 nanofiller dispersion method
 nanofiller dispersion
-nanofiller
-properties evaluation
-polyurethane
 optoelectronic application
-optoelectronic
 nanofiller distribution
 polyurethane matrix
 zirconium oxide
 atomic force microscopy
-microscopy
 force modulation
 HRSEM
-thermal properties
+thermal property
 DSC
 TGA
 polyurethane nanocomposite
-nanocomposite
 transmittance
 luminescence
 polymeric nanocomposites
@@ -2211,8 +1945,6 @@ titanium alloy matrix
 low cycle fatigue
 fatigue damage initiation
 fatigue damage propagation
-fatigue damage
-SCS-6 fiber
 fatigue damage diagram
 fiber breakage
 interfacial cracking
@@ -2242,28 +1974,19 @@ at all the stages and this present study reveals the estimation of safe factor
 with respect to working stress and ultimate tensile stress.
 
 §
-safe factor
 sintered aluminium alloy
 extrusion process
 powder metallurgy manufacturing
-powder metallurgy
 industrial application
-low density
 corrosion resistance
-passivation
 aerospace industry
-transportation
 structural material
 aluminium oxide
 aluminium sulfate
-powder mix
-compaction
 controlled atmosphere furnace
 atmosphere furnace
 bonding particles
 tensile specimen
-net shape
-intricate features
 working stress
 tensile stress
 §
@@ -2295,7 +2018,6 @@ loading conditions.
 fracture mechanic
 fatigue lifetime prediction
 fatigue crack growth test
-fatigue
 crack growth
 analytic fracture mechanic
 mechanical load redistribution
@@ -2336,9 +2058,6 @@ vibro-acoustic optimization
 periodic cellular material structure
 cellular material structure
 NVH application
-noise
-vibration
-harshness
 automobile purchaser
 multi-functional structure
 sandwich form
@@ -2415,9 +2134,8 @@ lumen loading
 situ synthesis
 magnetic powder
 pulp powder
-nanosized magnetic particles
+nanosized magnetic particle
 pulp fibres
-chemical coprecipitation process
 chemical coprecipitation
 magnetic paper
 scanning electron microscope
@@ -2438,7 +2156,6 @@ Characterization of HDH Titanium Powder for Biomaterial Applications. Several
 materials have been used as surgical implants since the 16th century. Materials
 can be implanted in the human body; however, the choice of the appropriate
 material is based on the required mechanical, physical, chemical, and biological
-properties. Until now two classes of metals namely stainless steel and cobalt-
 chromium-molybdenum alloys became known as materials for implant applications.
 They were considered suitable for surgical implant procedures but many
 researchers and surgeons were not completely satisfied with their performance.
@@ -2459,7 +2176,6 @@ HDH Titanium Powder
 Titanium Powder
 Biomaterial Application
 surgical implant
-stainless steel
 cobalt-chromium-molybdenum alloy
 cobalt-chromium-molybdenum
 implant performance
@@ -2473,10 +2189,10 @@ controlled porous structure
 porous structure
 porous coating
 dental surgical implants 
-orthopedic surgical implants
+orthopedic surgical implant
 bone tissue growth
 bone tissue
-porous metallic biomaterials
+porous metallic biomaterial
 §
 
 ================================================================================
@@ -2502,7 +2218,6 @@ structure promises for perspective PEC applications.
 §
 Three-dimensional Interconnected Nanoporous NTiO2
 Interconnected Nanoporous NTiO2
-NTiO2
 Photoelectrochemical Water Splitting
 Water Splitting
 Photoelectrochemical
@@ -2520,7 +2235,6 @@ Reversible Hydrogen Electrode
 Hydrogen Electrode
 Photostability
 Long-term Illumination
-Illumination
 §
 
 ================================================================================
@@ -2543,7 +2257,6 @@ Fill Factor
 Solar Cell
 Cu-based Additive
 additive pase
-Paste
 Front Contact Formation
 Silicon Solar Cells
 Screen-printing
@@ -2565,18 +2278,13 @@ of the present mineral sample with chlorite impurity.
 
 §
 thermal characterization of talc
-talc
 thermal analysis
 thermal decomposition
 talc sample
-Luzenac
-vacuum
-decomposition
 brucite sheet
-talc sheets
+talc sheet
 mineral sample
 chlorite impurity
-chlorite
 §
 
 ================================================================================
@@ -2610,14 +2318,10 @@ ecological damage
 health damage
 silicate glass matrix
 recycling galvanic waste
-recycling
 amorphous structure
-silica
-feldspar
 amorphous phases formation
 ceramic enamel
 coating characteristic
-frit
 waste incorporation
 §
 
@@ -2644,9 +2348,7 @@ metal particle
 nanodispersed particle
 thin polymer film
 low temperature codeposition
-codeposition
 reactive para-xylylene monomer
-sample annealing
 metal nanoparticle in polymer matrix
 metal nanoparticle
 polymer matrix
@@ -2681,7 +2383,6 @@ liquid metal droplet
 electromagnetic levitation
 inert flowing gas
 high speed cinematography
-cinematography
 §
 
 ================================================================================
@@ -2707,11 +2408,7 @@ Friedman, Flynn-Wall-Ozawa
 zeolite usage
 thermal degradation
 polypropylene pyrolysis
-polypropylene
-pyrolysis
 plastic material
-elasticity
-formability
 lightweight characteristic
 plastic waste
 environmental problem
@@ -2720,7 +2417,7 @@ light hydrocarbon
 energy source
 zeolite catalyst
 isoconversional Friedman method
-Friedman
+Friedman method
 Flynn-Wall-Ozawa method
 Flynn-Wall-Ozawa
 §
@@ -2750,9 +2447,6 @@ labor coefficient reduction
 rust painting method
 rust painting
 anticorrosive material
-anticorrosive
-rust
-primer
 §
 
 ================================================================================
@@ -2779,10 +2473,9 @@ Ritchie-Knott-Rice
 brittle fracture
 functionally graded material
 slender notch
-linear elastic
 Weibull statistic
 Weibull
-Young's modulus
+Youngs modulus
 modulus variation
 compact tension fracture mechanics specimen
 compact tension
@@ -2822,12 +2515,10 @@ Flower-rod Film
 Quantum Dot-sensitized Solar Cell
 Solar Cell
 one-dimensional nanorods
-nanorods
 fluorine-doped tin oxide conducting glass
 fluorine-doped tin oxide
 conducting glass
 hydrothermal synthesis method
-photoanode
 absorption of light
 direct electrical pathway
 coating cycle
@@ -2876,7 +2567,6 @@ Armchair-Graphene Nanoribbon Field Effect Transistor
 Nanoribbon
 Field Effect Transistor
 FET
-biosensor
 Nanogap cavitiy
 Sacrificial layer etching
 DNA biomolecule
@@ -2916,10 +2606,8 @@ pyrolytic graphite formation
 pyrolytic graphite
 propane gas pyrolysis
 graphite formation
-graphite structural features
+graphite structural feature
 structural features
-microstructure
-density
 crystal structure
 Deposition temperature
 decomposed gas convection
@@ -2952,11 +2640,8 @@ improved hardness
 aluminum metal matrix composite
 aluminum metal matrix
 eggshell particle
-hardening
-MINITAB 16
 powder technology method
 aluminum powder
-sintering
 inert gas
 variable weight fraction
 particle size effect on hardening
@@ -2988,10 +2673,8 @@ spall failure
 molecular crystal
 intra-molecular degrees of freedom
 mesodynamical method
-mesoparticle
 shock compression
 failure spall
-shockwave
 shocked material
 Hugoniot elastic limit
 Hugoniot
@@ -3043,7 +2726,6 @@ cryogenic dielectric characteristic
 liquid nitrogen environment
 liquid nitrogen
 gaseous helium environment
-gaseous helium
 single layer insulation
 multiple layer insulation
 layered insulation
@@ -3070,30 +2752,22 @@ over a cheap alumina substrate of a rough surface.
 
 §
 N-doped carbon nanotube array growth
-N-doped carbon nanotube
 carbon nanotube array growth
-carbon nanotube
-array growth
 CNT
 sintered Al2O3 substrate
-sintering
 nitrogen-containing carbon nanotube
 alumina substrate
 injection chemical vapor deposition
 chemical vapor deposition
 CVD
 carbon source ethanol
-carbon source
-ethanol
 nitrogen source ethylenediamine
 nitrogen source
 ethylenediamine
 polycrystalline Al2O3 micro-grain
 polycrystalline micro-grain
-micro-grain
 ferrocene concentration
 X-ray photoelectronic spectrum
-X-ray 
 photoelectronic spectrum
 §
 
@@ -3117,9 +2791,7 @@ reaction has taken place on the degraded rubber radicals to recombine.
 §
 chemorheological study
 vulcanized rubber
-rubber
 mechanical-curve treatment
-mechanical-curve
 external force strain
 glass transition temperature
 cleavage
@@ -3130,7 +2802,6 @@ Maxwellian type deformation
 Maxwellian type
 radical acceptor impregnation
 radical acceptor
-impregnation
 mechanical reaction
 rubber radical
 radical recombination 
@@ -3158,10 +2829,8 @@ topography from the GaN films.
 §
 high resolution X-ray diffraction
 X-ray diffraction
-X-ray
 X-ray topography
 GaN on sapphire
-sapphire
 GaN thin films
 sapphire substrate
 metalorganic vapor phase epitaxy
@@ -3169,8 +2838,6 @@ MOVPE
 thermal expansion coefficient
 buffer layer
 carrier concentration
-mobility
-slip lines
 stacking faults
 cellular structure
 §
@@ -3207,7 +2874,6 @@ FEM
 equal channel angular pressing
 ECAP
 finite element method simulation
-simulation
 plastic deformation
 die channel configuration
 deformation homogeneity
@@ -3217,7 +2883,6 @@ die channel geometry
 tensile strain area
 compressive stress
 cracking tendency
-fracture
 strain state
 §
 
@@ -3251,13 +2916,10 @@ Langmuir-Blodgett film
 Langmuir-Blodgett
 multilayer film
 phase behavior
-water surface
 ion subphase
 in-situ coordination
-ligand
 spectral measurement
 morphological investigation
-nanostructure
 molecular rearrangement
 molecular spacer
 aggregation mode
@@ -3292,7 +2954,6 @@ High temperature deformation
 closed cell ZnAl27 hybrid foam
 closed cell hybrid foam
 hybrid foam
-foam
 stir casting technique
 stir casting
 foaming agent
@@ -3336,13 +2997,10 @@ temperature on the F precipitation are described and compared to results for BF
 + 2 implants.
 
 §
-diffusion
 ion-implanted boron impurity
-implantation
 boron impurity
 pre-amorphized silicon
 amorphized silicon
-silicon
 boron ion implantation
 pre-amorphization
 F+ implantation
@@ -3350,7 +3008,6 @@ Si+ implantation
 B+ implantation
 boron profile
 crystalline silicon
-annealing
 rapid diffusion
 shallower junction
 dual implantation
@@ -3387,15 +3044,11 @@ erbium ion doped calcium fluoride
 trivalent erbium ion
 erbium ion
 calcium floride 
-doping
 Er:CaF2 nanoparticle
 co-precipitation method
 nanoparticle sintering
-sintering
-vacuum
-lithium fluoride (LiF)
+lithium fluoride
 sintering additive
-high density
 pore-free microstructure
 optical transmittance
 infrared laser operation
@@ -3447,8 +3100,6 @@ cell adhesion
 polyurethane substrate
 ploughed field effect
 sub-micron scale feature
-linear feature
-random feature
 cell adhesion promotion
 cell migration level
 lithographic technique
@@ -3479,7 +3130,6 @@ fuse cutout
 ceramic insulation
 saline environment
 X-ray diffraction
-X-ray
 ceramic material
 bond material
 thermal annealing
@@ -3487,7 +3137,6 @@ DRX peak
 Al6Si2O13 Mullite
 Mullite
 SiO2 Quartz
-Quartz
 junction bond material
 metallic preponderance
 whitish smoke
@@ -3522,14 +3171,12 @@ SiC UMOSFET
 cell structure
 wafer trench
 wafer off-angle
-wafer
 trench orientation
 MOS properties
 channel resistance
 instability of threshold voltage
-{11-20} plane
 hexagonal UMOSFET
-MOSFET properties
+MOSFET property
 SiC wafer
 §
 
@@ -3556,15 +3203,10 @@ melt spun alloy
 annealed Al-alloy
 annealed alloy
 differential scanning calorimetry
-calorimetry
 X-ray diffractometry
-X-ray
-XRD
 crystallisation stage
 fcc-Al formation
-fcc-Al
 bcc phase formation
-bcc
 La concentration
 micro hardness change
 §
@@ -3595,8 +3237,7 @@ the mechanical properties of cast Mg alloys.
 §
 Mg alloy
 crystal structure refinement
-refinement
-Nb-based heterogeneous substrates
+Nb-based heterogeneous substrate
 lightness
 high specific strength
 transportation industry
@@ -3607,10 +3248,9 @@ wrought magnesium
 hexagonal close-packed lattice
 hexagonal lattice
 MgAl binary system
-casting
 grain refinement
 NbB inoculation
-nucleated primary Mg grains
+nucleated primary Mg grain
 grain size reduction
 high pressure die cast
 die cast
@@ -3633,14 +3273,11 @@ assessed in relation to structure and morphology. Field emission scanning
 electron microscope of a Pr0.7Ca0.3MnO3 film deposited at on MgO001 .
 
 §
-Pr1-xCaxMnO3 thin films
+Pr1-xCaxMnO3 thin film
 MOCVD
 Metal Organic Chemical Vapor Deposition
 molten multi-metal source
 in-situ metal
-Prhfa3diglyme
-Cahfa2tetraglyme
-Mntmhd3 precursor
 crystal substrate
 LaAlO3
 MgO
@@ -3706,42 +3343,30 @@ implantology.
 §
 osteoblast cell behavior
 Ti25Ta25Nb alloy
-Ti25Ta25Nb
 bone substitute
-titanium
 low modulus
 high corrosion resistance
 corrosion resistance
-biocompatibility
 in-vitro cytocompatibility
-cytocompatibility
 human osteoblast
-Ti-6Al-4V biomaterial
-biomaterial
 Tissue Culture Polystyrene
-TCPS
 X-ray diffraction
-X-ray
 atomic force microscopy
 X-ray photoelectron spectroscopy
-spectroscopy
 cellular response
 cell viability
 cell attachment
 cell spreading
 cell morphology
 fibronectin organization
-fibronectin
 cell proliferation
 equiaxed grain microstructure
 nanometer scale surface roughness
 survival rates
 cell adhesion
 fibronectin matrix
-superelastic behavior
-Young's modulus
+Youngs modulus
 bone implantology
-implant
 §
 
 ================================================================================
@@ -3768,8 +3393,6 @@ viscoplastic model and experimental data.
 §
 viscoplastic behavior
 perovskite type ferroelectric
-perovskite
-ferroelectric
 rate-dependent constitutive model
 constitutive model
 hysteretic behavior
@@ -3787,11 +3410,9 @@ domain switching
 orientation effect
 poled ferroelectric
 multi-axial loading
-rate effect
 polarization rotation
 soft PZT ceramic
 PZT ceramic
-PZT
 §
 ================================================================================
 
@@ -3811,7 +3432,6 @@ with more reaction sites. Photodegradation conversion of Methylene blue Mb
 decreases with an increase in the initial concentration of Mb.
 
 §
-operational parameter
 TiO2 photocatalytic degradation
 photocatalytic degradation
 Methylene Blue
@@ -3824,13 +3444,11 @@ P25
 polyethylene glycol
 PEG
 photocatalytic property
-coating
 degradation efficiency
 photocatalytic activity
 electron-hole pair photogeneration
 photogeneration
 irradiation energy
-irradiation
 photocatalytic efficiency
 coating thickness
 photodegradation conversion
@@ -3839,12 +3457,10 @@ photodegradation conversion
 
 W2078720651
 
-Temperature, stress and microstructure in 10Ni5CrMoV steel plate during airarc
 cutting process. Although the airarc cutting process has been widely used in the
 material processing engineering, little information about temperature, stress
 and microstructure in the plate airarc cut is known. A three-dimensional finite
 element model including the material removal and the thermal effect of the arc
-is developed to study the temperature and stress fields of 10Ni5CrMoV steel
 plate during airarc cutting process in this paper. The microstructures and
 micro-mechanical properties of the parts near the groove especially in heat
 affected zone HAZ are studied by experimental methods, and they also can be used
@@ -3869,24 +3485,17 @@ the plate; it is also very valuable for engineering application of the airarc
 cutting process.
 
 §
-temperature
-stress
-microstructure
-10Ni5CrMoV steel plate
-steel plate
 Airarc cutting
 Material processing engineering
 finite element model
 Micro-mechanical property
 Heat affected zone
-HAZ
 Residual stress field
 Cooling velocity
 groove temperature gradient
 Multiphase transformation
 Coarse microstructure
 Butt welding
-flat plate
 §
 
 ================================================================================
@@ -3894,7 +3503,6 @@ flat plate
 W2089157330
 
 Molecular Dynamics Simulation of Anisotropic Corrosion-Induced Stress in
-FeSingle Crystal. Pipeline steel in soil containing water could induce a macro
 tensile stress, leading to stress corrosion cracking SCC. Anisotropic corrosion-
 induced stress of Fe single crystal is studied by molecular dynamics MD in this
 paper. The surface perpendicular to the z direction is subjected to the
@@ -3915,17 +3523,14 @@ deflection and the macro tensile stress are.
 
 §
 Molecular dynamic simulation
-simulation
 Anisotropic corrosion-induced stress
 Anisotropic stress
 corrosion-induced stress
-Pipeline steel
 macro tensile stress
 tensile stress
 Fe single crystal
 molecular dynamic
 Stress corrosion cracking
-SCC
 crystallographic direction
 Periodic boundary condition
 Free boundary condition
@@ -3942,7 +3547,6 @@ Diffraction Contrast Tomography - A Synchrotron Radiation Technique for Mapping
 Polycrystalline Microstructures in 3D. In this paper the authors describe a
 technique based on synchrotron x-ray diffraction which has been used to produce
 full 3D grain maps both grain shapes and orientations in annealed aluminium
-alloy and stainless steel samples containing around 500 grains. The procedure is
 termed diffraction contrast tomography DCT, reflecting its similarities with
 conventional absorption contrast tomography. It is an extension of the 3D X-ray
 diffraction microscopy 3DXRD concept, and has been developed in collaboration
@@ -3963,32 +3567,25 @@ basis.
 
 §
 Diffraction Contrast Tomography
-Tomography
 Synchrotron radiation technique
 radiation technique
 Mapping polycrystalline microstructure
 polycrystalline microstructure
-Mapping
-3D grain maps
+3D grain map
 Annealed aluminium alloy
 Annealed aluminium
-Stainless steel
 Absorption contrast tomography
 3D X-ray diffraction microscopy
 X-ray diffraction
-3DXRD
 Monochromatic synchrotron x-ray beam
 Extinction contrast
 Diffraction and extinction
-Diffraction
-extinction
 Grain indexing
 Algebraic reconstruction
 Crystallographic orientation
 Diffraction geometry
 Non-destructive technique
 In-situ study
-mapped sample
 Elastic strain
 stress tensor
 §
@@ -3999,7 +3596,6 @@ W2015671969
 
 Effect of Electropulsing on Recrystallization and Mechanical Properties of
 Silicon Steel Strips. Electropulsing-induced recrystallization and its effect on
-mechanical properties of oriented silicon steel strips Fe-3.0%Si were studied by
 optical microscopy, scanning electron microscopy and electron back-scatter
 diffraction. The results indicated that electropulsing accelerated
 recrystallization, and decreased the temperature of recrystallization.
@@ -4012,14 +3608,10 @@ kinetics.
 Electropulsing
 Recrystallization
 Mechanical property
-Silicon steel strip
-Silicon steel
 Electropulsing-induced recrystallization
-Oriented silicon steel
 Optical microscopy
 Scanning electron microscopy
 Electron back-scatter diffraction
-diffraction
 Acceleration of recrystallization
 Decreased recrystallization temperature
 recrystallization temperature
@@ -4061,27 +3653,17 @@ ODS copper
 Fusion material
 Mechanical property
 Y2O3 oxide particle
-room temperature rolling
 Subsequent annealing
 Texture development
 Tensile property
-EBSD
-TEM
 Tensile test
-Microstructure evolution
 Coarsening grain structure
 Brass texture enhancement
 Rolling reduction
 Single crystal-like brass-texture deformed structure
 Deformation mechanism
-Partial slip
-Dislocation
 ODS copper recrystallization
 copper recrystallization
-recrystallization 
-Tensile 
-strength
-ductility
 §
 
 ================================================================================
@@ -4139,19 +3721,13 @@ particle growth
 semibatch process
 Monodispersed particle
 nucleation step
-nucleation
-growth step
-growth
 particle formation
 Copper powder
 CuO slurry
 Wet chemical reduction
-Hydrazine
 reductant Hydrazine
 Rapid nucleation
-fast reduction
 Pd2+ reduction
-Batch process
 §
 
 ================================================================================
@@ -4159,9 +3735,7 @@ Batch process
 W3031018044
 
 FEM Optimization of a Steel Belt of OTR Tyres. This paper deals with an FEM
-simulation of a steel belt of tyres. A belt is a part of a tyre that plays a
 very important role in all radial tyres especially in case of heavy-duty off-
-the-road OTR ones. It is a composite composed of rubber material and a steel
 reinforcement. High peak stress inside this composite can initiate cracks, which
 subsequently lead to a complete tyre failure. In this work, the belt is
 extracted from the tyre and simulated separately in order to be able to cover
@@ -4172,32 +3746,25 @@ Marc/Mentat is employed as a calculation tool.
 §
 FEM simulation
 OTR tyre
-steel belt
 Steel belt of tyres
 Radial tyres
 off-the-road
 Heavy-duty off-the-road tyres
 off-the-road tyres
 Rubber material Steel reinforcement Composite
-Composite
 Rubber material
 Steel reinforcement
 Peak stress
-Cracks
 Tyre failure
 Belt behaviour
-Tension
 cord distribution
-cord
 FEM software MSC Marc/Mentat
-simulation
 §
 ================================================================================
 
 W2045741260
 
 First order reaction kinetics for transient creep in NiAl hardened austenitic
-steel. Transient creep of an NiAl hardened austenitic steel was analysed in the
 temperature range of 823 to at stresses ranging from 150 to 450 MPa in the frame
 work of first order reaction kinetics. The present analysis is aimed: to
 correlate various transient creep parameters with steady state creep rate
@@ -4215,17 +3782,11 @@ coefficients.
 First order reaction kinetic
 reaction kinetic
 Transient creep
-NiAl hardened austenitic steel
-hardened austenitic steel
-austenitic steel
-Stress
 Transient creep parameter
 Steady state creep rate
 state creep
-equation
 deformation mechanism
-deformation
-Creep stages
+Creep stage
 creep strain time data
 §
 
@@ -4245,20 +3806,15 @@ TiO2 / zeolite Y and SnO2 /zeolite Y under UV light irradiation.
 
 §
 SnO2-TiO2/Zeolite Y composites
-Zeolite
+Zeolite Y
 SnO2-TiO2
 Enhanced Photocatalytic Activity
 Photocatalytic Activity
 tin chloride impregnation
-impregnation
 tetrabutyl titanate solution
 Impregnation of tin chloride
 Tetrabutyl titanate solution
-Zeolite Y
-Calcination
 X-ray diffraction
-X-ray
-diffraction
 transmission electron microscopy
 UV-vis diffuse reflectance spectra
 diffuse reflectance spectra
@@ -4269,7 +3825,6 @@ Photocatalytic efficiency
 methyl orange
 Enhanced photocatalytic efficiency
 UV light irradiation
-irradiation
 §
 
 ================================================================================
@@ -4299,7 +3854,6 @@ mass transfer
 crystal growth
 semiconductor crystal
 oxide crystal
-crystal
 electronic device
 optical device
 crystal quality
@@ -4307,15 +3861,11 @@ growth furnace
 Czochralski method
 horizontal Bridgman method
 melt convection
-simulation
 numerical calculation
 X-ray radiography
-X-ray
-radiography
 large scale simulation
 flow instability
 low Prandtl number ratio
-Prandtl
 momentum diffusivity
 thermal diffusivity
 baroclinic instability
@@ -4350,10 +3900,8 @@ estimated.
 §
 binary intermetallic system
 Li intermetallic
-intermetallic
 tight binding linear muffin tin orbital method
 tight binding linear muffin tin orbital
-TB-LMTO 
 lattice constant
 bulk modulus
 pressure derivative
@@ -4365,11 +3913,8 @@ partial state density
 total state density
 B2CsCl phase
 metallic character
-conductivity
 Debye temperature
-Debye
 Gruneisen constant
-Gruneisen
 molar heat capacity
 §
 
@@ -4396,13 +3941,9 @@ higher temperatures, consisting of Pd_2Ni_2P, Cu_3P, and Pd_3P.
 §
 oxidation behavior
 Pd43Cu27Ni10P20 bulk metallic glass
-Pd43Cu27Ni10P20
 bulk metallic glass
-foam
 foam in dry air
-Pd4BMG
 amorphous foam
-porosity
 temperature range
 dry air
 favorable oxidation resistance
@@ -4413,9 +3954,6 @@ porous structure
 scale formation
 amorphous structure
 triplex-phase structure
-Pd2Ni2P
-Cu3P
-Pd3P
 temperature effect on oxidation
 oxidation in dry air
 bulk metallic glass oxidation
@@ -4444,16 +3982,11 @@ promote novel, high-efficiency CZTS-based CE in
 
 §
 doping effect
-doping
 copper zinc tin sulphide
 counter electrode
 dye-sensitized solar cell
 solar cell
-CE
-catalysis
-CZTS
 density functional theory
-DFT
 geometrical property
 electronic property
 iodine atom adsorption
@@ -4487,19 +4020,13 @@ material was severely decomposed with the cycles increase.
 
 §
 lithiation process
-lithiation
 delithiation process
-delithiation
 silicon-carbon composite
 silicon-carbon
 mechanical alloying
 graphite-doped silicon
-MA
 capacity retention ability
-anode
 SEI film
-lithium
-cycling process
 §
 
 ================================================================================
@@ -4522,19 +4049,11 @@ utilized as cavity filling materials.
 
 §
 abandoned lignite mine
-Japan
-Tokai
 lignite mine
 cavity filling material
 filling material
-slurry state
-solidification
-by-products
-recycling material
-regulatory restriction
 suitability assessment
 development of new filling materials
-by-products
 §
 
 ================================================================================
@@ -4556,23 +4075,18 @@ cost, simple manufacturing process and flexible process capability.
 
 §
 cost-effective approach
-cost-effective
 rapid manufacturing
 low pressure wax injection mold
 wax injection mold
 high surface finish
 high dimensional accuracy
-investment casting
-mass production
-metal part
 fused deposition rapid tooling
 improved mold quality
 geometric accuracy
-wax patterns
+wax pattern
 surface roughness improvement
 surface roughness
 low manufacturing cost
-low cost
 simple manufacturing process
 flexible process capability
 §
@@ -4602,12 +4116,9 @@ alloy as a potential material for biodegradable metallic orthopedic implants.
 
 §
 biocorrosion behavior
-biocorrosion
 biodegradable nanocomposite fiber
-biodegradable
 nanocomposite fiber
 layer-by-layer coating
-AM50 magnesium implant
 magnesium implant
 hybrid nanofiber
 improved biodegradation rate
@@ -4615,25 +4126,17 @@ biodegradation rate
 improved biocompatibility
 biocompatibility
 nano-hydroxyapatite particle
-nano-hydroxyapatite
-nHA
 polylactide nanofiber
-PLA
 air jet spinning approach
 air jet spinning
-AJS
 corrosion performance
 electrochemical measurement
 biocorrosion resistance
 adhesion strength
-Hank's balanced salt solution
 Hanks balanced salt solution
-HBSS
 cytocompatibility
-AJS coating
 air jet spinning coating
 nanostructured nHA embedded hybrid PLA nanofiber coating
 biodegradable metallic orthopedic implant
 orthopedic implant
-implant
 §
