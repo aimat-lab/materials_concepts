@@ -54,9 +54,7 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-def train(
-    model, X_train, y_train, X_test, y_test, learning_rate, batch_size, num_epochs
-):
+def train(model, X_train, y_train, learning_rate, batch_size, num_epochs):
     print(f"Training model... ({len(X_train):,})")
     X_train = torch.Tensor(np.array(X_train))
     y_train = torch.Tensor(np.array(y_train))
@@ -169,8 +167,6 @@ def main():
         model,
         X_train=embeddings["X_train"],
         y_train=data["y_train"],
-        X_test=embeddings["X_test"],
-        y_test=data["y_test"],
         learning_rate=0.001,
         batch_size=100,
         num_epochs=1,

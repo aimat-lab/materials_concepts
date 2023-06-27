@@ -152,7 +152,7 @@ class DataGenerator:
 
         def draw_sample():
             while (comb := frozenset(random.sample(bag, 2))) in drawn:
-                pass
+                pass  # we already drew this combination
 
             drawn.add(comb)
             return comb
