@@ -165,7 +165,7 @@ def main():
     model.train()
     train(
         model,
-        X_train=embeddings["X_train"],
+        X_train=np.array(embeddings["X_train"]),
         y_train=data["y_train"],
         learning_rate=0.001,
         batch_size=100,
@@ -188,3 +188,10 @@ def main_eval():
 
 if __name__ == "__main__":
     main_eval()
+
+# AUC 0.8659
+# Precision 0.0075
+# Recall 0.2190
+# F1 0.0145
+# Confusion matrix:
+# TN: 996852, FP: 3043, FN: 82, TP: 23
