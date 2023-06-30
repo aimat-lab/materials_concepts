@@ -1,12 +1,15 @@
 from torch import nn
 import torch
 import numpy as np
-from sklearn.metrics import (
-    roc_auc_score,
-    precision_recall_fscore_support,
-    confusion_matrix,
-)
 import pickle
+import fire
+import sys, os
+
+parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_directory)
+
+from metrics import print_metrics
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -15,35 +18,36 @@ def flatten(t):
     return [item for sublist in t for item in sublist]
 
 
-def load_data():
+def load_data(data_path, embeddings_path):
     print("Loading data...")
-    with open("model/data.pkl", "rb") as f:
+    with open(data_path, "rb") as f:
         data = pickle.load(f)
 
-    print("Loading embeddings...")
-    with open("model/baseline/embeddings.pkl", "rb") as f:
+    with open(embeddings_path, "rb") as f:
         embeddings = pickle.load(f)
 
     return data, embeddings
 
 
 class BaselineNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, layer_dims: list):
         """
         Fully Connected layers
         """
         super(BaselineNetwork, self).__init__()
 
-        self.net = nn.Sequential(  # very small network for tests
-            nn.Linear(15, 100),  # 15 properties
-            nn.ReLU(),
-            nn.Linear(100, 100),
-            nn.ReLU(),
-            nn.Linear(100, 10),
-            nn.ReLU(),
-            nn.Linear(10, 1),
-            nn.Sigmoid(),  # For Classification
-        )
+        layer_dims.append(1)
+
+        layers = []
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+            layers.append(nn.Linear(in_, out_))
+            layers.append(nn.ReLU())
+
+        layers.pop()
+        layers.append(nn.Sigmoid())
+
+        self.net = nn.Sequential(*layers)
+        print(self.net)
 
     def forward(self, x):
         """
@@ -139,55 +143,49 @@ def eval(model, data, embeddings):
     X_test = torch.tensor(np.array(embeddings["X_test"]), dtype=torch.float).to(device)
     predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
-    auc = roc_auc_score(data["y_test"], predictions)
-
-    THRESHOLD = 0.5
-    precision, recall, fscore, _ = precision_recall_fscore_support(
-        data["y_test"], predictions > THRESHOLD, average="binary"
-    )
-
-    print("AUC", f"{auc:.4f}")
-    print("Precision", f"{precision:.4f}")
-    print("Recall", f"{recall:.4f}")
-    print("F1", f"{fscore:.4f}")
-
-    print("Confusion matrix:")
-    tn, fp, fn, tp = confusion_matrix(data["y_test"], predictions > THRESHOLD).ravel()
-    print(f"TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
+    print_metrics(data["y_test"], predictions)
 
 
-def main():
-    data, embeddings = load_data()
+def main(
+    data_path="model/data.pkl",
+    embeddings_path="model/baseline/embeddings.pkl",
+    lr=0.001,
+    batch_size=100,
+    num_epochs=1,
+    train_model=False,
+    save_model=False,
+    eval_model=False,
+):
+    data, embeddings = load_data(data_path, embeddings_path)
 
-    model = BaselineNetwork().to(device)
+    model = BaselineNetwork([15, 100, 100, 10]).to(device)
 
-    print("Training...")
-    model.train()
-    train(
-        model,
-        X_train=np.array(embeddings["X_train"]),
-        y_train=data["y_train"],
-        learning_rate=0.001,
-        batch_size=100,
-        num_epochs=1,
-    )
-
-    eval(model, data, embeddings)
-
-    torch.save(model.state_dict(), "model/baseline/model.pt")
-
-
-def main_eval():
-    data, embeddings = load_data()
-    print("Loading model...")
-    model = BaselineNetwork().to(device)
-    model.load_state_dict(torch.load("model/baseline/model.pt"))
+    if train_model:
+        print("Training...")
+        model.train()
+        train(
+            model,
+            X_train=np.array(embeddings["X_train"]),
+            y_train=data["y_train"],
+            learning_rate=lr,
+            batch_size=batch_size,
+            num_epochs=num_epochs,
+        )
+        print("Saving model...")
+        if save_model:
+            torch.save(model.state_dict(), save_model)
+    elif eval_model:
+        print("Loading model...")
+        model.load_state_dict(torch.load(eval_model))
+    else:
+        print("Please specify either --train_model or --eval_model")
+        return
 
     eval(model, data, embeddings)
 
 
 if __name__ == "__main__":
-    main_eval()
+    fire.Fire(main)
 
 # AUC 0.8659
 # Precision 0.0075
