@@ -73,9 +73,20 @@ Build concepts graph by executing the following command:
 
 `python graph/build.py data/materials-science.llama.works.csv llama_concepts`
 
+Produces a pickled file `graph/edges.pkl` containing the graph:
+
+```
+{
+  "num_of_vertices": 123456,
+  "edges": [(v1, v2, timestamp), (v1, v2, timestamp), ...],
+}
+```
+
+Because of the sparse nature of the graph, it is stored as edge list. The timestamp is the number of days passed since 01-01-1970.
+
 > Note: If you want use rake concepts, you have to first extract the rake concepts and then replace `llama_concepts` with `rake_concepts` in the command above.
 
-> Note: The concepts are run against a filter mechanism to remove concepts which are not relevant for the domain. The filters are stored in the same file and can be extended or modified as needed.
+> Note: The concepts are run against a filter mechanism to remove concepts which are not relevant for the domain. The filters are stored in the same file and can be extended or modified as needed. Currently very restrictive (only concepts with occurrence > 3 and words >= 3 are kept).
 
 ## Generate Raw Classification Task Data
 
@@ -93,6 +104,22 @@ python model/create_data.py \
  --min_links=1 \
  --max_v_degree=None \
  --verbose=True
+```
+
+Output:
+
+```
+{
+  "year_train": 2016,
+  "year_test": 2019,
+  "year_delta": 3,
+  "min_links": 1,
+  "max_v_degree": None,
+  "X_train": [(v1, v2), ...] unnconnected vertex pairs until 2016,
+  "y_train": [0, 1, 1, 0, ...] indicating whether the vertex pairs will be connected in 2016 + 3 (year_delta),
+  "X_test": [(v1, v2), ...] unnconnected vertex pairs until 2019,
+  "y_test": whether the vertex pairs will be connected in 2022,
+}
 ```
 
 ## How to add new model
@@ -119,17 +146,22 @@ python model/create_data.py \
 - [x] Build graph with histogram edges
   - [x] Start with reduced concept list (keep concepts n>1) and discard materials where an element appears twice
 - [x] Implement Baseline
-- [ ] Implement evaluation (on test set)
-- [ ] Implement validation (on future data)
+- [x] Implement evaluation (on test set)
+- [x] Implement validation (on future data)
 - [ ] Implement top performing model from kaggle challange
 - [ ] Store model and graph
+- [ ] Extract concept embeddings (Calculate storage requirements)
+- [ ] Build Baseline (Features + Embeddings)
+- [ ] Build GNN Model (Embeddings + Features?)
 - [ ] Build API to query prediction service
-- [ ] Build Tiny Frontend. Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
+- [ ] Build Tiny Frontend
+  - [ ] Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
+  - [ ] Every researcher is a subgraph, calculate collaboration in O(C1 \* C2) where C1 and C2 are the number of concepts of the researchers. Highest ranked concept combinations are the most promising collaborations.
 
 ## Optimization
 
-- [ ] Where to store the data?
-- [ ] Data storing for works: How to store concepts (fetched and generated)
+- [x] Where to store the data? (-> Device)
+- [x] Data storing for works: How to store concepts (fetched and generated)
 - [x] How to speed up text processing in pandas? Pandas 2.0 (x) or other option to achieve pyarrow backend
 - [ ] Dockerize what comes after data fetching
 - [ ] How to optimize "concept synergy" query for concept v? (Naive: `O(n * pred(x,v))`)
