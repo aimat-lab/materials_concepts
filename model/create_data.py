@@ -84,6 +84,9 @@ class DataGenerator:
         Filter out all edges which have less than {min_links} links at {year_start + delta}
         and check if the vertices are in the filtered set of vertices.
         """
+        if self.verbose:
+            print("Getting positive samples...")
+
         pos_samples = set(self.future_graph.edges()) - set(self.past_graph.edges())
 
         lookup = {elem: True for elem in filtered_vertices}
@@ -101,6 +104,9 @@ class DataGenerator:
 
     def _get_neg_samples(self, to_draw, vertices):
         """Negative samples of vertex pairs: {year_start} unconnected, {year_start + delta} unconnected"""
+        if self.verbose:
+            print("Getting negative samples...")
+
         X = []
 
         draw_sample = self.get_draw_sample(len(vertices))
@@ -123,6 +129,9 @@ class DataGenerator:
         return X
 
     def _get_samples(self, to_draw, vertices, min_links):
+        if self.verbose:
+            print("Getting samples...")
+
         X, y = [], []
 
         draw_sample = self.get_draw_sample(len(vertices))
