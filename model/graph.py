@@ -28,7 +28,7 @@ class Graph:
         cols = symmetric_edges[:, 1]
         data = np.ones(symmetric_edges.shape[0])
 
-        return sparse.coo_matrix(
+        return sparse.csr_matrix(
             (
                 data,
                 (rows, cols),

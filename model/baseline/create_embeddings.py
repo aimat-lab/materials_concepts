@@ -114,13 +114,13 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
     logging.info("Computing all matrix squares")
     # compute matrix squares
     AA02 = all_sparse[0] ** 2
-    AA02 = AA02 / AA02.max()
+    # AA02 = AA02 / AA02.max()  # AA02.astype(np.float16)
     logging.info("1...")
     AA12 = all_sparse[1] ** 2
-    AA12 = AA12 / AA12.max()
+    # AA12 = AA12 / AA12.max()
     logging.info("2...")
     AA22 = all_sparse[2] ** 2
-    AA22 = AA02 / AA22.max()
+    # AA22 = AA02 / AA22.max()
     logging.info("3")
 
     logging.info("Computing degrees")
