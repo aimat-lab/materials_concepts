@@ -26,7 +26,7 @@ def get_jaccard_coefficient(
     return (
         num_neighbors_intersection / num_neighbors_union
         if num_neighbors_union > 0
-        else None
+        else 0
     )
 
 
