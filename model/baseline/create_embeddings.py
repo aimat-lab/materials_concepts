@@ -1,11 +1,25 @@
 from tqdm import tqdm
 import numpy as np
 import fire
+import logging
 import os
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from graph import Graph
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    "%(asctime)s | %(levelname)s | %(message)s", "%m-%d-%Y %H:%M:%S"
+)
+
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setFormatter(formatter)
+
+logger.addHandler(stdout_handler)
 
 
 def get_degrees(adjmatrix):
@@ -69,6 +83,7 @@ def retrieve_properties_for_vertex_pair(
     all_properties.append(AA22[v1, v2])  # 14
 
     if include_jaccard:
+        logging.debug("Computing jaccard")
         all_properties.append(
             get_jaccard_coefficient(
                 u=v1, v=v2, num_neighbors=all_degs0, adjacency_matrix_squared=AA02
@@ -96,19 +111,19 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
     vlist: ?
     """
 
-    print("Computing all matrix squares...")
+    logging.info("Computing all matrix squares")
     # compute matrix squares
     AA02 = all_sparse[0] ** 2
     AA02 = AA02 / AA02.max()
-    print("1...")
+    logging.info("1...")
     AA12 = all_sparse[1] ** 2
     AA12 = AA12 / AA12.max()
-    print("2...")
+    logging.info("2...")
     AA22 = all_sparse[2] ** 2
     AA22 = AA02 / AA22.max()
-    print("3")
+    logging.info("3")
 
-    print("done")
+    logging.info("Computing degrees")
 
     all_degs0 = get_degrees(all_sparse[0])
     all_degs0_n = normalize_degrees(all_degs0)
@@ -121,7 +136,7 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
     all_degs12 = normalize_degrees(get_degrees(AA12[1]))
     all_degs22 = normalize_degrees(get_degrees(AA22[2]))
 
-    print("Computed all degrees")
+    logging.info("Computed all degrees")
 
     all_properties = []
 
@@ -150,9 +165,12 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
 
 
 def calculate_embeddings(graph_path, X_train, X_test, include_jaccard=True):
+    logging.debug("Building graph")
     graph = Graph(graph_path)
 
+    logging.debug("Calculating adjacency matrices")
     matrices = graph.get_adj_matrices([2010, 2013, 2016])
+
     embeddings = compute_all_properties_of_list(
         matrices, np.concatenate([X_train, X_test]), include_jaccard=include_jaccard
     )
@@ -165,19 +183,26 @@ def main(
     data_path="data/model/data.pkl",
     output_path="data/model/baseline/embeddings.pkl",
     include_jaccard=True,
+    log_path="logs/baseline_embeddings.log",
 ):
+    file_handler = logging.FileHandler(log_path)
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+
     import pickle
 
-    print("Loading data...")
+    logging.info("Loading data...")
     with open(data_path, "rb") as f:
         data = pickle.load(f)
 
-    print("Calculating embeddings...")
+    logging.info("Calculating embeddings...")
     X_train, X_test = calculate_embeddings(
         graph_path, data["X_train"], data["X_test"], include_jaccard=include_jaccard
     )
 
-    print("Saving embeddings...")
+    logging.info("Saving embeddings...")
     with open(output_path, "wb") as f:
         pickle.dump({"X_train": X_train, "X_test": X_test}, f)
 
