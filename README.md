@@ -73,15 +73,15 @@ Build concepts graph by executing the following command:
 
 ```
 python graph/build.py \
-  input_path data/table/materials-science.llama.works.csv \
-  output_path data/graph/edges_mo3_mw3.pkl \
-  lookup_path data/table/lookup.csv \
-  colname llama_concepts \
-  min_occurence 3 \
-  min_words 1 \
-  max_words 10 \
-  min_occurence_elements 3 \
-  min_amount_elements 2
+  --input_path data/table/materials-science.llama.works.csv \
+  --output_path data/graph/edges_mo3_mw3.pkl \
+  --lookup_path data/table/lookup.csv \
+  --colname llama_concepts \
+  --min_occurence 3 \
+  --min_words 1 \
+  --max_words 10 \
+  --min_occurence_elements 3 \
+  --min_amount_elements 2
 ```
 
 Produces a pickled file `graph/edges.pkl` containing the graph:
@@ -105,13 +105,13 @@ Generate training and test data for classification task: Given {n} vertex pairs,
 
 ```
 python model/create_data.py \
- --graph_path graph/edges.pkl \
- --data_path model/data.pkl \
+ --graph_path data/graph/edges.pkl \
+ --data_path data/model/data.pkl \
  --year_start_train 2016 \
  --year_start_test 2019 \
  --year_delta 3 \
  --edges_used_train 4_000_000 \
- --edges_used_test 1_000_000 \
+ --edges_used_test 2_000_000 \
  --min_links 1 \
  --max_v_degree=None \
  --verbose=True
@@ -135,7 +135,38 @@ Output:
 
 ## How to add new model
 
+The classification process can typically be divided into two steps:
+
+1. Generate embeddings for node pairs
+2. Train a (binary) classifier on the embeddings
+
 ## Generate Embeddings
+
+## Example: Baseline Model
+
+1. Generate the embeddings
+
+```
+python model/baseline/create_embeddings.py \
+ --data_path data/model/data.pkl \
+ --output_path data/model/baseline/embeddings.pkl \
+ --include_jaccard False
+```
+
+2. Train the model
+
+```
+python model/baseline/train.py \
+  --data_path data/model/data.pkl \
+  --embeddings_path data/model/baseline/embeddings.pkl \
+  --lr 0.001 \
+  --batch_size 100 \
+  --num_epochs 1 \
+  --train_model True \
+  --save_model data/model/baseline/model.pt \
+  --metrics_path data/model/baseline/metrics.json \
+  --eval_mode False
+```
 
 # TODO General
 
@@ -188,3 +219,7 @@ Retrieve abstract for work given work ID: `$ abstract W2159161622`
 ## Identifying Sourcce
 
 Retrieve source for work given work ID: `$ getsource W2159161622`
+
+```
+
+```
