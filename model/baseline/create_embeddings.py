@@ -132,9 +132,9 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
     all_degs2 = get_degrees(all_sparse[2])
     all_degs2_n = normalize_degrees(all_degs2)
 
-    all_degs02 = normalize_degrees(get_degrees(AA02[0]))
-    all_degs12 = normalize_degrees(get_degrees(AA12[1]))
-    all_degs22 = normalize_degrees(get_degrees(AA22[2]))
+    all_degs02 = normalize_degrees(get_degrees(AA02))
+    all_degs12 = normalize_degrees(get_degrees(AA12))
+    all_degs22 = normalize_degrees(get_degrees(AA22))
 
     logging.info("Computed all degrees")
 
