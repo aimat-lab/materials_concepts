@@ -148,6 +148,7 @@ The classification process can typically be divided into two steps:
 
 ```
 python model/baseline/create_embeddings.py \
+ --graph_path data/graph/edges.pkl \
  --data_path data/model/data.pkl \
  --output_path data/model/baseline/embeddings.pkl \
  --include_jaccard False
@@ -164,7 +165,7 @@ python model/baseline/train.py \
   --num_epochs 1 \
   --train_model True \
   --save_model data/model/baseline/model.pt \
-  --metrics_path data/model/baseline/metrics.json \
+  --metrics_path data/model/baseline/metrics.pkl \
   --eval_mode False
 ```
 

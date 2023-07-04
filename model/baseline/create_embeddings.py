@@ -149,8 +149,8 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
     return all_properties
 
 
-def calculate_embeddings(X_train, X_test, include_jaccard=True):
-    graph = Graph("graph/edges.pkl")
+def calculate_embeddings(graph_path, X_train, X_test, include_jaccard=True):
+    graph = Graph(graph_path)
 
     matrices = graph.get_adj_matrices([2010, 2013, 2016])
     embeddings = compute_all_properties_of_list(
@@ -161,8 +161,9 @@ def calculate_embeddings(X_train, X_test, include_jaccard=True):
 
 
 def main(
-    data_path="model/data.pkl",
-    output_path="model/baseline/embeddings.pkl",
+    graph_path="data/graph/edges.pkl",
+    data_path="data/model/data.pkl",
+    output_path="data/model/baseline/embeddings.pkl",
     include_jaccard=True,
 ):
     import pickle
@@ -173,7 +174,7 @@ def main(
 
     print("Calculating embeddings...")
     X_train, X_test = calculate_embeddings(
-        data["X_train"], data["X_test"], include_jaccard=include_jaccard
+        graph_path, data["X_train"], data["X_test"], include_jaccard=include_jaccard
     )
 
     print("Saving embeddings...")
