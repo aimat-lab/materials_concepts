@@ -71,7 +71,18 @@ e.g.:
 
 Build concepts graph by executing the following command:
 
-`python graph/build.py data/materials-science.llama.works.csv llama_concepts`
+```
+python graph/build.py \
+  input_path data/table/materials-science.llama.works.csv \
+  output_path data/graph/edges_mo3_mw3.pkl \
+  lookup_path data/table/lookup.csv \
+  colname llama_concepts \
+  min_occurence 3 \
+  min_words 1 \
+  max_words 10 \
+  min_occurence_elements 3 \
+  min_amount_elements 2
+```
 
 Produces a pickled file `graph/edges.pkl` containing the graph:
 
@@ -82,11 +93,11 @@ Produces a pickled file `graph/edges.pkl` containing the graph:
 }
 ```
 
-Because of the sparse nature of the graph, it is stored as edge list. The timestamp is the number of days passed since 01-01-1970.
+Because of the sparse nature of the graph, it is stored as edge list. The timestamp is the number of days passed since `01-01-1970`.
 
 > Note: If you want use rake concepts, you have to first extract the rake concepts and then replace `llama_concepts` with `rake_concepts` in the command above.
 
-> Note: The concepts are run against a filter mechanism to remove concepts which are not relevant for the domain. The filters are stored in the same file and can be extended or modified as needed. Currently very restrictive (only concepts with occurrence > 3 and words >= 3 are kept).
+> Note: The concepts are run against a filter mechanism to remove concepts which are not relevant for the domain. The filters are stored in the same file and can be extended or modified as needed.
 
 ## Generate Raw Classification Task Data
 
@@ -94,14 +105,14 @@ Generate training and test data for classification task: Given {n} vertex pairs,
 
 ```
 python model/create_data.py \
- --graph_path=graph/edges.pkl \
- --data_path=model/data.pkl \
- --year_start_train=2016 \
- --year_start_test=2019 \
- --year_delta=3 \
- --edges_used_train=4_000_000 \
- --edges_used_test=1_000_000 \
- --min_links=1 \
+ --graph_path graph/edges.pkl \
+ --data_path model/data.pkl \
+ --year_start_train 2016 \
+ --year_start_test 2019 \
+ --year_delta 3 \
+ --edges_used_train 4_000_000 \
+ --edges_used_test 1_000_000 \
+ --min_links 1 \
  --max_v_degree=None \
  --verbose=True
 ```

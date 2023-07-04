@@ -188,30 +188,39 @@ class ElementFilter:
         return elements
 
 
-E_FILTERS = [OccurenceFilter(min_occurence=3), ElementFilter(min_amount_elements=2)]
-
-settings = {
-    "rake_concepts": {
-        "parse_func": str_to_set,
-        "filters": [OccurenceFilter(min_occurence=3), RakeFilter()],
-    },
-    "llama_concepts": {
-        "parse_func": literal_eval,
-        "filters": [
-            OccurenceFilter(min_occurence=3),
-            LlamaFilter(),
-            NonAsciiFilter(),
-            WordFilter(min_n=3, max_n=10),
-        ],
-    },
-}
-
-
 def main(
-    input_file="data/materials-science.llama.works.csv",
+    input_path="data/materials-science.llama.works.csv",
+    output_path="data/graph/edges.pkl",
+    lookup_path="data/table/lookup.csv",
     colname="llama_concepts",
+    min_occurence=3,
+    min_words=1,
+    max_words=10,
+    min_occurence_elements=3,
+    min_amount_elements=2,
 ):
-    df = pd.read_csv(input_file)
+    settings = {
+        "rake_concepts": {
+            "parse_func": str_to_set,
+            "filters": [OccurenceFilter(min_occurence=min_occurence), RakeFilter()],
+        },
+        "llama_concepts": {
+            "parse_func": literal_eval,
+            "filters": [
+                OccurenceFilter(min_occurence=min_occurence),
+                LlamaFilter(),
+                NonAsciiFilter(),
+                WordFilter(min_n=min_words, max_n=max_words),
+            ],
+        },
+    }
+
+    E_FILTERS = [
+        OccurenceFilter(min_occurence=min_occurence_elements),
+        ElementFilter(min_amount_elements=min_amount_elements),
+    ]
+
+    df = pd.read_csv(input_path)
     df[colname] = df[colname].apply(settings[colname]["parse_func"])
     df.elements = df.elements.apply(str_to_set)
 
@@ -246,7 +255,7 @@ def main(
 
     # save lookup as csv
     lookup_df = pd.DataFrame(lookup_list)
-    lookup_df.to_csv("graph/lookup.csv", index=False)
+    lookup_df.to_csv(lookup_path, index=False)
 
     # encode publication date as days since origin
     df["pub_date_days"] = pd.to_datetime(df.publication_date).apply(
@@ -282,11 +291,19 @@ def main(
     print(f"# nodes: {len(lookup):,.0f}")
     print(f"# edges: {len(all_edges):,.0f}")
 
-    with open("graph/edges.pkl", "wb") as f:
+    with open(output_path, "wb") as f:
         pickle.dump(
             {
                 "num_of_vertices": len(lookup),
                 "edges": all_edges,
+                "input_path": input_path,
+                "lookup_path": lookup_path,
+                "colname": colname,
+                "min_occurence": min_occurence,
+                "min_words": min_words,
+                "max_words": max_words,
+                "min_occurence_elements": min_occurence_elements,
+                "min_amount_elements": min_amount_elements,
             },
             f,
         )
