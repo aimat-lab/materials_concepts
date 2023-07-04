@@ -137,13 +137,13 @@ def train(model, X_train, y_train, learning_rate, batch_size, num_epochs):
         print(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
 
 
-def eval(model, data, embeddings):
+def eval(model, data, embeddings, metrics_path):
     """Load the pytorch model and evaluate it on the test set"""
     print("Evaluating...")
     X_test = torch.tensor(np.array(embeddings["X_test"]), dtype=torch.float).to(device)
     predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
-    print_metrics(data["y_test"], predictions)
+    print_metrics(data["y_test"], predictions, threshold=0.5, save_path=metrics_path)
 
 
 def main(
@@ -154,7 +154,8 @@ def main(
     num_epochs=1,
     train_model=False,
     save_model=False,
-    eval_model=False,
+    eval_mode=False,
+    metrics_path=None,
 ):
     data, embeddings = load_data(data_path, embeddings_path)
 
@@ -174,14 +175,14 @@ def main(
         print("Saving model...")
         if save_model:
             torch.save(model.state_dict(), save_model)
-    elif eval_model:
+    elif eval_mode:
         print("Loading model...")
-        model.load_state_dict(torch.load(eval_model))
+        model.load_state_dict(torch.load(eval_mode))
     else:
         print("Please specify either --train_model or --eval_model")
         return
 
-    eval(model, data, embeddings)
+    eval(model, data, embeddings, metrics_path)
 
 
 if __name__ == "__main__":

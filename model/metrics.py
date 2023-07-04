@@ -3,9 +3,10 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     confusion_matrix,
 )
+import pickle
 
 
-def print_metrics(y_test, y_pred, threshold=0.5):
+def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
     auc = roc_auc_score(y_test, y_pred)
     precision, recall, fscore, _ = precision_recall_fscore_support(
         y_test, y_pred > threshold, average="binary"
@@ -19,3 +20,21 @@ def print_metrics(y_test, y_pred, threshold=0.5):
     print("Confusion matrix:")
     tn, fp, fn, tp = confusion_matrix(y_test, y_pred > threshold).ravel()
     print(f"TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
+
+    if save_path:
+        with open(save_path, "wb") as f:
+            pickle.dump(
+                {
+                    "auc": auc,
+                    "precision": precision,
+                    "recall": recall,
+                    "fscore": fscore,
+                    "confusion_matrix": {
+                        "tn": tn,
+                        "fp": fp,
+                        "fn": fn,
+                        "tp": tp,
+                    },
+                },
+                f,
+            )
