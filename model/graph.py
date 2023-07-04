@@ -33,7 +33,7 @@ class Graph:
                 data,
                 (rows, cols),
             ),
-        )
+        ).astype(np.int16)
 
     @staticmethod
     def build_nx_graph(adj_mat):
