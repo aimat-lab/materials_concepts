@@ -18,7 +18,7 @@ def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
     print("F1", f"{fscore:.4f}")
 
     print("Confusion matrix:")
-    tn, fp, fn, tp = confusion_matrix(y_test, y_pred > threshold).ravel()
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred > threshold).ravel().astype(int)
     print(f"TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
 
     if save_path:
