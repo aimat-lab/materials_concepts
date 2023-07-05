@@ -20,7 +20,7 @@ class Graph:
         return data["num_of_vertices"], data["edges"]
 
     @staticmethod
-    def build_adj_matrix(edge_list):
+    def build_adj_matrix(edge_list, binary=False):
         """Build a symmetric adjacency matrix from edge list."""
 
         symmetric_edges = np.vstack((edge_list, edge_list[:, [1, 0, 2]]))
@@ -28,12 +28,14 @@ class Graph:
         cols = symmetric_edges[:, 1]
         data = np.ones(symmetric_edges.shape[0])
 
-        return sparse.csr_matrix(
+        adj_mat = sparse.csr_matrix(
             (
                 data,
                 (rows, cols),
             ),
         ).astype(np.int16)
+
+        return adj_mat if not binary else (adj_mat > 0).astype(np.int16)
 
     @staticmethod
     def build_nx_graph(adj_mat):
@@ -72,7 +74,8 @@ class Graph:
 
         return np.where(self.degrees <= max_degree)[0]
 
-    def get_adj_matrices(self, years):
+    def get_adj_matrices(self, years, binary=False):
         return [
-            self.build_adj_matrix(self.get_until(date(year, 12, 31))) for year in years
+            self.build_adj_matrix(self.get_until(date(year, 12, 31)), binary)
+            for year in years
         ]

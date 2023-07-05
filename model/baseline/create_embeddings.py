@@ -169,7 +169,7 @@ def calculate_embeddings(graph_path, X_train, X_test, include_jaccard=True):
     graph = Graph(graph_path)
 
     logging.debug("Calculating adjacency matrices")
-    matrices = graph.get_adj_matrices([2010, 2013, 2016])
+    matrices = graph.get_adj_matrices([2010, 2013, 2016], binary=True)
 
     embeddings = compute_all_properties_of_list(
         matrices, np.concatenate([X_train, X_test]), include_jaccard=include_jaccard
