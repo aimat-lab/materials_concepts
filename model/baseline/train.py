@@ -186,12 +186,13 @@ def main(
     eval_mode=False,
     metrics_path=None,
     pos_to_neg_ratio=0.03,
+    input_dim=15,
 ):
     data, embeddings = load_data(data_path, embeddings_path)
 
     X_train, y_train = sample(embeddings["X_train"], data["y_train"], pos_to_neg_ratio)
 
-    model = BaselineNetwork([15, 100, 100, 10]).to(device)
+    model = BaselineNetwork([input_dim, 100, 100, 10]).to(device)
 
     if train_model:
         print("Training...")
