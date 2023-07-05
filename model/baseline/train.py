@@ -146,6 +146,35 @@ def eval(model, data, embeddings, metrics_path):
     print_metrics(data["y_test"], predictions, threshold=0.5, save_path=metrics_path)
 
 
+def shuffle(X, y):
+    """Shuffle X and y in unison"""
+    assert len(X) == len(y)
+    p = np.random.permutation(len(X))
+    return X[p], y[p]
+
+
+def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
+    """Sample the data to have a given ratio of positive to negative samples"""
+    pos_indices = np.where(y == 1)[0]
+    neg_indices = np.where(y == 0)[0]
+
+    curr_pos_ratio = len(pos_indices) / len(y)
+    if curr_pos_ratio > pos_to_neg_ratio:
+        num_neg = len(neg_indices)
+        num_pos = int(pos_to_neg_ratio * num_neg)
+    else:
+        num_pos = len(pos_indices)
+        num_neg = num_pos / pos_to_neg_ratio
+
+    pos_indices = np.random.choice(pos_indices, size=num_pos, replace=False)
+    neg_indices = np.random.choice(neg_indices, size=num_neg, replace=False)
+
+    X = np.concatenate([X[pos_indices], X[neg_indices]])
+    y = np.concatenate([y[pos_indices], y[neg_indices]])
+
+    return shuffle(X, y)
+
+
 def main(
     data_path="model/data.pkl",
     embeddings_path="model/baseline/embeddings.pkl",
@@ -156,8 +185,11 @@ def main(
     save_model=False,
     eval_mode=False,
     metrics_path=None,
+    pos_to_neg_ratio=0.03,
 ):
     data, embeddings = load_data(data_path, embeddings_path)
+
+    X_train, y_train = sample(embeddings["X_train"], data["y_train"], pos_to_neg_ratio)
 
     model = BaselineNetwork([15, 100, 100, 10]).to(device)
 
@@ -166,8 +198,8 @@ def main(
         model.train()
         train(
             model,
-            X_train=np.array(embeddings["X_train"]),
-            y_train=data["y_train"],
+            X_train=X_train,
+            y_train=y_train,
             learning_rate=lr,
             batch_size=batch_size,
             num_epochs=num_epochs,
@@ -187,10 +219,3 @@ def main(
 
 if __name__ == "__main__":
     fire.Fire(main)
-
-# AUC 0.8659
-# Precision 0.0075
-# Recall 0.2190
-# F1 0.0145
-# Confusion matrix:
-# TN: 996852, FP: 3043, FN: 82, TP: 23

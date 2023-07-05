@@ -3,7 +3,7 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     confusion_matrix,
 )
-import pickle
+import json
 
 
 def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
@@ -22,8 +22,8 @@ def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
     print(f"TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
 
     if save_path:
-        with open(save_path, "wb") as f:
-            pickle.dump(
+        with open(save_path, "w") as f:
+            json.dump(
                 {
                     "auc": auc,
                     "precision": precision,
