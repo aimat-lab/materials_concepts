@@ -100,10 +100,12 @@ def retrieve_properties_for_vertex_pair(
             )
         )
 
-    return np.array(all_properties).astype(np.float32)
+    return np.array(all_properties).astype(np.float16)  # reduce memory usage
 
 
-def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
+def compute_all_properties_of_list(
+    all_sparse, vlist, include_jaccard=True
+) -> np.ndarray:
     """
     Computes hand-crafted properties for all vertices in vlist
 
@@ -161,7 +163,11 @@ def compute_all_properties_of_list(all_sparse, vlist, include_jaccard=True):
 
         all_properties.append(vals)
 
-    return all_properties
+    return np.array(all_properties)
+
+
+def normalize(embeddings, maxes):
+    return embeddings / maxes
 
 
 def calculate_embeddings(graph_path, X_train, X_test, include_jaccard=True):
@@ -173,6 +179,12 @@ def calculate_embeddings(graph_path, X_train, X_test, include_jaccard=True):
 
     embeddings = compute_all_properties_of_list(
         matrices, np.concatenate([X_train, X_test]), include_jaccard=include_jaccard
+    )
+
+    logging.debug("Normalizing embeddings")
+    embeddings = normalize(
+        embeddings,
+        np.max(embeddings, axis=0),
     )
 
     return embeddings[: len(X_train)], embeddings[len(X_train) :]
