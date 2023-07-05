@@ -37,4 +37,5 @@ def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
                     },
                 },
                 f,
+                indent=4,
             )
