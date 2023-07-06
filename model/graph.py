@@ -49,8 +49,11 @@ class Graph:
     def calc_degrees(adj_mat):
         return np.array(adj_mat.sum(0))[0]
 
-    def get_until(self, day):
-        return self.edges[self.edges[:, 2] < (day - Graph.DAY_ORIGIN).days]
+    def get_until(self, date):
+        return self.edges[self.edges[:, 2] < (date - Graph.DAY_ORIGIN).days]
+
+    def get_until_year(self, year):
+        return self.get_until(date(year, 12, 31))
 
     def get_adj_mat(self, until_year):
         cutoff_date = date(until_year, 12, 31)
