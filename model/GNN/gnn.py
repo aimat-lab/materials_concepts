@@ -1,7 +1,17 @@
 from torch_geometric.nn import GCNConv
 import torch.nn.functional as F
 import torch
-from dataset import data, test_data, print_metrics
+from torch_geometric.data import Data
+import fire
+import pickle
+import numpy as np
+import sys, os
+
+parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_directory)
+
+from graph import Graph
+from metrics import print_metrics
 
 
 class GCN(torch.nn.Module):
@@ -72,38 +82,133 @@ class LinkPredictor(torch.nn.Module):
         return self.mlp(x_concat)
 
 
-input_channel = 3
-hidden_channels = 32  # dimension of node embeddings
-hidden_mlp = 32  # dimension of the hidden layer in the MLP
-output_dim = 1
-model = LinkPredictor(
-    GCN(input_channel=input_channel, hidden_channels=hidden_channels),
-    MLP(input_dim=2 * hidden_channels, hidden_dim=hidden_mlp, output_dim=output_dim),
-)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+def shuffle(X, y):
+    """Shuffle X and y in unison"""
+    assert len(X) == len(y)
+    p = np.random.permutation(len(X))
+    return X[p], y[p]
 
-model.train()
-for epoch in range(30):
-    optimizer.zero_grad()
 
-    # Forward pass
-    out = model(data)
+def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
+    """Sample the data to have a given ratio of positive to negative samples"""
+    pos_indices = np.where(y == 1)[0]
+    neg_indices = np.where(y == 0)[0]
 
-    loss = F.binary_cross_entropy(out, data.future_edge_labels.unsqueeze(1))
+    curr_pos_ratio = len(pos_indices) / len(y)
+    if curr_pos_ratio > pos_to_neg_ratio:
+        num_neg = len(neg_indices)
+        num_pos = int(pos_to_neg_ratio * num_neg)
+    else:
+        num_pos = len(pos_indices)
+        num_neg = int(num_pos / pos_to_neg_ratio)
 
-    # Backward pass
-    loss.backward()
-    optimizer.step()
+    pos_indices = np.random.choice(pos_indices, size=num_pos, replace=False)
+    neg_indices = np.random.choice(neg_indices, size=num_neg, replace=False)
 
-    # Print loss
-    print(f"Epoch: {epoch}, Loss: {loss.item()}")
+    X = np.concatenate([X[pos_indices], X[neg_indices]])
+    y = np.concatenate([y[pos_indices], y[neg_indices]])
 
-# Evaluate on the test set
-model.eval()
-with torch.no_grad():
-    pred = model(test_data)
+    return shuffle(X, y)
 
-print_metrics(
-    test_data.future_edge_labels,
-    pred,
-)
+
+def calc_degs(adj):
+    return np.array(adj.sum(0))[0]
+
+
+def prepare_data(
+    graph_path="data/graph/edges.pkl",
+    data_path="data/model/data.pkl",
+):
+    graph = Graph(graph_path)
+
+    embs = [
+        calc_degs(adj)
+        for adj in graph.get_adj_matrices([2014, 2015, 2016], binary=False)
+    ]
+
+    test_embs = [
+        calc_degs(adj)
+        for adj in graph.get_adj_matrices([2017, 2018, 2019], binary=False)
+    ]
+
+    x = torch.tensor(np.array(embs), dtype=torch.float).T
+
+    test_x = torch.tensor(np.array(test_embs), dtype=torch.float).T
+
+    edge_index = (
+        torch.tensor(graph.get_until_year(2016), dtype=torch.long).t().contiguous()
+    )
+
+    data = Data(x=x, edge_index=edge_index)
+
+    with open(data_path, "rb") as f:
+        future_data = pickle.load(f)
+
+    X_train, y_train = sample(future_data["X_train"], future_data["y_train"], 0.5)
+
+    data.future_edge_index = torch.tensor(X_train, dtype=torch.long).t().contiguous()
+    data.future_edge_labels = torch.tensor(y_train, dtype=torch.float)
+
+    test_edge_index = (
+        torch.tensor(graph.get_until_year(2019), dtype=torch.long).t().contiguous()
+    )
+    test_data = Data(x=test_x, edge_index=test_edge_index)
+    test_data.future_edge_index = (
+        torch.tensor(future_data["X_test"], dtype=torch.long).t().contiguous()
+    )
+    test_data.future_edge_labels = torch.tensor(
+        future_data["y_test"], dtype=torch.float
+    )
+
+    return data, test_data
+
+
+def main(
+    graph_data="data/graph/edges.pkl",
+    data_path="data/model/data.pkl",
+    input_channel=3,
+    hidden_channels=8,
+    hidden_mlp=16,
+    output_dim=1,
+    epochs=25,
+    lr=0.01,
+):
+    data, test_data = prepare_data(graph_data, data_path)
+
+    model = LinkPredictor(
+        GCN(input_channel=input_channel, hidden_channels=hidden_channels),
+        MLP(
+            input_dim=2 * hidden_channels, hidden_dim=hidden_mlp, output_dim=output_dim
+        ),
+    )
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+
+    model.train()
+    for epoch in range(epochs):
+        optimizer.zero_grad()
+
+        # Forward pass
+        out = model(data)
+
+        loss = F.binary_cross_entropy(out, data.future_edge_labels.unsqueeze(1))
+
+        # Backward pass
+        loss.backward()
+        optimizer.step()
+
+        # Print loss
+        print(f"Epoch: {epoch}, Loss: {loss.item()}")
+
+    # Evaluate on the test set
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_data)
+
+    print_metrics(
+        test_data.future_edge_labels,
+        pred,
+    )
+
+
+if __name__ == "__main__":
+    fire.Fire(main)
