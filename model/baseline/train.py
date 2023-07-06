@@ -164,7 +164,7 @@ def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
         num_pos = int(pos_to_neg_ratio * num_neg)
     else:
         num_pos = len(pos_indices)
-        num_neg = num_pos / pos_to_neg_ratio
+        num_neg = int(num_pos / pos_to_neg_ratio)
 
     pos_indices = np.random.choice(pos_indices, size=num_pos, replace=False)
     neg_indices = np.random.choice(neg_indices, size=num_neg, replace=False)
