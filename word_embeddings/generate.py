@@ -10,6 +10,11 @@ import gzip
 
 tqdm.pandas()
 
+DIM_EMBEDDING = 768
+MAX_TOKENS = 510
+CLS_TOKEN_ID = 102
+SEP_TOKEN_ID = 103
+
 
 def setup_logger(level=logging.INFO, log_to_stdout=True):
     logger = logging.getLogger()
@@ -57,13 +62,32 @@ def prepare_dataframe(df, lookup_df):
     return df[["id", "abstract", "concepts"]]
 
 
+def wrap(tokens):
+    """Wrap tokens with [CLS] and [SEP], only if not already wrapped"""
+    if tokens[0] != CLS_TOKEN_ID:
+        tokens = [CLS_TOKEN_ID] + tokens
+
+    if tokens[-1] != SEP_TOKEN_ID:
+        tokens = tokens + [SEP_TOKEN_ID]
+
+    return tokens
+
+
 def init_get_embeddings(model, tokenizer):
     def func(text):
-        tokens = tokenizer(text)
-        outputs = model(torch.tensor([tokens["input_ids"]]))
-        embeddings = outputs.last_hidden_state.squeeze()
+        tokens = tokenizer(text)["input_ids"]
 
-        return embeddings[1:-1]  # remove [CLS] and [SEP]
+        chunks = [
+            wrap(tokens[i : i + MAX_TOKENS]) for i in range(0, len(tokens), MAX_TOKENS)
+        ]
+
+        embedded_chunks = []
+        for chunk in chunks:
+            outputs = model(torch.tensor([chunk]))
+            embeddings = outputs.last_hidden_state.squeeze()
+            embedded_chunks.append(embeddings[1:-1])  # remove [CLS] and [SEP]
+
+        return torch.cat(embedded_chunks)
 
     return func
 
@@ -137,7 +161,7 @@ def load_compressed(path):
     return pickle.loads(gzip.decompress(compressed))
 
 
-logger = setup_logger(logging.INFO, log_to_stdout=False)
+logger = setup_logger(logging.DEBUG, log_to_stdout=True)
 logger.info("Prepare dataframe")
 df = prepare_dataframe(
     df=pd.read_csv("data/table/materials-science.llama.works.csv"),
@@ -146,14 +170,14 @@ df = prepare_dataframe(
 
 logger.info("Setup model")
 tokenizer, model = setup_model("m3rg-iitd/matscibert")
-DIM_EMBEDDING = 768
 get_embeddings = init_get_embeddings(model, tokenizer)
 get_token_ids = init_get_token_ids(tokenizer)
 
 logger.info("Generate word embeddings")
 
 
-df = df.head(1000)
+df = df[df.abstract.str.len() > 3000]
+df = df.head(1)
 
 
 store = {}
@@ -166,11 +190,6 @@ for id, abstract, concepts in tqdm(
     )
 
     abstract_tokens = get_token_ids(abstract)
-    if len(abstract_tokens) > 512:
-        logger.info(
-            f"Abstract is too long ({len(abstract_tokens)} tokens), skip embedding generation"
-        )
-        continue
 
     abstract_embedding = get_embeddings(abstract)
 
