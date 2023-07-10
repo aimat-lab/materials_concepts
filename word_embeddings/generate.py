@@ -7,6 +7,8 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import pickle
 import gzip
+import fire
+import os
 
 tqdm.pandas()
 
@@ -82,10 +84,11 @@ def init_get_embeddings(model, tokenizer):
         ]
 
         embedded_chunks = []
-        for chunk in chunks:
-            outputs = model(torch.tensor([chunk]))
-            embeddings = outputs.last_hidden_state.squeeze()
-            embedded_chunks.append(embeddings[1:-1])  # remove [CLS] and [SEP]
+        with torch.no_grad():
+            for chunk in chunks:
+                outputs = model(torch.tensor([chunk]))
+                embeddings = outputs.last_hidden_state.squeeze()
+                embedded_chunks.append(embeddings[1:-1])  # remove [CLS] and [SEP]
 
         return torch.cat(embedded_chunks)
 
@@ -126,7 +129,7 @@ def get_concept_embedding(
 
 
 def extract_embeddings_for_abstract(
-    abstract_embedding, concepts, aggregation=torch.mean
+    abstract_embedding, abstract_tokens, concepts, aggregation=torch.mean
 ):
     concept_embeddings = []
     for concept in concepts:
@@ -161,48 +164,67 @@ def load_compressed(path):
     return pickle.loads(gzip.decompress(compressed))
 
 
-logger = setup_logger(logging.INFO, log_to_stdout=False)
-logger.info("Prepare dataframe")
-df = prepare_dataframe(
-    df=pd.read_csv("data/table/materials-science.llama.works.csv"),
-    lookup_df=pd.read_csv("data/table/lookup/lookup_large.csv"),
-)
+def process_works(df, desc):
+    store = {}
 
-logger.info("Setup model")
-tokenizer, model = setup_model("m3rg-iitd/matscibert")
-get_embeddings = init_get_embeddings(model, tokenizer)
-get_token_ids = init_get_token_ids(tokenizer)
+    for id, abstract, concepts in tqdm(
+        zip(df.id, df.abstract, df.concepts), total=len(df), desc=desc
+    ):
+        logger.info(
+            f"Process {id}: abstract len of {len(abstract)} with {len(concepts)} concepts"
+        )
 
-logger.info("Generate word embeddings")
+        abstract_tokens = get_token_ids(abstract)
+
+        abstract_embedding = get_embeddings(abstract)
+
+        logger.debug(
+            f"Tokenized abstract length: {len(abstract_tokens)}, Abstract embedding shape: {abstract_embedding.shape}"
+        )
+
+        embeddings = extract_embeddings_for_abstract(
+            abstract_embedding, abstract_tokens, concepts, aggregation=torch.mean
+        )
+
+        logger.debug(f"All embeddings shape: {embeddings.shape}")
+
+        store[id] = embeddings
+
+    return store
 
 
-df = df.head(500)
-
-
-store = {}
-
-for id, abstract, concepts in tqdm(
-    zip(df.id, df.abstract, df.concepts), total=len(df), desc="Generate embeddings"
+def main(
+    concepts_path="data/table/materials-science.llama.works.csv",
+    lookup_path="data/table/lookup/lookup_large.csv",
+    output_path="data/embeddings/large/",
+    log_to_stdout=False,
+    step_size=500,
 ):
-    logger.info(
-        f"Process {id}: abstract len of {len(abstract)} with {len(concepts)} concepts"
+    global logger, get_embeddings, get_token_ids
+    logger = setup_logger(logging.INFO, log_to_stdout=log_to_stdout)
+    logger.info("Prepare dataframe")
+
+    df = prepare_dataframe(
+        df=pd.read_csv(concepts_path),
+        lookup_df=pd.read_csv(lookup_path),
     )
 
-    abstract_tokens = get_token_ids(abstract)
+    logger.info("Setup model")
+    tokenizer, model = setup_model("m3rg-iitd/matscibert")
+    get_embeddings = init_get_embeddings(model, tokenizer)
+    get_token_ids = init_get_token_ids(tokenizer)
 
-    abstract_embedding = get_embeddings(abstract)
+    logger.info("Generate word embeddings")
 
-    logger.debug(
-        f"Tokenized abstract length: {len(abstract_tokens)}, Abstract embedding shape: {abstract_embedding.shape}"
-    )
+    for i in range(0, len(df), step_size):
+        logger.info(f"Process {i} to {i+step_size}...")
+        partial_df = df[i : i + step_size]
+        store = process_works(partial_df, desc=f"Generate embeddings ({i}):")
+        logger.info("Save embeddings")
+        save_path = os.path.join(output_path, f"embeddings_{i}.pkl.gz")
+        save_compressed(store, save_path)
 
-    embeddings = extract_embeddings_for_abstract(
-        abstract_embedding, concepts, aggregation=torch.mean
-    )
 
-    logger.debug(f"All embeddings shape: {embeddings.shape}")
-
-    store[id] = embeddings
-
-logger.info("Save embeddings")
-save_compressed(store, "data/embeddings/concept_embeddings_medium.pkl.gz")
+if __name__ == "__main__":
+    # fire.Fire(main)
+    pass
