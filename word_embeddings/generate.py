@@ -161,7 +161,7 @@ def load_compressed(path):
     return pickle.loads(gzip.decompress(compressed))
 
 
-logger = setup_logger(logging.DEBUG, log_to_stdout=True)
+logger = setup_logger(logging.INFO, log_to_stdout=False)
 logger.info("Prepare dataframe")
 df = prepare_dataframe(
     df=pd.read_csv("data/table/materials-science.llama.works.csv"),
