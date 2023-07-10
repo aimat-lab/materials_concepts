@@ -176,8 +176,7 @@ get_token_ids = init_get_token_ids(tokenizer)
 logger.info("Generate word embeddings")
 
 
-df = df[df.abstract.str.len() > 3000]
-df = df.head(1)
+df = df.head(700)
 
 
 store = {}
