@@ -166,6 +166,12 @@ for id, abstract, concepts in tqdm(
     )
 
     abstract_tokens = get_token_ids(abstract)
+    if len(abstract_tokens) > 512:
+        logger.info(
+            f"Abstract is too long ({len(abstract_tokens)} tokens), skip embedding generation"
+        )
+        continue
+
     abstract_embedding = get_embeddings(abstract)
 
     logger.debug(
