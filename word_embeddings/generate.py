@@ -226,5 +226,4 @@ def main(
 
 
 if __name__ == "__main__":
-    # fire.Fire(main)
-    pass
+    fire.Fire(main)
