@@ -11,7 +11,7 @@ import gzip
 tqdm.pandas()
 
 DIM_EMBEDDING = 768
-MAX_TOKENS = 510
+MAX_TOKENS = 510  # 512 - 2 (CLS and SEP)
 CLS_TOKEN_ID = 102
 SEP_TOKEN_ID = 103
 
@@ -165,7 +165,7 @@ logger = setup_logger(logging.DEBUG, log_to_stdout=True)
 logger.info("Prepare dataframe")
 df = prepare_dataframe(
     df=pd.read_csv("data/table/materials-science.llama.works.csv"),
-    lookup_df=pd.read_csv("data/table/lookup/lookup_medium.csv"),
+    lookup_df=pd.read_csv("data/table/lookup/lookup_large.csv"),
 )
 
 logger.info("Setup model")
@@ -176,7 +176,7 @@ get_token_ids = init_get_token_ids(tokenizer)
 logger.info("Generate word embeddings")
 
 
-df = df.head(700)
+df = df.head(500)
 
 
 store = {}
