@@ -147,8 +147,8 @@ def extract_embeddings_for_abstract(
 
         concept_embeddings.append(concept_embedding)
 
-    return torch.stack(
-        concept_embeddings
+    return (
+        torch.stack(concept_embeddings) if concept_embeddings else torch.tensor([])
     )  # all concept embeddings for one abstract, sorted alphabetically
 
 
@@ -199,6 +199,7 @@ def main(
     output_path="data/embeddings/large/",
     log_to_stdout=False,
     step_size=500,
+    start=0,
 ):
     global logger, get_embeddings, get_token_ids
     logger = setup_logger(logging.INFO, log_to_stdout=log_to_stdout)
@@ -216,7 +217,7 @@ def main(
 
     logger.info("Generate word embeddings")
 
-    for i in range(0, len(df), step_size):
+    for i in range(start, len(df), step_size):
         logger.info(f"Process {i} to {i+step_size}...")
         partial_df = df[i : i + step_size]
         store = process_works(partial_df, desc=f"Generate embeddings ({i}):")
