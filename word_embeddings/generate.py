@@ -158,12 +158,6 @@ def save_compressed(obj, path):
         f.write(compressed)
 
 
-def load_compressed(path):
-    with open(path, "rb") as f:
-        compressed = f.read()
-    return pickle.loads(gzip.decompress(compressed))
-
-
 def process_works(df, desc):
     store = {}
 
@@ -220,7 +214,7 @@ def main(
     for i in range(start, len(df), step_size):
         logger.info(f"Process {i} to {i+step_size}...")
         partial_df = df[i : i + step_size]
-        store = process_works(partial_df, desc=f"Generate embeddings ({i}):")
+        store = process_works(partial_df, desc=f"Generate embeddings ({i})")
         logger.info("Save embeddings")
         save_path = os.path.join(output_path, f"embeddings_{i}.pkl.gz")
         save_compressed(store, save_path)
