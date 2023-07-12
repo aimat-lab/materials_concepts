@@ -188,6 +188,22 @@ class ElementFilter:
         return elements
 
 
+class LengthFilter:
+    def __init__(self, min_length=2, max_length=100):
+        self.min_length = min_length
+        self.max_length = max_length
+
+    def __call__(self, concepts):
+        print(f"Applying length filter: min={self.min_length}, max={self.max_length}")
+        concepts = {
+            concept: n
+            for concept, n in tqdm(concepts.items())
+            if self.min_length <= len(concept) <= self.max_length
+        }
+
+        return concepts
+
+
 def main(
     input_path="data/materials-science.llama.works.csv",
     output_path="data/graph/edges.pkl",
@@ -196,6 +212,7 @@ def main(
     min_occurence=3,
     min_words=1,
     max_words=10,
+    min_length=5,
     min_occurence_elements=3,
     min_amount_elements=2,
 ):
@@ -211,6 +228,7 @@ def main(
                 LlamaFilter(),
                 NonAsciiFilter(),
                 WordFilter(min_n=min_words, max_n=max_words),
+                LengthFilter(min_length=min_length),
             ],
         },
     }
