@@ -18,28 +18,14 @@ class GCN(torch.nn.Module):
     def __init__(self, input_channel, hidden_channels):
         super(GCN, self).__init__()
         self.conv1 = GCNConv(input_channel, hidden_channels)
-        # self.conv2 = GATConv(hidden_channels, hidden_channels)
-        # self.conv3 = GCNConv(hidden_channels, hidden_channels)
         self.bn1 = torch.nn.BatchNorm1d(hidden_channels)
-        self.bn2 = torch.nn.BatchNorm1d(hidden_channels)
-        self.bn3 = torch.nn.BatchNorm1d(hidden_channels)
         self.relu1 = torch.nn.ReLU()
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
         x = self.bn1(x)
         x = self.relu1(x)
-        x = F.dropout(x, p=0.5, training=self.training)
-
-        # x = self.conv2(x, edge_index)
-        # x = self.bn2(x)
-        # x = self.prelu2(x)
-        # x = F.dropout(x, p=0.5, training=self.training)
-
-        # x = self.conv3(x, edge_index)
-        # x = self.bn3(x)
-        # x = torch.nn.PReLU(x)
-        # x = F.dropout(x, p=0.5, training=self.training)
+        x = F.dropout(x, p=0.1, training=self.training)
 
         return x
 
@@ -198,7 +184,7 @@ def main(
         optimizer.step()
 
         # Print loss
-        print(f"Epoch: {epoch}, Loss: {loss.item()}")
+        print(f"Epoch: {epoch}, Loss: {loss.item():.3f}")
 
     # Evaluate on the test set
     model.eval()
@@ -213,3 +199,10 @@ def main(
 
 if __name__ == "__main__":
     fire.Fire(main)
+
+# AUC 0.7761
+# Precision 0.0010
+# Recall 0.2000
+# F1 0.0019
+# Confusion matrix:
+# TN: 978003, FP: 21892, FN: 84, TP: 21
