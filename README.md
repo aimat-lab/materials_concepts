@@ -169,6 +169,39 @@ python model/baseline/train.py \
   --eval_mode False
 ```
 
+# Word Embeddings
+
+## Generate Word Embeddings
+
+Word embeddings are generated using BERT or a fine-tuned version of BERT e.g. MatSciBERT.
+To extract ambeddings for all concepts (all embedded tokens comprising a concept are `averaged`), run:
+
+```
+python word_embeddings/generate.py \
+  --concepts_path data/table/materials-science.llama.works.csv \
+  --lookup_path data/table/lookup/lookup_large.csv \
+  --output_path data/embeddings/large/ \
+  --log_to_stdout False \
+  --step_size 500 \
+  --start 0
+```
+
+> Currently, if a concept is not exactly contained in the abstract (this can happen because LLMs can apply some "normalization" during extraction), the embedding vector is set to all zeros. Idea: Replace with abstract embedding (average of all tokens in abstract).
+
+## Average Word Embeddings
+
+Averaging word (concept) embeddings so that they can be used as feature vectors for classification.
+
+```
+python word_embeddings/interface.py \
+  --concepts_path data/table/materials-science.llama.works.csv \
+  --lookup_path data/table/lookup/lookup_large.csv \
+  --filter_path data/table/lookup/lookup_small.csv \
+  --embeddings_dir data/embeddings/large/ \
+  --output_path data/model/concept_embs/ \
+  --until_year 2016
+```
+
 # TODO General
 
 ## Process
@@ -179,7 +212,7 @@ python model/baseline/train.py \
 - [x] Abstract cleaning: Clean chemical elements
 - [ ] Invert filenames: ...cleaned.works.csv -> ...works.cleaned.csv
 - [x] Add title to abstract (before cleaning)
-- [ ] Generate cleaned 'list' of all concepts
+- [x] Generate cleaned 'list' of all concepts
   - [x] Rake
   - [x] LLM
     - [x] Get access to BWUniCluster
@@ -191,9 +224,9 @@ python model/baseline/train.py \
 - [x] Implement Baseline
 - [x] Implement evaluation (on test set)
 - [x] Implement validation (on future data)
-- [ ] Implement top performing model from kaggle challange
-- [ ] Store model and graph
-- [ ] Extract concept embeddings (Calculate storage requirements)
+- [x] Implement top performing model from kaggle challange (More or less)
+- [x] Store model and graph
+- [x] Extract concept embeddings (Calculate storage requirements)
 - [ ] Build Baseline (Features + Embeddings)
 - [ ] Build GNN Model (Embeddings + Features?)
 - [ ] Build API to query prediction service
@@ -220,6 +253,10 @@ Retrieve abstract for work given work ID: `$ abstract W2159161622`
 ## Identifying Sourcce
 
 Retrieve source for work given work ID: `$ getsource W2159161622`
+
+```
+
+```
 
 ```
 

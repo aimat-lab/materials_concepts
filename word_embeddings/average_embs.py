@@ -5,6 +5,10 @@ import pickle, gzip
 from tqdm import tqdm
 import logging
 import sys
+import torch
+import fire
+
+DIM_EMBEDDING = 768
 
 
 def setup_logger(level=logging.INFO, log_to_stdout=True):
@@ -50,28 +54,63 @@ def prepare_dataframe(df, lookup_df, cols):
 
 class EmbeddingAverager:
     def __init__(self):
-        self.store = {}
+        self.storage = {}
+
+    def __len__(self):
+        return len(self.storage)
 
     def __setitem__(self, key, value):
-        if key not in self.store:
-            self.store[key] = (value, 1)
+        if key not in self.storage:
+            self.storage[key] = (value, 1)
         else:
-            old_value, count = self.store[key]
-            self.store[key] = (old_value + value, count + 1)
+            old_value, count = self.storage[key]
+            self.storage[key] = (old_value + value, count + 1)
 
     def __getitem__(self, key):
-        value, count = self.store[key]
+        value, count = self.storage[key]
         return value / count
 
     def __contains__(self, key):
-        return key in self.store
+        return key in self.storage
+
+    def keys(self):
+        return self.storage.keys()
+
+    def save(self, path, concept_mapping=None):
+        translated = self.storage
+
+        if concept_mapping:
+            translated = {
+                concept_mapping[concept]: self.__getitem__(concept)
+                for concept in self.storage.keys()
+            }
+
+        with gzip.open(path, "wb") as f:
+            pickle.dump(translated, f)
+
+    def null_ratio(self):
+        return round(
+            sum(
+                [
+                    1
+                    for embs, _ in self.storage.values()
+                    if all(embs == torch.zeros(DIM_EMBEDDING))
+                ]
+            )
+            / len(self.stores),
+            3,
+        )
 
 
 class DataReader:
     def __init__(self, embeddings_path, df, logger):
         self.embeddings_path = embeddings_path
         self.df = df
-        self.files = [f for f in os.listdir(embeddings_path) if f.endswith(".pkl.gz")]
+        self.lookup = {id: concepts for id, concepts in zip(df["id"], df["concepts"])}
+        self.files = sorted(
+            [f for f in os.listdir(embeddings_path) if f.endswith(".pkl.gz")],
+            key=lambda path: int(path[:-7].rsplit("_")[1]),
+        )
         self.logger = logger
 
     def get_averaged_concept_embeddings(self, concepts_filter, until_year=None):
@@ -99,17 +138,10 @@ class DataReader:
                 if id not in ids:
                     continue
 
-                print(self.df[self.df.id == id])
                 # filter embeddings according to concepts)
-                assert len(embeddings) == len(
-                    self.df[self.df.id == id].loc[150][
-                        "concepts"
-                    ]  # TODO: write wrapper for nice get access
-                )
+                assert len(embeddings) == len(self.lookup[id])
 
-                for emb, con in zip(
-                    embeddings, self.df[self.df.id == id].loc[150]["concepts"]
-                ):
+                for emb, con in zip(embeddings, self.lookup[id]):
                     if con in concepts_filter:
                         averaged_embeddings[con] = emb
 
@@ -122,17 +154,38 @@ class DataReader:
         return pickle.loads(gzip.decompress(compressed))
 
 
-concepts_path = "data/table/materials-science.llama.works.csv"
-lookup_path = "data/table/lookup/lookup_large.csv"
-logger = setup_logger(level=logging.DEBUG, log_to_stdout=True)
+def main(
+    concepts_path="data/table/materials-science.llama.works.csv",
+    lookup_path="data/table/lookup/lookup_large.csv",
+    filter_path="data/table/lookup/lookup_small.csv",
+    embeddings_dir="data/embeddings/large/",
+    output_path="data/model/con_embs/",
+    until_year=2016,
+):
+    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
-df = prepare_dataframe(
-    df=pd.read_csv(concepts_path),
-    lookup_df=pd.read_csv(lookup_path),
-    cols=["id", "concepts", "publication_date"],
-)
+    df = prepare_dataframe(
+        df=pd.read_csv(concepts_path),
+        lookup_df=pd.read_csv(lookup_path),
+        cols=["id", "concepts", "publication_date"],
+    )
 
-concept_filter = set(pd.read_csv(lookup_path)["concept"])
+    filter_df = pd.read_csv(filter_path)
 
-dr = DataReader("data/embeddings/large/", df, logger)
-averaged_embeddings = dr.get_averaged_concept_embeddings(concept_filter, 2016)
+    concept_filter = set(filter_df["concept"])
+
+    dr = DataReader(embeddings_dir, df, logger)
+    averaged_embeddings = dr.get_averaged_concept_embeddings(concept_filter, until_year)
+
+    concept_to_id = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
+
+    output_path = os.path.join(output_path, f"av_embs_{until_year}.pkl.gz")
+    averaged_embeddings.save(
+        output_path,
+        concept_mapping=concept_to_id,
+    )
+    logger.info(f"Saved {len(averaged_embeddings)} embeddings to {output_path}")
+
+
+if __name__ == "__main__":
+    fire.Fire(main)
