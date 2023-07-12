@@ -1,4 +1,4 @@
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, GATConv, GATv2Conv
 import torch.nn.functional as F
 import torch
 from torch_geometric.data import Data
@@ -18,18 +18,17 @@ class GCN(torch.nn.Module):
     def __init__(self, input_channel, hidden_channels):
         super(GCN, self).__init__()
         self.conv1 = GCNConv(input_channel, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, hidden_channels)
-        self.conv3 = GCNConv(hidden_channels, hidden_channels)
+        # self.conv2 = GATConv(hidden_channels, hidden_channels)
+        # self.conv3 = GCNConv(hidden_channels, hidden_channels)
         self.bn1 = torch.nn.BatchNorm1d(hidden_channels)
         self.bn2 = torch.nn.BatchNorm1d(hidden_channels)
         self.bn3 = torch.nn.BatchNorm1d(hidden_channels)
-        self.prelu1 = torch.nn.PReLU()
-        self.prelu2 = torch.nn.PReLU()
+        self.relu1 = torch.nn.ReLU()
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
         x = self.bn1(x)
-        x = self.prelu1(x)
+        x = self.relu1(x)
         x = F.dropout(x, p=0.5, training=self.training)
 
         # x = self.conv2(x, edge_index)
@@ -89,7 +88,9 @@ def shuffle(X, y):
     return X[p], y[p]
 
 
-def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
+def sample(
+    X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float
+):  # problem with *_medium dataset
     """Sample the data to have a given ratio of positive to negative samples"""
     pos_indices = np.where(y == 1)[0]
     neg_indices = np.where(y == 0)[0]
@@ -170,8 +171,8 @@ def main(
     hidden_channels=8,
     hidden_mlp=16,
     output_dim=1,
-    epochs=25,
-    lr=0.01,
+    epochs=50,
+    lr=0.005,
 ):
     data, test_data = prepare_data(graph_data, data_path)
 
