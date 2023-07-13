@@ -84,7 +84,7 @@ class BaselineNetwork(nn.Module):
 def get_embeddings(X, X_embs):
     logger.debug(f"Getting embeddings for {len(X)} samples")
     return torch.Tensor(
-        [torch.tensor([X_embs[int(v1)], X_embs[int(v2)]]) for v1, v2 in X]
+        [torch.tensor([X_embs[int(v1[0])], X_embs[int(v2[0])]]) for v1, v2 in X]
     )
 
 
