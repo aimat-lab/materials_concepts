@@ -118,7 +118,7 @@ class DataReader:
 
         # create date from year
         if until_year:
-            until_date = pd.to_datetime(until_year, format="%Y")
+            until_date = pd.to_datetime(f"31-12-{until_year}", format="%d-%m-%Y")
             ids = set(self.df[self.df.publication_date <= until_date]["id"])
         else:
             ids = set(self.df["id"])
