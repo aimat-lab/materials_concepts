@@ -8,10 +8,39 @@ import networkx as nx
 class Graph:
     DAY_ORIGIN = date(1970, 1, 1)
 
-    def __init__(self, path):
-        self.num_of_vertices, self.edges = Graph.load(path)
-        self.adj_mat = Graph.build_adj_matrix(self.edges)
-        self.degrees = Graph.calc_degrees(self.adj_mat)
+    def __init__(self, path=None, edge_list=None):
+        if path is None and edge_list is None:
+            raise ValueError("Either path or edge_list must be provided.")
+
+        if path is not None:
+            self.num_of_vertices, self.edges = Graph.load(path)
+            self._vertices = np.array(range(self.num_of_vertices))
+            self.adj_mat = Graph.build_adj_matrix(self.edges)
+            self.degrees = Graph.calc_degrees(self.adj_mat)
+        else:
+            self._vertices = np.array(
+                sorted(
+                    set(
+                        np.concatenate(
+                            (edge_list[:, 0].flatten(), edge_list[:, 1].flatten())
+                        )
+                    )
+                )
+            )
+            self.num_of_vertices = len(self._vertices)
+            self.edges = edge_list
+            self.adj_mat = Graph.build_adj_matrix(self.edges)
+            self.degrees = Graph.calc_degrees(self.adj_mat)[
+                self._vertices
+            ]  # only select degrees of vertices that are in the edge list as all other vertices have degree 0
+
+    @classmethod
+    def from_edge_list(cls, edge_list):
+        return cls(edge_list=edge_list)
+
+    @classmethod
+    def from_path(cls, path):
+        return cls(path=path)
 
     @staticmethod
     def load(path):
@@ -68,14 +97,19 @@ class Graph:
     def degree(self, vertex):
         return self.degrees[vertex]
 
+    @property
     def vertices(self):
-        return np.array(range(self.num_of_vertices))
+        return self._vertices
 
-    def get_vertices(self, max_degree):
+    def get_vertices(self, until_year, min_degree=0, max_degree=None):
+        g = Graph.from_edge_list(self.get_until_year(until_year))
+
         if max_degree is None:
-            return self.vertices()
+            vs = g.vertices[g.degrees >= min_degree]
+        else:
+            vs = g.vertices[(g.degrees >= min_degree) & (g.degrees <= max_degree)]
 
-        return np.where(self.degrees <= max_degree)[0]
+        return vs
 
     def get_adj_matrices(self, years, binary=False):
         return [

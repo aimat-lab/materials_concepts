@@ -20,11 +20,11 @@ class DataGenerator:
         self.verbose = verbose
         self.year_start = year_start
         self.year_delta = year_delta
-        year_end = year_start + year_delta
+        self.year_end = year_start + year_delta
 
         self.graph = Graph(path_to_graph)
         self.past_graph = self.graph.get_nx_graph(until_year=year_start)
-        self.future_graph = self.graph.get_nx_graph(until_year=year_end)
+        self.future_graph = self.graph.get_nx_graph(until_year=self.year_end)
 
     def generate(self, edges_used: int, min_links: int = 1, max_v_degree: int = None):
         """
@@ -54,7 +54,9 @@ class DataGenerator:
         """Generate training data by taking all positive samples and randomly drawing negative samples until the desired number of samples is reached.
         Warning: This leads to an overrepresentation of positive samples.
         """
-        filtered_vertices = self.graph.get_vertices(max_degree=max_v_degree)
+        filtered_vertices = self.graph.get_vertices(
+            until_year=self.year_start, min_degree=1, max_degree=max_v_degree
+        )  # TODO: Max degree by when?
 
         pos_samples = self._get_pos_samples(filtered_vertices, min_links)
         to_draw_neg = edges_used - len(pos_samples)
@@ -69,7 +71,7 @@ class DataGenerator:
         Drawn sample resembles the real distribution of (un)connected vertex pairs.
         """
         filtered_vertices = self.graph.get_vertices(
-            max_degree=max_v_degree
+            until_year=self.year_end, min_degree=1, max_degree=max_v_degree
         )  # TODO: For testing necessary as well?
 
         X, y = self._get_samples(edges_used, filtered_vertices, min_links)
