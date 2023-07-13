@@ -193,7 +193,7 @@ python word_embeddings/generate.py \
 Averaging word (concept) embeddings so that they can be used as feature vectors for classification.
 
 ```
-python word_embeddings/interface.py \
+python word_embeddings/average_embs.py \
   --concepts_path data/table/materials-science.llama.works.csv \
   --lookup_path data/table/lookup/lookup_large.csv \
   --filter_path data/table/lookup/lookup_small.csv \
@@ -201,6 +201,26 @@ python word_embeddings/interface.py \
   --output_path data/model/concept_embs/ \
   --until_year 2016
 ```
+
+## Train MLP
+
+```
+python model/concept_embs/train.py \
+  --data_path data/model/data.pkl \
+  --emb_train_path data/model/concept_embs/av_embs_2016.pkl.gz \
+  --emb_test_path data/model/concept_embs/av_embs_2019.pkl.gz \
+  --lr 0.001 \
+  --batch_size 100 \
+  --num_epochs 1 \
+  --train_model True \
+  --save_model data/model/concept_embs/model.pt \
+  --metrics_path data/model/concept_embs/metrics.pkl \
+  --pos_to_neg_ratio 0.03 \
+  --input_dim 1536 \
+  --eval_mode False
+```
+
+## Train GNN
 
 # TODO General
 
@@ -253,6 +273,10 @@ Retrieve abstract for work given work ID: `$ abstract W2159161622`
 ## Identifying Sourcce
 
 Retrieve source for work given work ID: `$ getsource W2159161622`
+
+```
+
+```
 
 ```
 
