@@ -219,7 +219,7 @@ def main(
         partial_df = df[i : i + step_size]
         store = process_works(partial_df, desc=f"Generate embeddings ({i})")
         logger.info("Save embeddings")
-        save_path = os.path.join(output_path, f"embeddings_{i}.pkl.gz")
+        save_path = os.path.join(output_path, f"embeddings_{i:06d}.pkl.gz")
         save_compressed(store, save_path)
 
 
