@@ -35,7 +35,7 @@ def prepare_dataframe(df, lookup_df, cols):
 
     df.abstract = df.abstract.str.lower()
     df.llama_concepts = df.llama_concepts.apply(literal_eval).apply(
-        lambda x: list({c.lower() for c in x if lookup.get(c)})
+        lambda x: list({c.lower() for c in x if lookup.get(c.lower())})
     )
 
     df.elements = df.elements.apply(
@@ -118,8 +118,8 @@ class DataReader:
 
         # create date from year
         if until_year:
-            until_date = pd.to_datetime(f"31-12-{until_year}", format="%d-%m-%Y")
-            ids = set(self.df[self.df.publication_date <= until_date]["id"])
+            until_date = pd.to_datetime(f"{until_year+1}-01-01")
+            ids = set(self.df[self.df.publication_date < until_date]["id"])
         else:
             ids = set(self.df["id"])
 

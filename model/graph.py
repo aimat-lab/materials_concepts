@@ -13,22 +13,13 @@ class Graph:
             raise ValueError("Either path or edge_list must be provided.")
 
         if path is not None:
-            self.num_of_vertices, self.edges = Graph.load(path)
-            self._vertices = np.array(range(self.num_of_vertices))
+            self.edges = Graph.load(path)
+            self._vertices = np.array(sorted(self.get_nodes_from_edge_list(self.edges)))
             self.adj_mat = Graph.build_adj_matrix(self.edges)
             self.degrees = Graph.calc_degrees(self.adj_mat)
         else:
-            self._vertices = np.array(
-                sorted(
-                    set(
-                        np.concatenate(
-                            (edge_list[:, 0].flatten(), edge_list[:, 1].flatten())
-                        )
-                    )
-                )
-            )
-            self.num_of_vertices = len(self._vertices)
             self.edges = edge_list
+            self._vertices = np.array(sorted(self.get_nodes_from_edge_list(self.edges)))
             self.adj_mat = Graph.build_adj_matrix(self.edges)
             self.degrees = Graph.calc_degrees(self.adj_mat)[
                 self._vertices
@@ -46,7 +37,11 @@ class Graph:
     def load(path):
         with open(path, "rb") as f:
             data = pickle.load(f)
-        return data["num_of_vertices"], data["edges"]
+        return data["edges"]
+
+    @staticmethod
+    def get_nodes_from_edge_list(edges) -> set:
+        return set(edges[:, 0]).union(edges[:, 1])
 
     @staticmethod
     def build_adj_matrix(edge_list, binary=False):
@@ -82,10 +77,10 @@ class Graph:
         return self.edges[self.edges[:, 2] < (date - Graph.DAY_ORIGIN).days]
 
     def get_until_year(self, year):
-        return self.get_until(date(year, 12, 31))
+        return self.get_until(date(year + 1, 1, 1))
 
     def get_adj_mat(self, until_year):
-        cutoff_date = date(until_year, 12, 31)
+        cutoff_date = date(until_year + 1, 1, 1)
 
         edges = self.get_until(cutoff_date)
         adj_mat = Graph.build_adj_matrix(edges)

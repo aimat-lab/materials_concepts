@@ -222,7 +222,7 @@ def main(
             "filters": [OccurenceFilter(min_occurence=min_occurence), RakeFilter()],
         },
         "llama_concepts": {
-            "parse_func": literal_eval,
+            "parse_func": lambda l: set(literal_eval(l)),
             "filters": [
                 OccurenceFilter(min_occurence=min_occurence),
                 LlamaFilter(),
@@ -240,9 +240,10 @@ def main(
 
     df = pd.read_csv(input_path)
     df[colname] = df[colname].apply(settings[colname]["parse_func"])
+
     df.elements = df.elements.apply(str_to_set)
 
-    concepts = [concept for s in tqdm(df[colname]) for concept in s]
+    concepts = [concept.lower() for s in tqdm(df[colname]) for concept in s]
     elements = [element for s in tqdm(df.elements) for element in s]
 
     concepts = Counter(concepts)
@@ -254,7 +255,7 @@ def main(
     for filter in E_FILTERS:
         elements = filter(elements)
 
-    concept_list = list(concepts.keys()) + list(elements.keys())
+    concept_list = [c.lower() for c in concepts.keys()] + list(elements.keys())
 
     # transform concepts into numbers
     lookup = {}
@@ -273,7 +274,6 @@ def main(
 
     # save lookup as csv
     lookup_df = pd.DataFrame(lookup_list)
-    lookup_df.to_csv(lookup_path, index=False)
 
     # encode publication date as days since origin
     df["pub_date_days"] = pd.to_datetime(df.publication_date).apply(
@@ -293,26 +293,34 @@ def main(
 
     print("Building edge list")
     all_edges = []
-    for concept_list, element_list, pub_date in tqdm(
-        list(zip(df[colname], df.elements, df.pub_date_days))
+
+    for concept_list, element_list, pub_date, date, work_id in tqdm(
+        list(
+            zip(df[colname], df.elements, df.pub_date_days, df.publication_date, df.id)
+        )
     ):
-        works_concepts = list(concept_list) + list(element_list)
+        works_concepts = [c.lower() for c in concept_list] + list(element_list)
         concept_ids = {
             lookup[c] for c in works_concepts if lookup.get(c) is not None
         }  # set comprehension because rake/llms don't necessarily filter out duplicates
 
-        for v1, v2 in get_pairs(concept_ids):
+        clique_pairs = get_pairs(concept_ids)
+        for v1, v2 in clique_pairs:
             all_edges.append(np.array((v1, v2, pub_date)))
 
     all_edges = np.array(all_edges)
+    nodes = set(all_edges[:, 0]).union(all_edges[:, 1])
 
-    print(f"# nodes: {len(lookup):,.0f}")
+    print(f"# nodes: {len(nodes):,.0f}")
     print(f"# edges: {len(all_edges):,.0f}")
+
+    lookup_df["in_graph"] = lookup_df.id.apply(lambda id: id in nodes)
+    lookup_df.to_csv(lookup_path, index=False)
 
     with open(output_path, "wb") as f:
         pickle.dump(
             {
-                "num_of_vertices": len(lookup),
+                "num_of_vertices": len(nodes),
                 "edges": all_edges,
                 "input_path": input_path,
                 "lookup_path": lookup_path,
