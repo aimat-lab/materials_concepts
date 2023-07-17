@@ -131,6 +131,8 @@ def get_concept_embedding(
 def extract_embeddings_for_abstract(
     abstract_embedding, abstract_tokens, concepts, aggregation=torch.mean
 ):
+    avg_embedding = torch.mean(abstract_embedding, dim=0)
+
     concept_embeddings = []
     for concept in concepts:
         concept_tokens = get_token_ids(concept)
@@ -142,7 +144,7 @@ def extract_embeddings_for_abstract(
                 abstract_embedding, concept_tokens, indices, aggregation
             )
             if indices
-            else torch.zeros(DIM_EMBEDDING)
+            else avg_embedding  # use average embedding of abstract
         )
 
         concept_embeddings.append(concept_embedding)
@@ -194,6 +196,7 @@ def main(
     log_to_stdout=False,
     step_size=500,
     start=0,
+    end=80_000,
 ):
     global logger, get_embeddings, get_token_ids
     logger = setup_logger(logging.INFO, log_to_stdout=log_to_stdout)
@@ -211,7 +214,7 @@ def main(
 
     logger.info("Generate word embeddings")
 
-    for i in range(start, len(df), step_size):
+    for i in range(start, end, step_size):
         logger.info(f"Process {i} to {i+step_size}...")
         partial_df = df[i : i + step_size]
         store = process_works(partial_df, desc=f"Generate embeddings ({i})")
