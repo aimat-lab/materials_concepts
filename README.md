@@ -75,7 +75,7 @@ Build concepts graph by executing the following command:
 python graph/build.py \
   --input_path data/table/materials-science.llama.works.csv \
   --output_path data/graph/edges_mo3_mw3.pkl \
-  --lookup_path data/table/lookup.csv \
+  --lookup_path data/table/lookup/lookup.csv \
   --colname llama_concepts \
   --min_occurence 3 \
   --min_words 1 \

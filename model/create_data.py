@@ -36,7 +36,7 @@ class DataGenerator:
         max_v_degree: maximum degree of vertices which are considered for sampling
 
         Returns:
-        X: array of vertex pairs with vertex [0, len(self.graph.num_of_vertices)]
+        X: array of vertex pairs with vertex ids
         y: array of labels (1 = connected, 0 = unconnected)
         """
         if self.training_data:
