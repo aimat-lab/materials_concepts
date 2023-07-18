@@ -44,12 +44,12 @@ def setup_model(model_name):
     return tokenizer, model
 
 
-def prepare_dataframe(df, lookup_df):
+def prepare_dataframe(df, lookup_df, cols):
     lookup = {key: True for key in lookup_df["concept"]}
 
     df.abstract = df.abstract.str.lower()
     df.llama_concepts = df.llama_concepts.apply(literal_eval).apply(
-        lambda x: list({c.lower() for c in x if lookup.get(c)})
+        lambda x: list({c.lower() for c in x if lookup.get(c.lower())})
     )
 
     df.elements = df.elements.apply(
@@ -61,7 +61,7 @@ def prepare_dataframe(df, lookup_df):
     df.concepts = df.llama_concepts + df.elements
     df.concepts = df.concepts.apply(lambda x: sorted(x))  # sort
 
-    return df[["id", "abstract", "concepts"]]
+    return df[cols]
 
 
 def wrap(tokens):
@@ -182,6 +182,8 @@ def process_works(df, desc):
             abstract_embedding, abstract_tokens, concepts, aggregation=torch.mean
         )
 
+        assert len(embeddings) == len(concepts)
+
         logger.debug(f"All embeddings shape: {embeddings.shape}")
 
         store[id] = embeddings
@@ -205,6 +207,7 @@ def main(
     df = prepare_dataframe(
         df=pd.read_csv(concepts_path),
         lookup_df=pd.read_csv(lookup_path),
+        cols=["id", "abstract", "concepts"],
     )
 
     logger.info("Setup model")
