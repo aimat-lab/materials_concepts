@@ -1,5 +1,5 @@
 import pandas as pd
-from ast import literal_eval
+from utils import prepare_dataframe
 from tqdm import tqdm
 import logging
 import sys
@@ -42,26 +42,6 @@ def setup_model(model_name):
     model = AutoModel.from_pretrained(model_name)
 
     return tokenizer, model
-
-
-def prepare_dataframe(df, lookup_df, cols):
-    lookup = {key: True for key in lookup_df["concept"]}
-
-    df.abstract = df.abstract.str.lower()
-    df.llama_concepts = df.llama_concepts.apply(literal_eval).apply(
-        lambda x: list({c.lower() for c in x if lookup.get(c.lower())})
-    )
-
-    df.elements = df.elements.apply(
-        lambda str: list({e.lower() for e in str.split(",") if lookup.get(e)})
-        if not pd.isna(str)
-        else []
-    )
-
-    df.concepts = df.llama_concepts + df.elements
-    df.concepts = df.concepts.apply(lambda x: sorted(x))  # sort
-
-    return df[cols]
 
 
 def wrap(tokens):
@@ -133,7 +113,7 @@ def extract_embeddings_for_abstract(
 ):
     avg_embedding = torch.mean(abstract_embedding, dim=0)
 
-    concept_embeddings = []
+    concept_embeddings = {}
     for concept in concepts:
         concept_tokens = get_token_ids(concept)
         indices = find_sequence_in_list(abstract_tokens, concept_tokens)
@@ -147,11 +127,9 @@ def extract_embeddings_for_abstract(
             else avg_embedding  # use average embedding of abstract
         )
 
-        concept_embeddings.append(concept_embedding)
+        concept_embeddings[concept] = concept_embedding
 
-    return (
-        torch.stack(concept_embeddings) if concept_embeddings else torch.tensor([])
-    )  # all concept embeddings for one abstract, sorted alphabetically
+    return concept_embeddings
 
 
 def save_compressed(obj, path):
@@ -182,7 +160,7 @@ def process_works(df, desc):
             abstract_embedding, abstract_tokens, concepts, aggregation=torch.mean
         )
 
-        assert len(embeddings) == len(concepts)
+        assert len(embeddings.values()) == len(concepts)
 
         logger.debug(f"All embeddings shape: {embeddings.shape}")
 
