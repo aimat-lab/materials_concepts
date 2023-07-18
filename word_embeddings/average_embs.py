@@ -5,7 +5,6 @@ import pickle, gzip
 from tqdm import tqdm
 import logging
 import sys
-import torch
 import fire
 
 DIM_EMBEDDING = 768
@@ -66,25 +65,11 @@ class EmbeddingAverager:
         with gzip.open(path, "wb") as f:
             pickle.dump(translated, f)
 
-    def null_ratio(self):
-        return round(
-            sum(
-                [
-                    1
-                    for embs, _ in self.storage.values()
-                    if all(embs == torch.zeros(DIM_EMBEDDING))
-                ]
-            )
-            / len(self.stores),
-            3,
-        )
-
 
 class DataReader:
     def __init__(self, embeddings_path, df, logger):
         self.embeddings_path = embeddings_path
         self.df = df
-        self.lookup = {id: concepts for id, concepts in zip(df["id"], df["concepts"])}
         self.files = sorted(
             [f for f in os.listdir(embeddings_path) if f.endswith(".pkl.gz")],
             key=lambda path: int(path[:-7].rsplit("_")[1]),
@@ -116,10 +101,7 @@ class DataReader:
                 if id not in ids:
                     continue
 
-                # filter embeddings according to concepts)
-                assert len(embeddings) == len(self.lookup[id])
-
-                for emb, con in zip(embeddings, self.lookup[id]):
+                for con, emb in embeddings.items():
                     if con in concepts_filter:
                         averaged_embeddings[con] = emb
 
@@ -160,7 +142,7 @@ def main(
     output_path = os.path.join(output_path, f"av_embs_{until_year}.pkl.gz")
     averaged_embeddings.save(
         output_path,
-        concept_mapping=concept_to_id,
+        # concept_mapping=concept_to_id,
     )
     logger.info(f"Saved {len(averaged_embeddings)} embeddings to {output_path}")
 
