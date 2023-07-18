@@ -162,8 +162,6 @@ def process_works(df, desc):
 
         assert len(embeddings.values()) == len(concepts)
 
-        logger.debug(f"All embeddings shape: {embeddings.shape}")
-
         store[id] = embeddings
 
     return store
