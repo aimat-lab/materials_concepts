@@ -17,7 +17,7 @@ from metrics import print_metrics
 class GCN(torch.nn.Module):
     def __init__(self, input_channel, hidden_channels):
         super(GCN, self).__init__()
-        self.conv1 = GCNConv(input_channel, hidden_channels)
+        self.conv1 = GATv2Conv(input_channel, hidden_channels)
         self.bn1 = torch.nn.BatchNorm1d(hidden_channels)
         self.relu1 = torch.nn.ReLU()
 
@@ -25,7 +25,7 @@ class GCN(torch.nn.Module):
         x = self.conv1(x, edge_index)
         x = self.bn1(x)
         x = self.relu1(x)
-        x = F.dropout(x, p=0.1, training=self.training)
+        x = F.dropout(x, p=0.2, training=self.training)
 
         return x
 
@@ -35,16 +35,13 @@ class MLP(torch.nn.Module):
         super(MLP, self).__init__()
         self.fc1 = torch.nn.Linear(input_dim, hidden_dim)
         self.fc2 = torch.nn.Linear(hidden_dim, hidden_dim)
-        self.fc3 = torch.nn.Linear(hidden_dim, hidden_dim)
-        self.fc4 = torch.nn.Linear(hidden_dim, output_dim)
+        self.fc3 = torch.nn.Linear(hidden_dim, output_dim)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         x = F.relu(x)
         x = self.fc3(x)
-        x = F.relu(x)
-        x = self.fc4(x)
         x = torch.sigmoid(x)
         return x
 
@@ -151,13 +148,13 @@ def prepare_data(
 
 
 def main(
-    graph_data="data/graph/edges.pkl",
-    data_path="data/model/data.pkl",
+    graph_data="data/graph/edges_small.pkl",
+    data_path="data/model/data_small_v2.pkl",
     input_channel=3,
     hidden_channels=8,
-    hidden_mlp=16,
+    hidden_mlp=32,
     output_dim=1,
-    epochs=50,
+    epochs=100,
     lr=0.005,
 ):
     data, test_data = prepare_data(graph_data, data_path)
