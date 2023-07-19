@@ -139,9 +139,7 @@ def train(
             # Zero the gradients
             optimizer.zero_grad()
 
-            print("Plain input shape:", inputs.shape)
             inputs = get_embeddings(inputs, X_train_embs)
-            print("Embeddings input shape:", inputs.shape)
 
             # Forward pass
             outputs = model(inputs)  # load embeddings here
@@ -177,6 +175,7 @@ def train(
         with torch.no_grad():
             for data in data_loader:
                 inputs, labels = data
+                inputs = get_embeddings(inputs, X_train_embs)
                 outputs = model(inputs)
                 _, predicted = torch.max(
                     outputs.data, 1
