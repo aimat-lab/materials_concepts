@@ -243,7 +243,7 @@ def main(
     input_dim=1536,
 ):
     global logger
-    logger = setup_logger(level=logging.DEBUG, log_to_stdout=True)
+    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
     data = load_data(data_path)
 
