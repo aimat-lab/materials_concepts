@@ -12,6 +12,7 @@ sys.path.append(parent_directory)
 
 from metrics import print_metrics
 
+TENSOR_DIM = 768
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -86,7 +87,14 @@ def get_embeddings(X, X_embs):
 
     l = []
     for v1, v2 in X:
-        l.append([X_embs[int(v1.item())], X_embs[int(v2.item())]])
+        i1 = int(v1.item())
+        i2 = int(v2.item())
+        l.append(
+            [
+                X_embs.get(i1, torch.zeros(TENSOR_DIM)),
+                X_embs.get(i2, torch.zeros(TENSOR_DIM)),
+            ]
+        )
     return torch.stack(l)
 
 
