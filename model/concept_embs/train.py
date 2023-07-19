@@ -90,12 +90,14 @@ def get_embeddings(X, X_embs):
         i1 = int(v1.item())
         i2 = int(v2.item())
         l.append(
-            [
-                X_embs.get(i1, torch.zeros(TENSOR_DIM)),
-                X_embs.get(i2, torch.zeros(TENSOR_DIM)),
-            ]
+            torch.tensor(
+                [
+                    X_embs.get(i1, torch.zeros(TENSOR_DIM)),
+                    X_embs.get(i2, torch.zeros(TENSOR_DIM)),
+                ]
+            )
         )
-    return torch.stack(l)
+    return torch.tensor(l)
 
 
 def train(
