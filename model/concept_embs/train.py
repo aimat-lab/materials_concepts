@@ -259,11 +259,15 @@ def main(
         "X_test": load_compressed(emb_test_path),
     }
 
+    from collections import Counter
+
+    print(Counter(data["y_train"]))
+
     X_train, y_train = sample(data["X_train"], data["y_train"], pos_to_neg_ratio)
 
     print("Shape X_train", X_train.shape)
 
-    model = BaselineNetwork([input_dim, 1024, 512, 256, 64, 16]).to(device)
+    model = BaselineNetwork([input_dim, 1024, 512, 256, 64, 32, 16, 8, 4]).to(device)
 
     if train_model:
         model.train()
