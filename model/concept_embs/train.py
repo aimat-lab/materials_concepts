@@ -228,6 +228,12 @@ def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
     return shuffle(X, y)
 
 
+def random_sample(X, y, n=1000):
+    """Sample n random samples from X and y"""
+    indices = np.random.choice(len(X), size=n, replace=False)
+    return X[indices], y[indices]
+
+
 def main(
     data_path="data/model/data.pkl",
     emb_train_path="data/model/concept_embs/av_embs_2016.pkl.gz",
@@ -252,7 +258,9 @@ def main(
         "X_test": load_compressed(emb_test_path),
     }
 
-    X_train, y_train = sample(data["X_train"], data["y_train"], pos_to_neg_ratio)
+    X_train, y_train = random_sample(
+        *sample(data["X_train"], data["y_train"], pos_to_neg_ratio), n=10000
+    )
 
     model = BaselineNetwork([input_dim, 1024, 512, 256, 64, 16]).to(device)
 
