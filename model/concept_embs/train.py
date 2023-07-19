@@ -259,9 +259,7 @@ def main(
         "X_test": load_compressed(emb_test_path),
     }
 
-    X_train, y_train = random_sample(
-        *sample(data["X_train"], data["y_train"], pos_to_neg_ratio), n=10000
-    )
+    X_train, y_train = sample(data["X_train"], data["y_train"], pos_to_neg_ratio)
 
     print("Shape X_train", X_train.shape)
 
