@@ -139,7 +139,9 @@ def train(
             # Zero the gradients
             optimizer.zero_grad()
 
+            print("Plain input shape:", inputs.shape)
             inputs = get_embeddings(inputs, X_train_embs)
+            print("Embeddings input shape:", inputs.shape)
 
             # Forward pass
             outputs = model(inputs)  # load embeddings here
@@ -261,6 +263,8 @@ def main(
     X_train, y_train = random_sample(
         *sample(data["X_train"], data["y_train"], pos_to_neg_ratio), n=10000
     )
+
+    print("Shape X_train", X_train.shape)
 
     model = BaselineNetwork([input_dim, 1024, 512, 256, 64, 16]).to(device)
 
