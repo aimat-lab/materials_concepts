@@ -86,13 +86,8 @@ def get_embeddings(X, X_embs):
 
     l = []
     for v1, v2 in X:
-        try:
-            l.append(torch.tensor([X_embs[int(v1.item())], X_embs[int(v2.item())]]))
-        except ValueError:
-            print(v1, v2)
-            print(v1.item(), v2.item())
-
-    return torch.Tensor(l)
+        l.append([X_embs[int(v1.item())], X_embs[int(v2.item())]])
+    return torch.stack(l)
 
 
 def train(
