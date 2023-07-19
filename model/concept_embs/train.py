@@ -90,7 +90,7 @@ def get_embeddings(X, X_embs):
         i1 = int(v1.item())
         i2 = int(v2.item())
         l.append(
-            np.array(
+            np.concatenate(
                 [
                     np.array(X_embs.get(i1, torch.zeros(TENSOR_DIM))),
                     np.array(X_embs.get(i2, torch.zeros(TENSOR_DIM))),
