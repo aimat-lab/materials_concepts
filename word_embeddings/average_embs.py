@@ -142,7 +142,7 @@ def main(
     output_path = os.path.join(output_path, f"av_embs_{until_year}.pkl.gz")
     averaged_embeddings.save(
         output_path,
-        # concept_mapping=concept_to_id,
+        concept_mapping=concept_to_id,
     )
     logger.info(f"Saved {len(averaged_embeddings)} embeddings to {output_path}")
 
