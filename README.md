@@ -74,11 +74,11 @@ Build concepts graph by executing the following command:
 ```
 python graph/build.py \
   --input_path data/table/materials-science.llama.works.csv \
-  --output_path data/graph/edges_mo3_mw3.pkl \
-  --lookup_path data/table/lookup/lookup.csv \
+  --output_path data/graph/edges_small.pkl \
+  --lookup_path data/table/lookup/lookup_small.csv \
   --colname llama_concepts \
   --min_occurence 3 \
-  --min_words 1 \
+  --min_words 3 \
   --max_words 10 \
   --min_occurence_elements 3 \
   --min_amount_elements 2
@@ -140,8 +140,6 @@ The classification process can typically be divided into two steps:
 1. Generate embeddings for node pairs
 2. Train a (binary) classifier on the embeddings
 
-## Generate Embeddings
-
 ## Example: Baseline Model
 
 1. Generate the embeddings
@@ -183,10 +181,12 @@ python word_embeddings/generate.py \
   --output_path data/embeddings/large/ \
   --log_to_stdout False \
   --step_size 500 \
-  --start 0
+  --start 0 \
+  --end 750000
 ```
 
-> Currently, if a concept is not exactly contained in the abstract (this can happen because LLMs can apply some "normalization" during extraction), the embedding vector is set to all zeros. Idea: Replace with abstract embedding (average of all tokens in abstract).
+> Currently, if a concept is not exactly contained in the abstract (this can happen because LLMs can apply some "normalization" during extraction), the embedding vector is set to the average of all tokens in the abstract.
+> On GPU4_A100 generating embeddings for 80k abstracts takes about 6h.
 
 ## Average Word Embeddings
 
@@ -248,9 +248,16 @@ python model/concept_embs/train.py \
 - [x] Store model and graph
 - [x] Extract concept embeddings (Calculate storage requirements)
 - [ ] Build Baseline (Features + Embeddings)
-- [ ] Build GNN Model (Embeddings + Features?)
+
+  - [ ] Resturct Trainloop
+    - [ ] One epoch: sample batchsize / 2 positive and batchsize / 2 negative samples
+    - [ ] Generalize Model architecture with params: LR, #Layers, Layer degradation, Initial hidden state
+    - [ ] Trainloop: with early stopping and eval on every ith epoch on test set
+  - [ ] Generate embeddings "on the fly", just store the squared adjacency matrix
+
 - [ ] Build API to query prediction service
 - [ ] Build Tiny Frontend
+  - [ ] Build Search Bar
   - [ ] Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
   - [ ] Every researcher is a subgraph, calculate collaboration in O(C1 \* C2) where C1 and C2 are the number of concepts of the researchers. Highest ranked concept combinations are the most promising collaborations.
 
