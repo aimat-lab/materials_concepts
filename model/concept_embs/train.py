@@ -140,10 +140,11 @@ def train(
             optimizer.zero_grad()
 
             inputs = get_embeddings(inputs, X_train_embs).to(device)
+            labels = labels.to(device)
 
             # Forward pass
             outputs = model(inputs)  # load embeddings here
-            loss = criterion(outputs, labels.unsqueeze(1).to(device))
+            loss = criterion(outputs, labels.unsqueeze(1))
 
             # Backward pass and optimization
             loss.backward()
