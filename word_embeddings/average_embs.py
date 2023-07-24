@@ -61,7 +61,7 @@ class EmbeddingAverager:
             }
         else:
             translated = {
-                key: self.storage.__getitem__(key) for key in self.storage.keys()
+                key: self.__getitem__(key) for key in self.storage.keys()
             }  # this might seem unnecessary but we use this getitem access to convert the (tensor, count) tuple to a single tensor
 
         with gzip.open(path, "wb") as f:
