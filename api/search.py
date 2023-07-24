@@ -4,8 +4,7 @@ import gzip
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 import torch
-
-CONCEPT_PATH = "data/embeddings/embeddings_full.pkl.gz"
+import pandas as pd
 
 
 def setup_model(model_name):
@@ -26,7 +25,7 @@ def convert_tensors_to_arrays(data):
     return {k: v.numpy() for k, v in data.items()}
 
 
-class Search:
+class SemanticSearch:
     def __init__(self, data, k, model_name):
         self.data = data
         self.k = k + 1  # +1 because the first result is the query itself
@@ -62,18 +61,34 @@ class Search:
         distances, indices = nbrs.kneighbors([emb])
         return [(self.keys[i], round(d, 3)) for i, d in zip(indices[0], distances[0])]
 
-    def search(self, string, semantic_search=False):
-        if semantic_search:
-            return self._nn_search(string)
-        else:
-            return self._plain_search(string)
+    def search(self, string):
+        return self._nn_search(string)
 
 
-print("Loading data")
-data = convert_tensors_to_arrays(load_compressed(CONCEPT_PATH))
+class PlainSearch:
+    def __init__(self, df):
+        self.df = df
 
-search = Search(
-    data,
-    k=6,
-    model_name="m3rg-iitd/matscibert",
-)
+    def search(self, string, k=10):
+        return sorted(self._plain_search(string), key=lambda x: x[1], reverse=True)[:k]
+
+    def _plain_search(self, string):
+        return [
+            (concept, count)
+            for concept, count in zip(self.df["concept"], self.df["count"])
+            if string in concept
+        ]
+
+
+# print("Loading data")
+# CONCEPT_PATH = "data/embeddings/embeddings_full.pkl.gz"
+# data = convert_tensors_to_arrays(load_compressed(CONCEPT_PATH))
+
+# search = SemanticSearch(
+#     data,
+#     k=6,
+#     model_name="m3rg-iitd/matscibert",
+# )
+
+
+data = PlainSearch(pd.read_csv("data/table/lookup/lookup_small.csv"))
