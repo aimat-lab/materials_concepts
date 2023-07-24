@@ -54,13 +54,15 @@ class EmbeddingAverager:
         return self.storage.keys()
 
     def save(self, path, concept_mapping=None):
-        translated = self.storage
-
         if concept_mapping:
             translated = {
                 concept_mapping[concept]: self.__getitem__(concept)
                 for concept in self.storage.keys()
             }
+        else:
+            translated = {
+                key: self.storage.__getitem__(key) for key in self.storage.keys()
+            }  # this might seem unnecessary but we use this getitem access to convert the (tensor, count) tuple to a single tensor
 
         with gzip.open(path, "wb") as f:
             pickle.dump(translated, f)
@@ -120,7 +122,7 @@ def main(
     filter_path="data/table/lookup/lookup_small.csv",
     embeddings_dir="data/embeddings/large/",
     output_path="data/model/con_embs/av_embs_small_2016.pkl.gz",
-    store_concepts_plain=False,
+    store_concepts_ids=False,
     until_year=2016,
 ):
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -138,12 +140,14 @@ def main(
     dr = DataReader(embeddings_dir, df, logger)
     averaged_embeddings = dr.get_averaged_concept_embeddings(concept_filter, until_year)
 
-    if store_concepts_plain:
-        concept_to_id = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
+    concept_mapping = None
+
+    if store_concepts_ids:
+        concept_mapping = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
 
     averaged_embeddings.save(
         output_path,
-        concept_mapping=concept_to_id if store_concepts_plain else None,
+        concept_mapping=concept_mapping,
     )
     logger.info(f"Saved {len(averaged_embeddings)} embeddings to {output_path}")
 
