@@ -139,11 +139,11 @@ def train(
             # Zero the gradients
             optimizer.zero_grad()
 
-            inputs = get_embeddings(inputs, X_train_embs)
+            inputs = get_embeddings(inputs, X_train_embs).to(device)
 
             # Forward pass
             outputs = model(inputs)  # load embeddings here
-            loss = criterion(outputs, labels.unsqueeze(1))
+            loss = criterion(outputs, labels.unsqueeze(1).to(device))
 
             # Backward pass and optimization
             loss.backward()
@@ -175,7 +175,7 @@ def train(
         with torch.no_grad():
             for data in data_loader:
                 inputs, labels = data
-                inputs = get_embeddings(inputs, X_train_embs)
+                inputs = get_embeddings(inputs, X_train_embs).to(device)
                 outputs = model(inputs)
                 _, predicted = torch.max(
                     outputs.data, 1
