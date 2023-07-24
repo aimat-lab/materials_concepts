@@ -71,7 +71,7 @@ class DataGenerator:
         Drawn sample resembles the real distribution of (un)connected vertex pairs.
         """
         filtered_vertices = self.graph.get_vertices(
-            until_year=self.year_end, min_degree=1, max_degree=max_v_degree
+            until_year=self.year_start, min_degree=1, max_degree=max_v_degree
         )  # TODO: For testing necessary as well?
 
         X, y = self._get_samples(edges_used, filtered_vertices, min_links)
