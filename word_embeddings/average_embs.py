@@ -143,7 +143,7 @@ def main(
 
     averaged_embeddings.save(
         output_path,
-        concept_mapping=concept_to_id,
+        concept_mapping=concept_to_id if store_concepts_plain else None,
     )
     logger.info(f"Saved {len(averaged_embeddings)} embeddings to {output_path}")
 
