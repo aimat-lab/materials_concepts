@@ -177,6 +177,7 @@ def train(
             for data in data_loader:
                 inputs, labels = data
                 inputs = get_embeddings(inputs, X_train_embs).to(device)
+                labels = labels.to(device)
                 outputs = model(inputs)
                 _, predicted = torch.max(
                     outputs.data, 1
