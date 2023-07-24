@@ -198,7 +198,8 @@ python word_embeddings/average_embs.py \
   --lookup_path data/table/lookup/lookup_large.csv \
   --filter_path data/table/lookup/lookup_small.csv \
   --embeddings_dir data/embeddings/large/ \
-  --output_path data/model/concept_embs/ \
+  --output_path data/model/concept_embs/av_embs_small_2016.pkl.gz \
+  --store_concepts_plain False \
   --until_year 2016
 ```
 

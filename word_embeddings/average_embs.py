@@ -119,7 +119,8 @@ def main(
     lookup_path="data/table/lookup/lookup_large.csv",
     filter_path="data/table/lookup/lookup_small.csv",
     embeddings_dir="data/embeddings/large/",
-    output_path="data/model/con_embs/",
+    output_path="data/model/con_embs/av_embs_small_2016.pkl.gz",
+    store_concepts_plain=False,
     until_year=2016,
 ):
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -137,9 +138,9 @@ def main(
     dr = DataReader(embeddings_dir, df, logger)
     averaged_embeddings = dr.get_averaged_concept_embeddings(concept_filter, until_year)
 
-    concept_to_id = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
+    if store_concepts_plain:
+        concept_to_id = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
 
-    output_path = os.path.join(output_path, f"av_embs_{until_year}.pkl.gz")
     averaged_embeddings.save(
         output_path,
         concept_mapping=concept_to_id,
