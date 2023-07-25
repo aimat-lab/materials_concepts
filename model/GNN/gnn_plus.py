@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
 from torch_geometric.data import Data
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, confusion_matrix
 import pickle, gzip
 import os, sys
 import logging
@@ -79,11 +79,6 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     return data
 
 
-# vertices (2016): 141748
-# vertices (2019): 146764
-# vertices (full): 148032
-
-
 class GCN(nn.Module):
     def __init__(self, num_features, hidden_channels):
         super(GCN, self).__init__()
@@ -131,11 +126,25 @@ class Net(nn.Module):
         return self.mlp(pair_embeddings)
 
 
+def sample_batch(y, batch_size):
+    # sample (batch_size / 2) positive and (batch_size / 2) negative samples
+    pos_indices = torch.where(y == 1)[0]
+    neg_indices = torch.where(y == 0)[0]
+
+    i_pos = torch.randint(0, len(pos_indices), (batch_size // 2,))
+    i_neg = torch.randint(0, len(neg_indices), (batch_size // 2,))
+    batch_indices = torch.cat([pos_indices[i_pos], neg_indices[i_neg]])
+
+    # shuffle batch
+    batch_indices = batch_indices[torch.randperm(len(batch_indices))]
+    return batch_indices
+
+
 def train(model, train_data, optimizer, criterion, batch_size=10_000):
     model.train()
     optimizer.zero_grad()
 
-    batch_inidices = torch.randperm(len(train_data.pair))[:batch_size]
+    batch_inidices = sample_batch(train_data.y, batch_size)
     train_data.batch_pair = train_data.pair[batch_inidices]
     batch_y = train_data.y[batch_inidices]
 
@@ -155,8 +164,11 @@ def test(model, test_data):
         out = model(test_data)
 
     auc = roc_auc_score(test_data.y.cpu(), out.view(-1).cpu())
+    tn, fp, fn, tp = confusion_matrix(
+        test_data.y.cpu(), out.view(-1).cpu() > 0.5
+    ).ravel()
 
-    return auc
+    return auc, (tn, fp, fn, tp)
 
 
 def main(
@@ -167,7 +179,7 @@ def main(
     lr=0.01,
 ):
     global logger
-    logger = setup_logger(log_file, level=logging.DEBUG, log_to_stdout=True)
+    logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
 
     logger.info("Loading data")
     data_dict = load_pkl("data/model/data.M.pkl")
@@ -191,8 +203,10 @@ def main(
         logger.debug(f"Epoch {epoch}")
         loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
         if epoch % 10 == 0:
-            auc = test(model, test_data)
-            logger.info(f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}")
+            auc, (tn, fp, fn, tp) = test(model, test_data)
+            logger.info(
+                f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
+            )
 
 
 if __name__ == "__main__":
