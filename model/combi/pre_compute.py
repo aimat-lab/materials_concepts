@@ -4,6 +4,7 @@ import fire
 import logging
 import os
 import sys
+import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from graph import Graph
@@ -36,7 +37,10 @@ def get_square_matrices(graph_path, years, binary):
 
     logging.debug("Squaring matrices")
     squares = [m**2 for m in tqdm(matrices)]
-    return {year: square for year, square in zip(years, squares)}
+    return {
+        year: square.toarray().astype(np.float16)
+        for year, square in zip(years, squares)
+    }
 
 
 def save_compressed(obj, path):
@@ -47,7 +51,7 @@ def save_compressed(obj, path):
 
 def main(
     graph_path="data/graph/edges_medium.pkl",
-    output_path="data/model/combi/embeddings.pkl.gz",
+    output_path="data/model/combi/matrices_2016.pkl.gz",
     binary=True,
     years=[2010, 2013, 2016],
 ):
