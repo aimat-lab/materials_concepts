@@ -6,6 +6,7 @@ from torch_geometric.data import Data
 from sklearn.metrics import roc_auc_score
 import pickle, gzip
 import os, sys
+import logging
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_directory)
@@ -13,6 +14,25 @@ sys.path.append(parent_directory)
 from graph import Graph
 
 NODE_DIM = 768
+
+
+def setup_logger(file, level=logging.INFO, log_to_stdout=True):
+    logger = logging.getLogger()
+    logger.setLevel(level)
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(message)s", "%H:%M:%S"
+    )
+
+    if log_to_stdout:
+        stdout_handler = logging.StreamHandler(sys.stdout)
+        stdout_handler.setFormatter(formatter)
+        logger.addHandler(stdout_handler)
+
+    file_handler = logging.FileHandler(file)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
 
 
 def load_pkl(path):
@@ -45,6 +65,7 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     vertex_pairs = torch.tensor(data_dict[f"X_{dataset_type}"], dtype=torch.int)
     labels = torch.tensor(data_dict[f"y_{dataset_type}"], dtype=torch.float)
 
+    logger.info("Loading node features")
     x = load_node_features(cut_off_year, len(graph.vertices))
 
     data = Data(
@@ -58,12 +79,14 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     return data
 
 
+logger.info("Loading data")
 data_dict = load_pkl("data/model/data.M.pkl")
+logger.info("Loading graph")
 graph = Graph("data/graph/edges_medium.pkl")
 
-print("Creating PyG dataset 'train'")
+logger.info("Creating PyG dataset 'train'")
 pyg_graph_train = create_pyg_dataset(data_dict, graph, "train")
-print("Creating PyG dataset 'test'")
+logger.info("Creating PyG dataset 'test'")
 pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
 # vertices (2016): 141748
@@ -140,6 +163,8 @@ def test(model, test_data):
 
 
 def main():
+    global logger
+    logger = setup_logger("logs/gnn_plus.log", level=logging.DEBUG, log_to_stdout=True)
     hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
 
     model = Net(NODE_DIM, hidden_channels)
@@ -149,8 +174,9 @@ def main():
     train_data = pyg_graph_train
     test_data = pyg_graph_test
 
-    print("Training...")
+    logger.info("Training")
     for epoch in range(100):
+        logger.debug(f"Epoch {epoch}")
         loss = train(model, train_data, optimizer, criterion)
         if epoch % 10 == 0:
             auc = test(model, test_data)
