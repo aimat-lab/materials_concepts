@@ -7,7 +7,7 @@ from sklearn.metrics import roc_auc_score, confusion_matrix
 import pickle, gzip
 import os, sys
 import logging
-import numpy as np
+import fire
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_directory)
@@ -37,7 +37,7 @@ def setup_logger(file, level=logging.INFO, log_to_stdout=True):
 
 
 def calc_degs(adj):
-    return np.array(adj.sum(0))[0]
+    return torch.tensor(adj.sum(0))[0]
 
 
 def load_pkl(path):
@@ -212,4 +212,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    fire.Fire(main)
