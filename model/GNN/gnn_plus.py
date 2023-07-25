@@ -167,6 +167,7 @@ def main():
 
     hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
     batch_size = 10_000
+    num_epochs = 10_000
 
     logger.info("Loading data")
     data_dict = load_pkl("data/model/data.M.pkl")
@@ -186,7 +187,7 @@ def main():
     test_data = pyg_graph_test
 
     logger.info("Training")
-    for epoch in range(100):
+    for epoch in range(num_epochs):
         logger.debug(f"Epoch {epoch}")
         loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
         if epoch % 10 == 0:
