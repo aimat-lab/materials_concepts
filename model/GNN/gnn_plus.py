@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, GATv2Conv
 from torch_geometric.data import Data
 from sklearn.metrics import roc_auc_score, confusion_matrix
 import pickle, gzip
@@ -82,11 +82,12 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
 class GCN(nn.Module):
     def __init__(self, num_features, hidden_channels):
         super(GCN, self).__init__()
-        self.conv1 = GCNConv(num_features, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, hidden_channels)
+        self.conv1 = GATv2Conv(num_features, hidden_channels)
+        self.bn1 = nn.BatchNorm1d(hidden_channels)
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
+        x = self.bn1(x)
         x = F.relu(x)
         x = F.dropout(x, p=0.2, training=self.training)
         return x
@@ -178,10 +179,9 @@ def test(model, test_data):
 
 def main(
     log_file="logs/gnn_plus.log",
-    hidden_channels=768,
     batch_size=100_000,
     num_epochs=10_000,
-    lr=0.005,
+    lr=0.01,
     log_interval=5,
 ):
     global logger
@@ -197,9 +197,7 @@ def main(
     logger.info("Creating PyG dataset 'test'")
     pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
-    model = Net(
-        NODE_DIM, hidden_channels, [2 * NODE_DIM, 1024, 512, 256, 64, 32, 16, 8, 4, 1]
-    )
+    model = Net(NODE_DIM, NODE_DIM, [2 * NODE_DIM, 1024, 512, 256, 64, 32, 16, 8, 4, 1])
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.BCELoss()
 
