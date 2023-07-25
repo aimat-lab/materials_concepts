@@ -1,4 +1,7 @@
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv
 from torch_geometric.data import Data
 import pickle, gzip
 import os, sys
@@ -59,7 +62,52 @@ graph = Graph("data/graph/edges_medium.pkl")
 
 
 pyg_graph_train = create_pyg_dataset(data_dict, graph, "train")
+pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
 # vertices (2016): 141748
 # vertices (2019): 146764
 # vertices (full): 148032
+
+
+class GCN(nn.Module):
+    def __init__(self, num_features, hidden_channels):
+        super(GCN, self).__init__()
+        self.conv1 = GCNConv(num_features, hidden_channels)
+        self.conv2 = GCNConv(hidden_channels, hidden_channels)
+
+    def forward(self, x, edge_index):
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.conv2(x, edge_index)
+
+        return x
+
+
+class MLP(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(MLP, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.fc2(x)
+
+        return torch.sigmoid(x)
+
+
+class Net(nn.Module):
+    def __init__(self, num_features, hidden_channels):
+        super(Net, self).__init__()
+        self.gcn = GCN(num_features, hidden_channels)
+        self.mlp = MLP(2 * hidden_channels, hidden_channels, 1)
+
+    def forward(self, data):
+        x, edge_index, pairs = data.x, data.edge_index, data.pair
+        x = self.gcn(x, edge_index)
+
+        # Concatenate the embeddings of the two nodes in each pair
+        pair_embeddings = torch.cat([x[pairs[:, 0]], x[pairs[:, 1]]], dim=-1)
+        return self.mlp(pair_embeddings)
