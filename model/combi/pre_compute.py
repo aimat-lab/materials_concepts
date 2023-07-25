@@ -28,19 +28,33 @@ logger.addHandler(stdout_handler)
 logger.addHandler(file_handler)
 
 
-def get_square_matrices(graph_path, years, binary):
+def get_node_features(graph_path, years, binary):
     logging.debug("Building graph")
     graph = Graph(graph_path)
 
     logging.debug("Calculating adjacency matrices")
-    matrices = graph.get_adj_matrices(years, binary=binary)
+    matrices = graph.get_adj_matrices(years, binary=binary, full=True)
+    degrees = [calc_degs(m) for m in matrices]
 
     logging.debug("Squaring matrices")
     squares = [m**2 for m in tqdm(matrices)]
-    return {
-        year: square.toarray().astype(np.float16)
-        for year, square in zip(years, squares)
-    }
+    degrees_squared = [calc_degs(m) for m in squares]
+
+    v_features = []
+    for v in graph.vertices:
+        v_features.append(
+            [degrees[i][v] for i in range(len(degrees))]
+            + [degrees_squared[i][v] for i in range(len(degrees_squared))]
+        )
+
+    v_features = np.array(v_features)
+    print(v_features.shape)
+
+    return v_features
+
+
+def calc_degs(adj):
+    return np.array(adj.sum(0))[0]
 
 
 def save_compressed(obj, path):
@@ -56,18 +70,18 @@ def main(
     years=[2010, 2013, 2016],
 ):
     logging.info("Calculating embeddings...")
-    matrices = get_square_matrices(graph_path, years=years, binary=binary)
+    v_features = get_node_features(graph_path, years=years, binary=binary)
 
     logging.info("Saving matrices...")
 
-    matrices.update(
-        {
-            "binary": binary,
-        }
-    )
+    store = {
+        "binary": binary,
+        "years": years,
+        "v_features": v_features,
+    }
 
-    logging.info(f"Saving Matrices: {matrices.keys()} to {output_path}")
-    save_compressed(matrices, output_path)
+    logging.info(f"Saving features of nodes ({years}) to {output_path}")
+    save_compressed(store, output_path)
 
 
 if __name__ == "__main__":
