@@ -179,9 +179,10 @@ def test(model, test_data):
 def main(
     log_file="logs/gnn_plus.log",
     hidden_channels=768,
-    batch_size=20_000,
+    batch_size=100_000,
     num_epochs=10_000,
     lr=0.005,
+    log_interval=5,
 ):
     global logger
     logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
@@ -209,7 +210,7 @@ def main(
     for epoch in range(num_epochs):
         logger.debug(f"Epoch {epoch}")
         loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
-        if epoch % 10 == 0:
+        if (epoch + 1) % log_interval == 0:
             auc, (tn, fp, fn, tp) = test(model, test_data)
             logger.info(
                 f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
