@@ -135,7 +135,7 @@ def train(model, train_data, optimizer, criterion, batch_size=10_000):
     model.train()
     optimizer.zero_grad()
 
-    batch_inidices = torch.randperm(len(train_data))[:batch_size]
+    batch_inidices = torch.randperm(len(train_data.pair))[:batch_size]
     train_data.batch_pair = train_data.pair[batch_inidices]
     batch_y = train_data.y[batch_inidices]
 
@@ -192,7 +192,7 @@ def main(
         loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
         if epoch % 10 == 0:
             auc = test(model, test_data)
-            print(f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}")
+            logger.info(f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}")
 
 
 if __name__ == "__main__":
