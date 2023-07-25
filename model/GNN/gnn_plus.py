@@ -67,7 +67,7 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     labels = torch.tensor(data_dict[f"y_{dataset_type}"], dtype=torch.float)
 
     logger.info("Loading node features")
-    x = load_node_features(graph)
+    x = load_node_features(graph, cut_off_year, amt_years=5)
 
     data = Data(
         x=x,
