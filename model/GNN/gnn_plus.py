@@ -7,13 +7,14 @@ from sklearn.metrics import roc_auc_score, confusion_matrix
 import pickle, gzip
 import os, sys
 import logging
+import numpy as np
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_directory)
 
 from graph import Graph
 
-NODE_DIM = 768
+NODE_DIM = 5
 
 
 def setup_logger(file, level=logging.INFO, log_to_stdout=True):
@@ -35,6 +36,10 @@ def setup_logger(file, level=logging.INFO, log_to_stdout=True):
     return logger
 
 
+def calc_degs(adj):
+    return np.array(adj.sum(0))[0]
+
+
 def load_pkl(path):
     with open(path, "rb") as f:
         return pickle.load(f)
@@ -45,15 +50,11 @@ def load_compressed(path):
         return pickle.load(f)
 
 
-def load_node_features(cut_off_year, num_vertices):
-    path = f"data/model/GNN/av_embs_{cut_off_year}.M.pkl.gz"
-    data_dict = load_compressed(path)
+def load_node_features(graph, cutoff_year, amt_years=5):
+    years = list(range(cutoff_year - amt_years, cutoff_year + 1))
+    embs = [calc_degs(adj) for adj in graph.get_adj_matrices(years, binary=False)]
 
-    data = []
-    for i in range(num_vertices):
-        data.append(data_dict.get(i, torch.zeros(NODE_DIM)))
-
-    return torch.stack(data)
+    return torch.stack(embs)
 
 
 def create_pyg_dataset(data_dict, graph, dataset_type):
@@ -66,7 +67,7 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     labels = torch.tensor(data_dict[f"y_{dataset_type}"], dtype=torch.float)
 
     logger.info("Loading node features")
-    x = load_node_features(cut_off_year, len(graph.vertices))
+    x = load_node_features(graph)
 
     data = Data(
         x=x,
@@ -175,10 +176,9 @@ def test(model, test_data):
 
 def main(
     log_file="logs/gnn_plus.log",
-    # batch_size=100_000,
-    num_epochs=100,
+    num_epochs=30,
     lr=0.01,
-    log_interval=1,
+    log_interval=2,
 ):
     global logger
     logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
@@ -193,7 +193,7 @@ def main(
     logger.info("Creating PyG dataset 'test'")
     pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
-    model = Net(NODE_DIM, NODE_DIM, [2 * NODE_DIM, 1024, 512, 256, 64, 32, 16, 8, 4, 1])
+    model = Net(5, hidden_channels=10, mlp_layer_dims=[20, 10, 5, 1])
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.BCELoss()
 
