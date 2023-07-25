@@ -92,7 +92,7 @@ def get_embeddings(X, X_embs):
         emb2 = X_embs[i2]
 
         l.append(np.concatenate([np.array(emb1), np.array(emb2)]))
-    return torch.tensor(np.array(l))
+    return torch.tensor(np.array(l)).float()
 
 
 def train(
@@ -135,6 +135,8 @@ def train(
             optimizer.zero_grad()
 
             inputs = get_embeddings(inputs, X_train_embs).to(device)
+            print(inputs.shape)
+            print(inputs)
             labels = labels.to(device)
 
             # Forward pass
