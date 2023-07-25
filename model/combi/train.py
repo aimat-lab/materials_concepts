@@ -135,8 +135,6 @@ def train(
             optimizer.zero_grad()
 
             inputs = get_embeddings(inputs, X_train_embs).to(device)
-            print(inputs.shape)
-            print(inputs)
             labels = labels.to(device)
 
             # Forward pass
