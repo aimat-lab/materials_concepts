@@ -44,7 +44,7 @@ class Graph:
         return set(edges[:, 0]).union(edges[:, 1])
 
     @staticmethod
-    def build_adj_matrix(edge_list, binary=False):
+    def build_adj_matrix(edge_list, binary=False, dim=None):
         """Build a symmetric adjacency matrix from edge list."""
 
         symmetric_edges = np.vstack((edge_list, edge_list[:, [1, 0, 2]]))
@@ -52,12 +52,21 @@ class Graph:
         cols = symmetric_edges[:, 1]
         data = np.ones(symmetric_edges.shape[0])
 
-        adj_mat = sparse.csr_matrix(
-            (
-                data,
-                (rows, cols),
-            ),
-        ).astype(np.int16)
+        if dim:
+            adj_mat = sparse.csr_matrix(
+                (
+                    data,
+                    (rows, cols),
+                ),
+                shape=(dim, dim),
+            ).astype(np.int16)
+        else:
+            adj_mat = sparse.csr_matrix(
+                (
+                    data,
+                    (rows, cols),
+                ),
+            ).astype(np.int16)
 
         return adj_mat if not binary else (adj_mat > 0).astype(np.int16)
 
@@ -106,8 +115,12 @@ class Graph:
 
         return vs
 
-    def get_adj_matrices(self, years, binary=False):
+    def get_adj_matrices(self, years, binary=False, full=False):
         return [
-            self.build_adj_matrix(self.get_until(date(year, 12, 31)), binary)
+            self.build_adj_matrix(
+                self.get_until(date(year, 12, 31)),
+                binary=binary,
+                dim=len(self.vertices) if full else None,
+            )
             for year in years
         ]
