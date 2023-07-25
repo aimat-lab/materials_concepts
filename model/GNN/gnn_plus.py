@@ -119,7 +119,7 @@ class Net(nn.Module):
         self.mlp = MLP(mlp_layer_dims)
 
     def forward(self, data):
-        x, edge_index, pairs = data.x, data.edge_index, data.batch_pair
+        x, edge_index, pairs = data.x, data.edge_index, data.pair
         logger.debug("Applying GCN")
         x = self.gcn(x, edge_index)
 
@@ -146,16 +146,12 @@ def sample_batch(y, batch_size):
     return batch_indices
 
 
-def train(model, train_data, optimizer, criterion, batch_size=10_000):
+def train(model, train_data, optimizer, criterion):
     model.train()
     optimizer.zero_grad()
 
-    batch_inidices = sample_batch(train_data.y, batch_size)
-    train_data.batch_pair = train_data.pair[batch_inidices]
-    batch_y = train_data.y[batch_inidices]
-
     out = model(train_data)
-    loss = criterion(out.view(-1), batch_y)
+    loss = criterion(out.view(-1), train_data.y)
     loss.backward()
     optimizer.step()
 
@@ -179,10 +175,10 @@ def test(model, test_data):
 
 def main(
     log_file="logs/gnn_plus.log",
-    batch_size=100_000,
-    num_epochs=10_000,
+    # batch_size=100_000,
+    num_epochs=100,
     lr=0.01,
-    log_interval=5,
+    log_interval=1,
 ):
     global logger
     logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
@@ -207,7 +203,7 @@ def main(
     logger.info("Training")
     for epoch in range(num_epochs):
         logger.debug(f"Epoch {epoch}")
-        loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
+        loss = train(model, train_data, optimizer, criterion)
         if (epoch + 1) % log_interval == 0:
             auc, (tn, fp, fn, tp) = test(model, test_data)
             logger.info(
