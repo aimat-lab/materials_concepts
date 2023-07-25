@@ -93,9 +93,7 @@ class GCN(nn.Module):
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
         x = F.relu(x)
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.conv2(x, edge_index)
-
+        x = F.dropout(x, p=0.2, training=self.training)
         return x
 
 
@@ -161,13 +159,15 @@ def test(model, test_data):
     return auc
 
 
-def main():
+def main(
+    log_file="logs/gnn_plus.log",
+    hidden_channels=768,
+    batch_size=10_000,
+    num_epochs=10_000,
+    lr=0.01,
+):
     global logger
-    logger = setup_logger("logs/gnn_plus.log", level=logging.DEBUG, log_to_stdout=True)
-
-    hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
-    batch_size = 10_000
-    num_epochs = 10_000
+    logger = setup_logger(log_file, level=logging.DEBUG, log_to_stdout=True)
 
     logger.info("Loading data")
     data_dict = load_pkl("data/model/data.M.pkl")
@@ -180,7 +180,7 @@ def main():
     pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
     model = Net(NODE_DIM, hidden_channels)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.BCELoss()
 
     train_data = pyg_graph_train
