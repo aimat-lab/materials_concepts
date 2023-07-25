@@ -120,7 +120,7 @@ class Net(nn.Module):
         self.mlp = MLP(2 * hidden_channels, hidden_channels, 1)
 
     def forward(self, data):
-        x, edge_index, pairs = data.x, data.edge_index, data.pair
+        x, edge_index, pairs = data.x, data.edge_index, data.batch_pair
         logger.debug("Applying GCN")
         x = self.gcn(x, edge_index)
 
@@ -133,12 +133,16 @@ class Net(nn.Module):
         return self.mlp(pair_embeddings)
 
 
-def train(model, train_data, optimizer, criterion):
+def train(model, train_data, optimizer, criterion, batch_size=10_000):
     model.train()
     optimizer.zero_grad()
 
+    batch_inidices = torch.randperm(len(train_data))[:batch_size]
+    train_data.batch_pair = train_data.pair[batch_inidices]
+    batch_y = train_data.y[batch_inidices]
+
     out = model(train_data)
-    loss = criterion(out.view(-1), train_data.y)
+    loss = criterion(out.view(-1), batch_y)
     loss.backward()
     optimizer.step()
 
@@ -148,6 +152,7 @@ def train(model, train_data, optimizer, criterion):
 def test(model, test_data):
     model.eval()
 
+    test_data.batch_pair = test_data.pair
     with torch.no_grad():
         out = model(test_data)
 
@@ -161,6 +166,7 @@ def main():
     logger = setup_logger("logs/gnn_plus.log", level=logging.DEBUG, log_to_stdout=True)
 
     hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
+    batch_size = 10_000
 
     logger.info("Loading data")
     data_dict = load_pkl("data/model/data.M.pkl")
@@ -182,7 +188,7 @@ def main():
     logger.info("Training")
     for epoch in range(100):
         logger.debug(f"Epoch {epoch}")
-        loss = train(model, train_data, optimizer, criterion)
+        loss = train(model, train_data, optimizer, criterion, batch_size=batch_size)
         if epoch % 10 == 0:
             auc = test(model, test_data)
             print(f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}")
