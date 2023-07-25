@@ -121,11 +121,15 @@ class Net(nn.Module):
 
     def forward(self, data):
         x, edge_index, pairs = data.x, data.edge_index, data.pair
+        logger.debug("Applying GCN")
         x = self.gcn(x, edge_index)
 
         # Concatenate the embeddings of the two nodes in each pair
+        logger.debug("Concatenating embeddings")
         pair_embeddings = torch.cat([x[pairs[:, 0]], x[pairs[:, 1]]], dim=-1)
-        print(pair_embeddings.shape)
+        logger.debug(pair_embeddings.shape)
+
+        logger.debug("Applying MLP")
         return self.mlp(pair_embeddings)
 
 
