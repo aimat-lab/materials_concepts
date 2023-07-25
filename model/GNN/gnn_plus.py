@@ -93,24 +93,29 @@ class GCN(nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, layer_dims):
         super(MLP, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, output_size)
+
+        layers = []
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+            layers.append(nn.Linear(in_, out_))
+            layers.append(nn.ReLU())
+
+        layers.pop()
+        layers.append(nn.Sigmoid())
+
+        self.net = nn.Sequential(*layers)
+        print(self.net)
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.fc2(x)
-
-        return torch.sigmoid(x)
+        return self.net(x)
 
 
 class Net(nn.Module):
-    def __init__(self, num_features, hidden_channels):
+    def __init__(self, num_features, hidden_channels, mlp_layer_dims):
         super(Net, self).__init__()
         self.gcn = GCN(num_features, hidden_channels)
-        self.mlp = MLP(2 * hidden_channels, hidden_channels, 1)
+        self.mlp = MLP(mlp_layer_dims)
 
     def forward(self, data):
         x, edge_index, pairs = data.x, data.edge_index, data.batch_pair
@@ -174,9 +179,9 @@ def test(model, test_data):
 def main(
     log_file="logs/gnn_plus.log",
     hidden_channels=768,
-    batch_size=10_000,
+    batch_size=20_000,
     num_epochs=10_000,
-    lr=0.01,
+    lr=0.005,
 ):
     global logger
     logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
@@ -191,7 +196,9 @@ def main(
     logger.info("Creating PyG dataset 'test'")
     pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
-    model = Net(NODE_DIM, hidden_channels)
+    model = Net(
+        NODE_DIM, hidden_channels, [2 * NODE_DIM, 1024, 512, 256, 64, 32, 16, 8, 4, 1]
+    )
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.BCELoss()
 
