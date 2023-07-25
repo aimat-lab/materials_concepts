@@ -79,16 +79,6 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     return data
 
 
-logger.info("Loading data")
-data_dict = load_pkl("data/model/data.M.pkl")
-logger.info("Loading graph")
-graph = Graph("data/graph/edges_medium.pkl")
-
-logger.info("Creating PyG dataset 'train'")
-pyg_graph_train = create_pyg_dataset(data_dict, graph, "train")
-logger.info("Creating PyG dataset 'test'")
-pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
-
 # vertices (2016): 141748
 # vertices (2019): 146764
 # vertices (full): 148032
@@ -165,7 +155,18 @@ def test(model, test_data):
 def main():
     global logger
     logger = setup_logger("logs/gnn_plus.log", level=logging.DEBUG, log_to_stdout=True)
+
     hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
+
+    logger.info("Loading data")
+    data_dict = load_pkl("data/model/data.M.pkl")
+    logger.info("Loading graph")
+    graph = Graph("data/graph/edges_medium.pkl")
+
+    logger.info("Creating PyG dataset 'train'")
+    pyg_graph_train = create_pyg_dataset(data_dict, graph, "train")
+    logger.info("Creating PyG dataset 'test'")
+    pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
     model = Net(NODE_DIM, hidden_channels)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
