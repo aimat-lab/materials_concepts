@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
 from torch_geometric.data import Data
+from sklearn.metrics import roc_auc_score
 import pickle, gzip
 import os, sys
 
@@ -60,8 +61,9 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
 data_dict = load_pkl("data/model/data.M.pkl")
 graph = Graph("data/graph/edges_medium.pkl")
 
-
+print("Creating PyG dataset 'train'")
 pyg_graph_train = create_pyg_dataset(data_dict, graph, "train")
+print("Creating PyG dataset 'test'")
 pyg_graph_test = create_pyg_dataset(data_dict, graph, "test")
 
 # vertices (2016): 141748
@@ -110,4 +112,50 @@ class Net(nn.Module):
 
         # Concatenate the embeddings of the two nodes in each pair
         pair_embeddings = torch.cat([x[pairs[:, 0]], x[pairs[:, 1]]], dim=-1)
+        print(pair_embeddings.shape)
         return self.mlp(pair_embeddings)
+
+
+def train(model, train_data, optimizer, criterion):
+    model.train()
+    optimizer.zero_grad()
+
+    out = model(train_data)
+    loss = criterion(out.view(-1), train_data.y)
+    loss.backward()
+    optimizer.step()
+
+    return loss.item()
+
+
+def test(model, test_data):
+    model.eval()
+
+    with torch.no_grad():
+        out = model(test_data)
+
+    auc = roc_auc_score(test_data.y.cpu(), out.view(-1).cpu())
+
+    return auc
+
+
+def main():
+    hidden_channels = NODE_DIM  # number of hidden channels in GCN and MLP
+
+    model = Net(NODE_DIM, hidden_channels)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    criterion = nn.BCELoss()
+
+    train_data = pyg_graph_train
+    test_data = pyg_graph_test
+
+    print("Training...")
+    for epoch in range(100):
+        loss = train(model, train_data, optimizer, criterion)
+        if epoch % 10 == 0:
+            auc = test(model, test_data)
+            print(f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}")
+
+
+if __name__ == "__main__":
+    main()
