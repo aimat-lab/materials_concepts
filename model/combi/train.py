@@ -125,14 +125,15 @@ class Trainer:
     def train(self, num_epochs):
         logger.info("Training model")
 
-        for epoch in range(num_epochs):
-            logger.debug(f"Epoch {epoch}")
+        for epoch in range(1, num_epochs + 1):
             loss = self._train_epoch()
-            if (epoch + 1) % self.log_interval == 0:
+            if epoch % self.log_interval == 0:
                 auc, (tn, fp, fn, tp) = eval(self.model, self.eval_data)
                 logger.info(
                     f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
                 )
+            else:
+                logger.info(f"Epoch {epoch}, Loss: {loss:.4f}")
 
     def _train_epoch(self):
         data = self.train_data
@@ -182,7 +183,6 @@ def eval(model, data: Data):
     """Load the pytorch model and evaluate it on the test set"""
     model.eval()
 
-    logger.info("Evaluating")
     inputs = get_embeddings(
         data.pairs, data.feature_embeddings, data.concept_embeddings
     ).to(device)
