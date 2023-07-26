@@ -204,10 +204,10 @@ def main(
     data = load_data(data_path)
 
     d_train = Data(
-        pairs=data["X_train"],
+        pairs=torch.tensor(data["X_train"]),
         feature_embeddings=load_compressed(emb_f_train_path),
         concept_embeddings=load_compressed(emb_c_train_path),
-        labels=data["y_train"],
+        labels=torch.tensor(data["y_train"]),
     )
 
     d_test = Data(
