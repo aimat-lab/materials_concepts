@@ -6,11 +6,16 @@ import fire
 import sys, os
 import gzip
 import logging
+from collections import namedtuple
+
+Data = namedtuple(
+    "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
+)
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_directory)
 
-from metrics import print_metrics
+from metrics import test
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -57,8 +62,6 @@ class BaselineNetwork(nn.Module):
         """
         super(BaselineNetwork, self).__init__()
 
-        layer_dims.append(1)
-
         layers = []
         for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
             layers.append(nn.Linear(in_, out_))
@@ -80,164 +83,107 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-def get_embeddings(X, X_embs_f, X_embs_c):
-    logger.debug(f"Getting embeddings for {len(X)} samples")
+def get_embeddings(pairs, feature_embeddings, concept_embeddings):
+    logger.debug(f"Getting embeddings for {len(pairs)} samples")
 
     l = []
-    for v1, v2 in X:
+    for v1, v2 in pairs:
         i1 = int(v1.item())
         i2 = int(v2.item())
 
-        emb1_f = np.array(X_embs_f[i1])
-        emb2_f = np.array(X_embs_f[i2])
+        emb1_f = np.array(feature_embeddings[i1])
+        emb2_f = np.array(feature_embeddings[i2])
 
-        emb1_c = np.array(X_embs_c[i1])
-        emb2_c = np.array(X_embs_c[i2])
+        emb1_c = np.array(concept_embeddings[i1])
+        emb2_c = np.array(concept_embeddings[i2])
 
         l.append(np.concatenate([emb1_f, emb2_f, emb1_c, emb2_c]))
     return torch.tensor(np.array(l)).float()
 
 
+def sample_batch(y, batch_size, pos_ratio=0.5):
+    pos_indices = torch.where(y == 1)[0]
+    neg_indices = torch.where(y == 0)[0]
+
+    amt_pos = int(batch_size * pos_ratio)
+    amt_neg = batch_size - amt_pos
+
+    i_pos = torch.randint(0, len(pos_indices), (amt_pos,))
+    i_neg = torch.randint(0, len(neg_indices), (amt_neg,))
+
+    batch_indices = torch.cat([pos_indices[i_pos], neg_indices[i_neg]])
+
+    # shuffle batch
+    batch_indices = batch_indices[torch.randperm(len(batch_indices))]
+    return batch_indices
+
+
+def train_epoch(model, data: Data, optimizer, criterion, batch_size, pos_ratio=0.5):
+    model.train()
+    optimizer.zero_grad()
+
+    # get batch
+    batch_indices = sample_batch(data.labels, batch_size, pos_ratio)
+
+    inputs = get_embeddings(
+        data.pairs[batch_indices],
+        feature_embeddings=data.feature_embeddings,
+        concept_embeddings=data.concept_embeddings,
+    ).to(device)
+    labels = data.labels[batch_indices].to(device)
+
+    # Forward pass
+    outputs = model(inputs)
+    loss = criterion(outputs.view(-1), labels)
+
+    # Backward and optimize
+    loss.backward()
+    optimizer.step()
+
+    return loss.item()
+
+
 def train(
     model,
-    X_train,
-    X_train_embs_f,
-    X_train_embs_c,
-    y_train,
+    train_data,
+    eval_data,
     learning_rate,
     batch_size,
     num_epochs,
+    log_interval=5,
+    pos_ratio=0.5,
 ):
-    logger.info(f"Training model... ({len(X_train):,})")
-    X_train = torch.Tensor(np.array(X_train))
-    y_train = torch.Tensor(np.array(y_train))
-
-    # Create a PyTorch dataset
-    dataset = torch.utils.data.TensorDataset(X_train, y_train)
-
-    # Create a data loader
-    data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=True
-    )
+    logger.info("Training model")
 
     criterion = nn.BCELoss()
 
     # Define your optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    accuracy_values = []
-
     for epoch in range(num_epochs):
-        running_loss = 0.0
-
-        total = 0
-        correct = 0
-
-        model.train()
-        for i, (inputs, labels) in enumerate(data_loader):
-            # Zero the gradients
-            optimizer.zero_grad()
-
-            inputs = get_embeddings(inputs, X_train_embs_f, X_train_embs_c).to(device)
-            labels = labels.to(device)
-
-            # Forward pass
-            outputs = model(inputs)  # load embeddings here
-            loss = criterion(outputs, labels.unsqueeze(1))
-
-            # Backward pass and optimization
-            loss.backward()
-            optimizer.step()
-
-            # Track the loss
-            running_loss += loss.item()
-
-            # Track accuracy
-            _, predicted = torch.max(outputs, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-
-            # Print or log information
-            if (i + 1) % 1000 == 0:
-                batch_loss = running_loss / 10
-                batch_accuracy = correct / total
-                logger.info(
-                    f"Epoch [{epoch+1}/{num_epochs}], Batch [{i+1}/{len(data_loader)}], Loss: {batch_loss:.4f}, Accuracy: {batch_accuracy:.4f}"
-                )
-                running_loss = 0.0
-                correct = 0
-                total = 0
-
-        correct = 0
-        total = 0
-
-        model.eval()
-        with torch.no_grad():
-            for data in data_loader:
-                inputs, labels = data
-                inputs = get_embeddings(inputs, X_train_embs_f, X_train_embs_c).to(
-                    device
-                )
-                labels = labels.to(device)
-                outputs = model(inputs)
-                _, predicted = torch.max(
-                    outputs.data, 1
-                )  # Get the index of the maximum logit value
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
-
-        accuracy = correct / total
-        accuracy_values.append(accuracy)
-
-        # Print the average loss for the epoch
-        logger.info(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
+        logger.debug(f"Epoch {epoch}")
+        loss = train_epoch(
+            model, train_data, optimizer, criterion, batch_size, pos_ratio=pos_ratio
+        )
+        if (epoch + 1) % log_interval == 0:
+            auc, (tn, fp, fn, tp) = eval(model, eval_data)
+            logger.info(
+                f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
+            )
 
 
-def eval(model, data, embeddings_f, embeddings_c, metrics_path):
+def eval(model, data: Data, metrics_path=None):
     """Load the pytorch model and evaluate it on the test set"""
     logger.info("Evaluating")
-    test_inputs = get_embeddings(
-        data["X_test"], embeddings_f["X_test"], embeddings_c["X_test"]
+    inputs = get_embeddings(
+        data.pairs, data.feature_embeddings, data.concept_embeddings
     )
-    X_test = torch.tensor(test_inputs, dtype=torch.float).to(device)
-    predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
-    print_metrics(data["y_test"], predictions, threshold=0.5, save_path=metrics_path)
+    X = torch.tensor(inputs, dtype=torch.float).to(device)
+    predictions = np.array(flatten(model(X).detach().cpu().numpy()))
 
-
-def shuffle(X, y):
-    """Shuffle X and y in unison"""
-    assert len(X) == len(y)
-    p = np.random.permutation(len(X))
-    return X[p], y[p]
-
-
-def sample(X: np.ndarray, y: np.ndarray, pos_to_neg_ratio: float):
-    """Sample the data to have a given ratio of positive to negative samples"""
-    pos_indices = np.where(y == 1)[0]
-    neg_indices = np.where(y == 0)[0]
-
-    curr_pos_ratio = len(pos_indices) / len(y)
-    if curr_pos_ratio > pos_to_neg_ratio:
-        num_neg = len(neg_indices)
-        num_pos = int(pos_to_neg_ratio * num_neg)
-    else:
-        num_pos = len(pos_indices)
-        num_neg = int(num_pos / pos_to_neg_ratio)
-
-    pos_indices = np.random.choice(pos_indices, size=num_pos, replace=False)
-    neg_indices = np.random.choice(neg_indices, size=num_neg, replace=False)
-
-    X = np.concatenate([X[pos_indices], X[neg_indices]])
-    y = np.concatenate([y[pos_indices], y[neg_indices]])
-
-    return shuffle(X, y)
-
-
-def random_sample(X, y, n=1000):
-    """Sample n random samples from X and y"""
-    indices = np.random.choice(len(X), size=n, replace=False)
-    return X[indices], y[indices]
+    auc, _, confusion_matrix = test(data.labels, predictions, threshold=0.5)
+    return auc, confusion_matrix
 
 
 def main(
@@ -249,66 +195,39 @@ def main(
     lr=0.001,
     batch_size=100,
     num_epochs=1,
-    train_model=False,
-    save_model=False,
-    eval_mode=False,
-    metrics_path=None,
-    pos_to_neg_ratio=0.03,
-    input_dim=1556,
+    pos_ratio=0.3,
+    layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
 ):
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
     data = load_data(data_path)
 
-    embeddings_f = {
-        "X_train": load_compressed(emb_f_train_path),
-        "X_test": load_compressed(emb_f_test_path),
-    }
+    d_train = Data(
+        pairs=data["X_train"],
+        feature_embeddings=load_compressed(emb_f_train_path),
+        concept_embeddings=load_compressed(emb_c_train_path),
+        labels=data["y_train"],
+    )
 
-    embeddings_c = {
-        "X_train": load_compressed(emb_c_train_path),
-        "X_test": load_compressed(emb_c_test_path),
-    }
+    d_test = Data(
+        pairs=data["X_test"],
+        feature_embeddings=load_compressed(emb_f_test_path),
+        concept_embeddings=load_compressed(emb_c_test_path),
+        labels=data["y_test"],
+    )
 
-    from collections import Counter
+    model = BaselineNetwork(layers).to(device)
 
-    print(Counter(data["y_train"]))
-
-    X_train, y_train = sample(data["X_train"], data["y_train"], pos_to_neg_ratio)
-
-    print("Shape X_train", X_train.shape)
-
-    model = BaselineNetwork([input_dim, 100, 100, 50]).to(device)
-
-    if train_model:
-        model.train()
-        train(
-            model,
-            X_train=X_train,
-            X_train_embs_f=embeddings_f["X_train"],
-            X_train_embs_c=embeddings_c["X_train"],
-            y_train=y_train,
-            learning_rate=lr,
-            batch_size=batch_size,
-            num_epochs=num_epochs,
-        )
-        logger.info("Saving model")
-        if save_model:
-            torch.save(model.state_dict(), save_model)
-    elif eval_mode:
-        logger.info("Loading model")
-        model.load_state_dict(torch.load(eval_mode))
-    else:
-        logger.info("Please specify either --train_model or --eval_model")
-        return
-
-    eval(
+    model.train()
+    train(
         model,
-        data,
-        embeddings_f=embeddings_f,
-        embeddings_c=embeddings_c,
-        metrics_path=metrics_path,
+        train_data=d_train,
+        eval_data=d_test,
+        learning_rate=lr,
+        batch_size=batch_size,
+        num_epochs=num_epochs,
+        pos_ratio=pos_ratio,
     )
 
 
