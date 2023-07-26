@@ -133,7 +133,7 @@ class Trainer:
                     f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
                 )
             else:
-                logger.info(f"Epoch {epoch}, Loss: {loss:.4f}")
+                logger.debug(f"Epoch {epoch}, Loss: {loss:.4f}")
 
     def _train_epoch(self):
         data = self.train_data
