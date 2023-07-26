@@ -6,6 +6,14 @@ from sklearn.metrics import (
 import json
 
 
+def test(y_test, y_pred, threshold=0.5):
+    return (
+        roc_auc_score(y_test, y_pred),
+        precision_recall_fscore_support(y_test, y_pred > threshold, average="binary"),
+        confusion_matrix(y_test, y_pred > threshold).ravel(),
+    )
+
+
 def print_metrics(y_test, y_pred, threshold=0.5, save_path=None):
     auc = roc_auc_score(y_test, y_pred)
     precision, recall, fscore, _ = precision_recall_fscore_support(
