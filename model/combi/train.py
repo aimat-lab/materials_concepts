@@ -207,14 +207,14 @@ def main(
         pairs=torch.tensor(data["X_train"]),
         feature_embeddings=load_compressed(emb_f_train_path),
         concept_embeddings=load_compressed(emb_c_train_path),
-        labels=torch.tensor(data["y_train"]),
+        labels=torch.tensor(data["y_train"], dtype=torch.float),
     )
 
     d_test = Data(
         pairs=torch.tensor(data["X_test"]),
         feature_embeddings=load_compressed(emb_f_test_path),
         concept_embeddings=load_compressed(emb_c_test_path),
-        labels=torch.tensor(data["y_test"]),
+        labels=torch.tensor(data["y_test"], dtype=torch.float),
     )
 
     model = BaselineNetwork(layers).to(device)
