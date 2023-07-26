@@ -211,10 +211,10 @@ def main(
     )
 
     d_test = Data(
-        pairs=data["X_test"],
+        pairs=torch.tensor(data["X_test"]),
         feature_embeddings=load_compressed(emb_f_test_path),
         concept_embeddings=load_compressed(emb_c_test_path),
-        labels=data["y_test"],
+        labels=torch.tensor(data["y_test"]),
     )
 
     model = BaselineNetwork(layers).to(device)
