@@ -208,6 +208,9 @@ def main(
     log_interval=10,
     # weight_decay=0.01,
 ):
+    global logger
+    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
+
     logger.info("Running with parameters:")
     logger.info(f"lr: {lr}")
     logger.info(f"batch_size: {batch_size}")
@@ -215,9 +218,6 @@ def main(
     logger.info(f"pos_ratio: {pos_ratio}")
     logger.info(f"layers: {layers}")
     # print(f"weight_decay: {weight_decay}")
-
-    global logger
-    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
     data = load_data(data_path)
 
