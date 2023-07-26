@@ -253,7 +253,7 @@ def main(
     )
     trainer.train(num_epochs)
 
-    model.save("data/model/combi/model.pt")
+    torch.save(model.state_dict(), "data/model/combi/model.pt")
 
 
 if __name__ == "__main__":
