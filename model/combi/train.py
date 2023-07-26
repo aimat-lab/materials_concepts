@@ -101,6 +101,66 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
     return torch.tensor(np.array(l)).float()
 
 
+class Trainer:
+    def __init__(
+        self,
+        model,
+        train_data,
+        eval_data,
+        optimizer,
+        criterion,
+        batch_size,
+        pos_ratio,
+        log_interval,
+    ):
+        self.model = model
+        self.train_data = train_data
+        self.eval_data = eval_data
+        self.optimizer = optimizer
+        self.criterion = criterion
+        self.batch_size = batch_size
+        self.pos_ratio = pos_ratio
+        self.log_interval = log_interval
+
+    def train(self, num_epochs):
+        logger.info("Training model")
+
+        for epoch in range(num_epochs):
+            logger.debug(f"Epoch {epoch}")
+            loss = self._train_epoch()
+            if (epoch + 1) % self.log_interval == 0:
+                auc, (tn, fp, fn, tp) = eval(self.model, self.eval_data)
+                logger.info(
+                    f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
+                )
+
+    def _train_epoch(self):
+        data = self.train_data
+
+        self.model.train()
+        self.optimizer.zero_grad()
+
+        # get batch
+        batch_indices = sample_batch(data.labels, self.batch_size, self.pos_ratio)
+
+        inputs = get_embeddings(
+            data.pairs[batch_indices],
+            feature_embeddings=data.feature_embeddings,
+            concept_embeddings=data.concept_embeddings,
+        ).to(device)
+        labels = data.labels[batch_indices].to(device)
+
+        # Forward pass
+        outputs = self.model(inputs)
+        loss = self.criterion(outputs.view(-1), labels)
+
+        # Backward and optimize
+        loss.backward()
+        self.optimizer.step()
+
+        return loss.item()
+
+
 def sample_batch(y, batch_size, pos_ratio=0.5):
     pos_indices = torch.where(y == 1)[0]
     neg_indices = torch.where(y == 0)[0]
@@ -118,69 +178,16 @@ def sample_batch(y, batch_size, pos_ratio=0.5):
     return batch_indices
 
 
-def train_epoch(model, data: Data, optimizer, criterion, batch_size, pos_ratio=0.5):
-    model.train()
-    optimizer.zero_grad()
-
-    # get batch
-    batch_indices = sample_batch(data.labels, batch_size, pos_ratio)
-
-    inputs = get_embeddings(
-        data.pairs[batch_indices],
-        feature_embeddings=data.feature_embeddings,
-        concept_embeddings=data.concept_embeddings,
-    ).to(device)
-    labels = data.labels[batch_indices].to(device)
-
-    # Forward pass
-    outputs = model(inputs)
-    loss = criterion(outputs.view(-1), labels)
-
-    # Backward and optimize
-    loss.backward()
-    optimizer.step()
-
-    return loss.item()
-
-
-def train(
-    model,
-    train_data,
-    eval_data,
-    learning_rate,
-    batch_size,
-    num_epochs,
-    log_interval=5,
-    pos_ratio=0.5,
-):
-    logger.info("Training model")
-
-    criterion = nn.BCELoss()
-
-    # Define your optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-    for epoch in range(num_epochs):
-        logger.debug(f"Epoch {epoch}")
-        loss = train_epoch(
-            model, train_data, optimizer, criterion, batch_size, pos_ratio=pos_ratio
-        )
-        if (epoch + 1) % log_interval == 0:
-            auc, (tn, fp, fn, tp) = eval(model, eval_data)
-            logger.info(
-                f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
-            )
-
-
-def eval(model, data: Data, metrics_path=None):
+def eval(model, data: Data):
     """Load the pytorch model and evaluate it on the test set"""
+    model.eval()
+
     logger.info("Evaluating")
     inputs = get_embeddings(
         data.pairs, data.feature_embeddings, data.concept_embeddings
-    )
+    ).to(device)
 
-    X = torch.tensor(inputs, dtype=torch.float).to(device)
-    predictions = np.array(flatten(model(X).detach().cpu().numpy()))
+    predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
 
     auc, _, confusion_matrix = test(data.labels, predictions, threshold=0.5)
     return auc, confusion_matrix
@@ -194,9 +201,10 @@ def main(
     emb_c_test_path="data/model/concept_embs/av_embs_2019.M.pkl.gz",
     lr=0.001,
     batch_size=100,
-    num_epochs=1,
+    num_epochs=1000,
     pos_ratio=0.3,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
+    log_interval=10,
 ):
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -219,16 +227,17 @@ def main(
 
     model = BaselineNetwork(layers).to(device)
 
-    model.train()
-    train(
-        model,
+    trainer = Trainer(
+        model=model,
         train_data=d_train,
         eval_data=d_test,
-        learning_rate=lr,
+        optimizer=torch.optim.Adam(model.parameters(), lr=lr),
+        criterion=nn.BCELoss(),
         batch_size=batch_size,
-        num_epochs=num_epochs,
         pos_ratio=pos_ratio,
+        log_interval=log_interval,
     )
+    trainer.train(num_epochs)
 
 
 if __name__ == "__main__":
