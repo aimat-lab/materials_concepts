@@ -80,7 +80,7 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-def get_embeddings(X, X_embs):
+def get_embeddings(X, X_embs_f, X_embs_c):
     logger.debug(f"Getting embeddings for {len(X)} samples")
 
     l = []
@@ -88,17 +88,21 @@ def get_embeddings(X, X_embs):
         i1 = int(v1.item())
         i2 = int(v2.item())
 
-        emb1 = X_embs[i1]
-        emb2 = X_embs[i2]
+        emb1_f = np.array(X_embs_f[i1])
+        emb2_f = np.array(X_embs_f[i2])
 
-        l.append(np.concatenate([np.array(emb1), np.array(emb2)]))
+        emb1_c = np.array(X_embs_c[i1])
+        emb2_c = np.array(X_embs_c[i2])
+
+        l.append(np.concatenate([emb1_f, emb2_f, emb1_c, emb2_c]))
     return torch.tensor(np.array(l)).float()
 
 
 def train(
     model,
     X_train,
-    X_train_embs,
+    X_train_embs_f,
+    X_train_embs_c,
     y_train,
     learning_rate,
     batch_size,
@@ -134,7 +138,7 @@ def train(
             # Zero the gradients
             optimizer.zero_grad()
 
-            inputs = get_embeddings(inputs, X_train_embs).to(device)
+            inputs = get_embeddings(inputs, X_train_embs_f, X_train_embs_c).to(device)
             labels = labels.to(device)
 
             # Forward pass
@@ -171,7 +175,9 @@ def train(
         with torch.no_grad():
             for data in data_loader:
                 inputs, labels = data
-                inputs = get_embeddings(inputs, X_train_embs).to(device)
+                inputs = get_embeddings(inputs, X_train_embs_f, X_train_embs_c).to(
+                    device
+                )
                 labels = labels.to(device)
                 outputs = model(inputs)
                 _, predicted = torch.max(
@@ -187,10 +193,12 @@ def train(
         logger.info(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
 
 
-def eval(model, data, embeddings, metrics_path):
+def eval(model, data, embeddings_f, embeddings_c, metrics_path):
     """Load the pytorch model and evaluate it on the test set"""
     logger.info("Evaluating")
-    test_inputs = get_embeddings(data["X_test"], embeddings["X_test"])
+    test_inputs = get_embeddings(
+        data["X_test"], embeddings_f["X_test"], embeddings_c["X_test"]
+    )
     X_test = torch.tensor(test_inputs, dtype=torch.float).to(device)
     predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
@@ -234,8 +242,10 @@ def random_sample(X, y, n=1000):
 
 def main(
     data_path="data/model/data.pkl",
-    emb_train_path="data/model/combi/features_2016.M.pkl.gz",
-    emb_test_path="data/model/combi/features_2019.M.pkl.gz",
+    emb_f_train_path="data/model/combi/features_2016.M.pkl.gz",
+    emb_f_test_path="data/model/combi/features_2019.M.pkl.gz",
+    emb_c_train_path="data/model/concept_embs/av_embs_2016.M.pkl.gz",
+    emb_c_test_path="data/model/concept_embs/av_embs_2019.M.pkl.gz",
     lr=0.001,
     batch_size=100,
     num_epochs=1,
@@ -244,16 +254,21 @@ def main(
     eval_mode=False,
     metrics_path=None,
     pos_to_neg_ratio=0.03,
-    input_dim=1536,
+    input_dim=1556,
 ):
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
     data = load_data(data_path)
 
-    embeddings = {
-        "X_train": load_compressed(emb_train_path),
-        "X_test": load_compressed(emb_test_path),
+    embeddings_f = {
+        "X_train": load_compressed(emb_f_train_path),
+        "X_test": load_compressed(emb_f_test_path),
+    }
+
+    embeddings_c = {
+        "X_train": load_compressed(emb_c_train_path),
+        "X_test": load_compressed(emb_c_test_path),
     }
 
     from collections import Counter
@@ -271,7 +286,8 @@ def main(
         train(
             model,
             X_train=X_train,
-            X_train_embs=embeddings["X_train"],
+            X_train_embs_f=embeddings_f["X_train"],
+            X_train_embs_c=embeddings_c["X_train"],
             y_train=y_train,
             learning_rate=lr,
             batch_size=batch_size,
@@ -287,7 +303,13 @@ def main(
         logger.info("Please specify either --train_model or --eval_model")
         return
 
-    eval(model, data, embeddings, metrics_path)
+    eval(
+        model,
+        data,
+        embeddings_f=embeddings_f,
+        embeddings_c=embeddings_c,
+        metrics_path=metrics_path,
+    )
 
 
 if __name__ == "__main__":
