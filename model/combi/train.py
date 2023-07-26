@@ -65,10 +65,11 @@ class BaselineNetwork(nn.Module):
         layers = []
         for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
             layers.append(nn.Linear(in_, out_))
-            # TODO: nn.Dropout
             layers.append(nn.ReLU())
+            layers.append(nn.Dropout(p=0.1))
 
-        layers.pop()
+        layers.pop()  # remove last dropout layer
+        layers.pop()  # remove last relu layer
         layers.append(nn.Sigmoid())
 
         self.net = nn.Sequential(*layers)
@@ -205,7 +206,16 @@ def main(
     pos_ratio=0.3,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
     log_interval=10,
+    # weight_decay=0.01,
 ):
+    logger.info("Running with parameters:")
+    logger.info(f"lr: {lr}")
+    logger.info(f"batch_size: {batch_size}")
+    logger.info(f"num_epochs: {num_epochs}")
+    logger.info(f"pos_ratio: {pos_ratio}")
+    logger.info(f"layers: {layers}")
+    # print(f"weight_decay: {weight_decay}")
+
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
@@ -231,13 +241,18 @@ def main(
         model=model,
         train_data=d_train,
         eval_data=d_test,
-        optimizer=torch.optim.Adam(model.parameters(), lr=lr),
+        optimizer=torch.optim.Adam(
+            model.parameters(),
+            lr=lr,  # weight_decay=weight_decay
+        ),
         criterion=nn.BCELoss(),
         batch_size=batch_size,
         pos_ratio=pos_ratio,
         log_interval=log_interval,
     )
     trainer.train(num_epochs)
+
+    model.save("data/model/combi/model.pt")
 
 
 if __name__ == "__main__":
