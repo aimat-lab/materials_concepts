@@ -111,8 +111,11 @@ g_pred = graph.get_nx_graph(prediction_since)
 
 logger.info("Finding unconnected nodes")
 unconnected = []
-for n in g_pred.nodes:
+for n, deg in zip(g_pred.nodes, g_pred.degree):
     if n == concept_id:
+        continue
+
+    if deg == 0:
         continue
 
     if g_pred.has_edge(concept_id, n):
