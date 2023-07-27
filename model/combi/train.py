@@ -110,6 +110,7 @@ class Trainer:
         train_data,
         eval_data,
         optimizer,
+        scheduler,
         criterion,
         batch_size,
         pos_ratio,
@@ -119,6 +120,7 @@ class Trainer:
         self.train_data = train_data
         self.eval_data = eval_data
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.criterion = criterion
         self.batch_size = batch_size
         self.pos_ratio = pos_ratio
@@ -160,6 +162,7 @@ class Trainer:
         # Backward and optimize
         loss.backward()
         self.optimizer.step()
+        self.scheduler.step()
 
         return loss.item()
 
@@ -206,8 +209,9 @@ def main(
     num_epochs=1000,
     pos_ratio=0.3,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
+    step_size=40,
+    gamma=0.8,
     log_interval=10,
-    weight_decay=0.01,
 ):
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -218,9 +222,8 @@ def main(
     logger.info(f"num_epochs: {num_epochs}")
     logger.info(f"pos_ratio: {pos_ratio}")
     logger.info(f"layers: {layers}")
-    print(f"weight_decay: {weight_decay}")
-
-    # TODO: scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    logger.info(f"step_size: {step_size}")
+    logger.info(f"gamma: {gamma}")
 
     data = load_data(data_path)
 
@@ -240,15 +243,20 @@ def main(
 
     model = BaselineNetwork(layers).to(device)
 
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=lr,
+    )
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=step_size, gamma=gamma
+    )
+
     trainer = Trainer(
         model=model,
         train_data=d_train,
         eval_data=d_test,
-        optimizer=torch.optim.Adam(
-            model.parameters(),
-            lr=lr,
-            weight_decay=weight_decay,
-        ),
+        optimizer=optimizer,
+        scheduler=scheduler,
         criterion=nn.BCELoss(),
         batch_size=batch_size,
         pos_ratio=pos_ratio,
