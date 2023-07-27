@@ -121,7 +121,7 @@ for n in g_pred.nodes:
     unconnected.append(n)
 
 
-pairs = [(concept_id, n) for n in unconnected]
+pairs = torch.tensor([(concept_id, n) for n in unconnected])
 
 # load embeddings
 emb_f_test_path = "data/model/combi/features_2019.M.pkl.gz"
