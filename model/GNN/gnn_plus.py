@@ -51,10 +51,9 @@ def load_compressed(path):
 
 
 def load_node_features(graph, cutoff_year, amt_years=5):
-    years = list(range(cutoff_year - amt_years, cutoff_year + 1))
+    years = list(range(cutoff_year - amt_years + 1, cutoff_year + 1))
     embs = [calc_degs(adj) for adj in graph.get_adj_matrices(years, binary=False)]
-
-    return torch.stack(embs)
+    return torch.stack(embs).to(torch.float).T
 
 
 def create_pyg_dataset(data_dict, graph, dataset_type):
@@ -63,7 +62,7 @@ def create_pyg_dataset(data_dict, graph, dataset_type):
     edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous()[:2, :]
     edge_attr = torch.tensor(edge_list, dtype=torch.float).t().contiguous()[2, :]
 
-    vertex_pairs = torch.tensor(data_dict[f"X_{dataset_type}"], dtype=torch.int)
+    vertex_pairs = torch.tensor(data_dict[f"X_{dataset_type}"], dtype=torch.long)
     labels = torch.tensor(data_dict[f"y_{dataset_type}"], dtype=torch.float)
 
     logger.info("Loading node features")
@@ -88,7 +87,7 @@ class GCN(nn.Module):
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
-        x = self.bn1(x)
+        # x = self.bn1(x)
         x = F.relu(x)
         x = F.dropout(x, p=0.2, training=self.training)
         return x
@@ -120,7 +119,7 @@ class Net(nn.Module):
         self.mlp = MLP(mlp_layer_dims)
 
     def forward(self, data):
-        x, edge_index, pairs = data.x, data.edge_index, data.pair
+        x, edge_index, pairs = data.x, data.edge_index, data.batch_pair
         logger.debug("Applying GCN")
         x = self.gcn(x, edge_index)
 
@@ -151,8 +150,12 @@ def train(model, train_data, optimizer, criterion):
     model.train()
     optimizer.zero_grad()
 
+    batch_indices = sample_batch(train_data.y, batch_size=10_000)
+    train_data.batch_pair = train_data.pair[batch_indices]
+    batch_y = train_data.y[batch_indices]
+
     out = model(train_data)
-    loss = criterion(out.view(-1), train_data.y)
+    loss = criterion(out.view(-1), batch_y)
     loss.backward()
     optimizer.step()
 
@@ -176,9 +179,9 @@ def test(model, test_data):
 
 def main(
     log_file="logs/gnn_plus.log",
-    num_epochs=30,
+    num_epochs=300,
     lr=0.01,
-    log_interval=2,
+    log_interval=1,
 ):
     global logger
     logger = setup_logger(log_file, level=logging.INFO, log_to_stdout=True)
