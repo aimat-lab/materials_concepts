@@ -149,5 +149,6 @@ with open("data/model/combi/results.pkl", "wb") as f:
         {
             "concepts": [lookup_id_c[id] for id in unconnected],
             "predictions": outs,
-        }
+        },
+        f,
     )
