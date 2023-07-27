@@ -90,10 +90,10 @@ class BaselineNetwork(nn.Module):
 
 logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
-logger.info("Loading model")
-layers = [1556, 1024, 1024, 512, 256, 32, 1]
-model = BaselineNetwork(layers).to(device)
-model.load_state_dict(torch.load("data/model/combi/model.pt"))
+# logger.info("Loading model")
+# layers = [1556, 1024, 1024, 512, 256, 32, 1]
+# model = BaselineNetwork(layers).to(device)
+# model.load_state_dict(torch.load("data/model/combi/model.pt"))
 
 search = "znonanorod array"
 
@@ -107,22 +107,19 @@ concept_id = lookup_c_id[search]
 logger.info("Loading graph")
 prediction_since = 2019
 graph = Graph("data/graph/edges_medium.pkl")
-g_pred = graph.get_nx_graph(prediction_since)
+g = Graph.from_edge_list(graph.get_until_year(prediction_since))
+g_nx = graph.get_nx_graph(prediction_since)
 
 logger.info("Finding unconnected nodes")
 unconnected = []
-for n, deg in zip(g_pred.nodes, g_pred.degree):
+for n in g.vertices:
     if n == concept_id:
         continue
 
-    if deg == 0:
-        continue
-
-    if g_pred.has_edge(concept_id, n):
+    if g_nx.has_edge(concept_id, n):
         continue
 
     unconnected.append(n)
-
 
 pairs = torch.tensor([(concept_id, n) for n in unconnected])
 
