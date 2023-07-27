@@ -207,7 +207,7 @@ def main(
     pos_ratio=0.3,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
     log_interval=10,
-    # weight_decay=0.01,
+    weight_decay=0.01,
 ):
     global logger
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -218,7 +218,9 @@ def main(
     logger.info(f"num_epochs: {num_epochs}")
     logger.info(f"pos_ratio: {pos_ratio}")
     logger.info(f"layers: {layers}")
-    # print(f"weight_decay: {weight_decay}")
+    print(f"weight_decay: {weight_decay}")
+
+    # TODO: scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
     data = load_data(data_path)
 
@@ -244,7 +246,8 @@ def main(
         eval_data=d_test,
         optimizer=torch.optim.Adam(
             model.parameters(),
-            lr=lr,  # weight_decay=weight_decay
+            lr=lr,
+            weight_decay=weight_decay,
         ),
         criterion=nn.BCELoss(),
         batch_size=batch_size,
@@ -253,7 +256,8 @@ def main(
     )
     trainer.train(num_epochs)
 
-    torch.save(model.state_dict(), "data/model/combi/model.pt")
+    # do not save during inference
+    # torch.save(model.state_dict(), "data/model/combi/model.pt")
 
 
 if __name__ == "__main__":
