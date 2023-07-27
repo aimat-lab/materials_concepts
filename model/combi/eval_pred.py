@@ -144,7 +144,7 @@ outs = model(inputs)
 outs = outs.detach().cpu().numpy().flatten()
 
 logger.info("Saving results")
-with open("data/model/combi/results.pkl") as f:
+with open("data/model/combi/results.pkl", "wb") as f:
     pickle.dump(
         {
             "concepts": [lookup_id_c[id] for id in unconnected],
