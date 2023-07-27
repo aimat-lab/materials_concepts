@@ -5,6 +5,7 @@ import os, sys
 import gzip, pickle
 from collections import namedtuple
 import numpy as np
+import logging
 
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_directory)
@@ -16,6 +17,25 @@ Data = namedtuple(
 )
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+def setup_logger(level=logging.INFO, log_to_stdout=True):
+    logger = logging.getLogger()
+    logger.setLevel(level)
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(message)s", "%H:%M:%S"
+    )
+
+    if log_to_stdout:
+        stdout_handler = logging.StreamHandler(sys.stdout)
+        stdout_handler.setFormatter(formatter)
+        logger.addHandler(stdout_handler)
+
+    file_handler = logging.FileHandler("logs.log")
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
 
 
 def load_compressed(path):
@@ -68,7 +88,9 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-print("Loading model...")
+logger = setup_logger(level=logging.INFO, log_to_stdout=True)
+
+logger.info("Loading model")
 layers = [1556, 1024, 1024, 512, 256, 32, 1]
 model = BaselineNetwork(layers).to(device)
 model.load_state_dict(torch.load("data/model/combi/model.pt"))
@@ -82,12 +104,12 @@ lookup_id_c = {id: concept for concept, id in zip(lookup["concept"], lookup["id"
 
 concept_id = lookup_c_id[search]
 
-print("Loading graph...")
+logger.info("Loading graph")
 prediction_since = 2019
 graph = Graph("data/graph/edges_medium.pkl")
 g_pred = graph.get_nx_graph(prediction_since)
 
-print("Finding unconnected nodes...")
+logger.info("Finding unconnected nodes")
 unconnected = []
 for n in g_pred.nodes:
     if n == concept_id:
@@ -109,13 +131,19 @@ data = Data(
     pairs=pairs,
     feature_embeddings=load_compressed(emb_f_test_path),
     concept_embeddings=load_compressed(emb_c_test_path),
+    labels=None,
 )
 
+logger.info("Retrieving embeddings")
 inputs = get_embeddings(
     data.pairs, data.feature_embeddings, data.concept_embeddings
 ).to(device)
-outs = model(inputs)
 
+logger.info("Predicting")
+outs = model(inputs)
+outs = outs.detach().cpu().numpy().flatten()
+
+logger.info("Saving results")
 with open("data/model/combi/results.pkl") as f:
     pickle.dump(
         {
