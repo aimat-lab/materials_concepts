@@ -90,10 +90,10 @@ class BaselineNetwork(nn.Module):
 
 logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 
-# logger.info("Loading model")
-# layers = [1556, 1024, 1024, 512, 256, 32, 1]
-# model = BaselineNetwork(layers).to(device)
-# model.load_state_dict(torch.load("data/model/combi/model.pt"))
+logger.info("Loading model")
+layers = [1556, 1024, 1024, 512, 256, 32, 1]
+model = BaselineNetwork(layers).to(device)
+model.load_state_dict(torch.load("data/model/combi/model.pt"))
 
 search = "znonanorod array"
 
