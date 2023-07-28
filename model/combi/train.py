@@ -103,6 +103,48 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
     return torch.tensor(np.array(l)).float()
 
 
+class EarlyStopping:
+    def __init__(self, sliding_window=5, eta=1e-4):
+        self.sliding_window = sliding_window
+        self.eta = eta
+        self.losses = []
+        self.aucs = []
+
+    def append(self, loss, auc):
+        self.losses.append(loss)
+        self.aucs.append(auc)
+
+    @property
+    def current_auc_sliding(self):
+        return np.mean(self.aucs[-self.sliding_window :])
+
+    @property
+    def previous_auc_sliding(self):
+        return np.mean(self.aucs[-self.sliding_window * 2 : -self.sliding_window])
+
+    @property
+    def current_loss_sliding(self):
+        return np.mean(self.losses[-self.sliding_window :])
+
+    @property
+    def previous_loss_sliding(self):
+        return np.mean(self.losses[-self.sliding_window * 2 : -self.sliding_window])
+
+    def should_stop_early(self):
+        if len(self.aucs) < self.sliding_window * 2:
+            return False
+
+        # current averaged auc is higher than previous averaged auc
+        if (self.current_auc_sliding - self.previous_auc_sliding) > self.eta:
+            return False
+
+        # previous averaged loss is higher than current averaged loss
+        if (self.previous_loss_sliding - self.current_loss_sliding) > self.eta:
+            return False
+
+        return True
+
+
 class Trainer:
     def __init__(
         self,
@@ -114,6 +156,7 @@ class Trainer:
         criterion,
         batch_size,
         pos_ratio,
+        early_stopping,
         log_interval,
     ):
         self.model = model
@@ -125,19 +168,26 @@ class Trainer:
         self.batch_size = batch_size
         self.pos_ratio = pos_ratio
         self.log_interval = log_interval
+        self.early_stopping = early_stopping
 
     def train(self, num_epochs):
         logger.info("Training model")
 
         for epoch in range(1, num_epochs + 1):
             loss = self._train_epoch()
+
             if epoch % self.log_interval == 0:
                 auc, (tn, fp, fn, tp) = eval(self.model, self.eval_data)
+
+                self.early_stopping.append(loss=loss, auc=auc)
+
                 logger.info(
                     f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
                 )
-            else:
-                logger.debug(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+                if self.early_stopping.should_stop_early():
+                    logger.info("Early stopping triggered")
+                    break
 
     def _train_epoch(self):
         data = self.train_data
@@ -260,6 +310,7 @@ def main(
         criterion=nn.BCELoss(),
         batch_size=batch_size,
         pos_ratio=pos_ratio,
+        early_stopping=EarlyStopping(sliding_window=5),
         log_interval=log_interval,
     )
     trainer.train(num_epochs)
