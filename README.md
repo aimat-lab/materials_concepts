@@ -248,13 +248,18 @@ python model/concept_embs/train.py \
 - [x] Implement top performing model from kaggle challange (More or less)
 - [x] Store model and graph
 - [x] Extract concept embeddings (Calculate storage requirements)
-- [ ] Build Baseline (Features + Embeddings)
+- [x] Build Baseline (Features + Embeddings)
 
-  - [ ] Resturct Trainloop
-    - [ ] One epoch: sample batchsize / 2 positive and batchsize / 2 negative samples
-    - [ ] Generalize Model architecture with params: LR, #Layers, Layer degradation, Initial hidden state
-    - [ ] Trainloop: with early stopping and eval on every ith epoch on test set
-  - [ ] Generate embeddings "on the fly", just store the squared adjacency matrix
+  - [x] Resturct Trainloop
+    - [x] One epoch: sample batchsize / 2 positive and batchsize / 2 negative samples
+    - [x] Generalize Model architecture with params: LR, #Layers, Layer degradation, Initial hidden state
+    - [x] Trainloop: with early stopping and eval on every ith epoch on test set
+  - [x] Generate embeddings "on the fly", just store the squared adjacency matrix
+
+- [ ] Optimize Hyperparameters: Layer
+- [ ] Optimize Hyperparameters: LR + Gamma
+- [ ] Optimize Hyperparameters: Pos rate
+- [ ] Optimize Hyperparameters: Dropout (?)
 
 - [ ] Build API to query prediction service
 - [ ] Build Tiny Frontend
