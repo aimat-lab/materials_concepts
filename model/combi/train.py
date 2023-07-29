@@ -20,7 +20,7 @@ from metrics import test
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def setup_logger(level=logging.INFO, log_to_stdout=True):
+def setup_logger(file, level=logging.INFO, log_to_stdout=True):
     logger = logging.getLogger()
     logger.setLevel(level)
     formatter = logging.Formatter(
@@ -32,7 +32,7 @@ def setup_logger(level=logging.INFO, log_to_stdout=True):
         stdout_handler.setFormatter(formatter)
         logger.addHandler(stdout_handler)
 
-    file_handler = logging.FileHandler("logs.log")
+    file_handler = logging.FileHandler(file)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
@@ -255,16 +255,18 @@ def main(
     emb_c_train_path="data/model/concept_embs/av_embs_2016.M.pkl.gz",
     emb_c_test_path="data/model/concept_embs/av_embs_2019.M.pkl.gz",
     lr=0.001,
+    gamma=0.8,
     batch_size=100,
     num_epochs=1000,
     pos_ratio=0.3,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
     step_size=40,
-    gamma=0.8,
     log_interval=10,
+    log_file="logs.log",
+    save_model=False,
 ):
     global logger
-    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
+    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
 
     logger.info("Running with parameters:")
     logger.info(f"lr: {lr}")
@@ -315,8 +317,8 @@ def main(
     )
     trainer.train(num_epochs)
 
-    # do not save during inference
-    # torch.save(model.state_dict(), "data/model/combi/model.pt")
+    if save_model:
+        torch.save(model.state_dict(), save_model)
 
 
 if __name__ == "__main__":
