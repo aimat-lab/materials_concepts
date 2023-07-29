@@ -17,6 +17,7 @@ Data = namedtuple(
 )
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print("Device:", device)
 
 
 def setup_logger(level=logging.INFO, log_to_stdout=True):
@@ -39,6 +40,7 @@ def setup_logger(level=logging.INFO, log_to_stdout=True):
 
 
 def load_compressed(path):
+    logger.info(f"Loading data from {path}")
     with gzip.open(path, "rb") as f:
         return pickle.load(f)
 
@@ -93,7 +95,13 @@ logger = setup_logger(level=logging.INFO, log_to_stdout=True)
 logger.info("Loading model")
 layers = [1556, 1024, 1024, 512, 256, 32, 1]
 model = BaselineNetwork(layers).to(device)
-model.load_state_dict(torch.load("data/model/combi/model.pt"))
+
+model.load_state_dict(
+    torch.load(
+        "data/model/combi/model.pt",
+        map_location=torch.device(device),
+    )
+)
 
 search = "znonanorod array"
 
@@ -120,6 +128,8 @@ for n in g.vertices:
         continue
 
     unconnected.append(n)
+
+logger.info(f"Unconnected: {len(unconnected)}. Total: {len(g.vertices)}")
 
 pairs = torch.tensor([(concept_id, n) for n in unconnected])
 
