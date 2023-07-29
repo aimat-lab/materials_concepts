@@ -14,9 +14,9 @@ constants = dict(
     gamma=0.8,
     step_size=50,
     batch_size=1000,
-    num_epochs=5,  # 5000,
+    num_epochs=5000,
     pos_ratio=0.3,
-    log_interval=5,  # 50,
+    log_interval=50,
 )
 
 config = {
