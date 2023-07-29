@@ -51,7 +51,7 @@ class GridSearch:
                 run_config["layer_decrease"],
             )
 
-            layer_dims += [10]
+            layer_dims = [1556] + layer_dims + [10, 1]
 
             # DEBUG
             # print(f"Hash: {params_hash}")
