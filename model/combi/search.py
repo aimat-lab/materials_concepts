@@ -5,7 +5,7 @@ import hashlib
 import json
 
 constants = dict(
-    data_path="data/model/data.pkl",
+    data_path="data/model/data.M.pkl",
     emb_f_train_path="data/model/combi/features_2016.M.pkl.gz",
     emb_f_test_path="data/model/combi/features_2019.M.pkl.gz",
     emb_c_train_path="data/model/concept_embs/av_embs_2016.M.pkl.gz",
