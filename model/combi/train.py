@@ -7,6 +7,8 @@ import sys, os
 import gzip
 import logging
 from collections import namedtuple
+from importlib import reload
+
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
@@ -265,6 +267,7 @@ def main(
     log_file="logs.log",
     save_model=False,
 ):
+    reload(logging)
     global logger
     logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
 
