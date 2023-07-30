@@ -10,20 +10,18 @@ constants = dict(
     emb_f_test_path="data/model/combi/features_2019.M.pkl.gz",
     emb_c_train_path="data/model/concept_embs/av_embs_2016.M.pkl.gz",
     emb_c_test_path="data/model/concept_embs/av_embs_2019.M.pkl.gz",
-    lr=0.001,
-    gamma=0.8,
-    step_size=50,
+    layers=[1556, 1556, 933, 10, 1],
     batch_size=1000,
     num_epochs=5000,
     pos_ratio=0.3,
     log_interval=50,
 )
 
-config = {
-    "layer_count": [2, 4],
-    "hidden_dim": [512, 1024, 1556],
-    "layer_decrease": [0.4, 0.6, 0.8],
-}
+config = dict(
+    lr=[0.005, 0.001, 0.0005],
+    gamma=[0.6, 0.8, 1],
+    step_size=[50, 80],
+)
 
 
 class GridSearch:
@@ -45,24 +43,13 @@ class GridSearch:
 
             self._print_begin(f"Starting run: {i + 1}/{len(run_configs)}", width=80)
 
-            layer_dims = self._generate_layer_dims(
-                run_config["layer_count"],
-                run_config["hidden_dim"],
-                run_config["layer_decrease"],
-            )
-
-            layer_dims = [1556] + layer_dims + [10, 1]
-
-            # DEBUG
-            # print(f"Hash: {params_hash}")
-            # print("Layer dims:")
-            # print(layer_dims)
-            # print("Total params:")
-            # print(f"{functools.reduce(lambda a, b: a * b, layer_dims):.3e}")
+            print(f"{params_hash}".center(80))
+            self._print_dict(run_config)
+            print("-" * 80)
 
             main(
                 **constants,
-                layers=layer_dims,
+                **run_config,
                 log_file=f"logs/{params_hash}.log",
                 save_model=f"data/model/combi/{params_hash}.pt",
             )
@@ -89,6 +76,9 @@ class GridSearch:
         for k, v in d.items():
             print(f"{k}: {v}")
 
+    def _debug(self, **kwargs):
+        self._print_dict(kwargs)
+
     @staticmethod
     def hash_dict(d):
         d_json = json.dumps(d, sort_keys=True)
@@ -96,7 +86,7 @@ class GridSearch:
         return hash_object.hexdigest()
 
 
-blacklist = ["4e1f636becc25a9cad8f3e239faf4f7c"]  # list of config hashes to skip
+blacklist = []  # list of config hashes to skip
 
 if __name__ == "__main__":
     grid_search = GridSearch(config, blacklist=blacklist)
