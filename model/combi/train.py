@@ -58,7 +58,7 @@ def load_compressed(path):
 
 
 class BaselineNetwork(nn.Module):
-    def __init__(self, layer_dims: list):
+    def __init__(self, layer_dims: list, dropout: float):
         """
         Fully Connected layers
         """
@@ -69,7 +69,7 @@ class BaselineNetwork(nn.Module):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.BatchNorm1d(out_))
             layers.append(nn.ReLU())
-            layers.append(nn.Dropout(p=0.1))  # TODO: try out 0.3
+            layers.append(nn.Dropout(p=dropout))
 
         layers.pop()  # remove last dropout layer
         layers.pop()  # remove last relu layer
@@ -261,6 +261,7 @@ def main(
     batch_size=100,
     num_epochs=1000,
     pos_ratio=0.3,
+    dropout=0.1,
     layers=[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1],
     step_size=40,
     log_interval=10,
@@ -276,6 +277,7 @@ def main(
     logger.info(f"batch_size: {batch_size}")
     logger.info(f"num_epochs: {num_epochs}")
     logger.info(f"pos_ratio: {pos_ratio}")
+    logger.info(f"dropout: {dropout}")
     logger.info(f"layers: {layers}")
     logger.info(f"step_size: {step_size}")
     logger.info(f"gamma: {gamma}")
@@ -296,7 +298,7 @@ def main(
         labels=torch.tensor(data["y_test"], dtype=torch.float),
     )
 
-    model = BaselineNetwork(layers).to(device)
+    model = BaselineNetwork(layers, dropout).to(device)
 
     optimizer = torch.optim.Adam(
         model.parameters(),

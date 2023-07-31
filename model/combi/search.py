@@ -13,14 +13,15 @@ constants = dict(
     layers=[1556, 1556, 933, 10, 1],
     batch_size=1000,
     num_epochs=5000,
-    pos_ratio=0.3,
     log_interval=50,
+    lr=0.0005,
+    gamma=0.8,
+    step_size=80,
 )
 
 config = dict(
-    lr=[0.005, 0.001, 0.0005],
-    gamma=[0.6, 0.8, 1],
-    step_size=[50, 80],
+    pos_ratio=[0.1, 0.2, 0.3, 0.4, 0.5],
+    dropout=[0, 0.25, 0.5],
 )
 
 
