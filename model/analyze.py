@@ -62,7 +62,7 @@ depthCounter = Counter()
 sample = np.random.choice(len(pos_edges), 5000, replace=False)
 for i, (u, v) in tqdm(enumerate(pos_edges[sample])):
     bfs_to_depth(g, u)
-    depthCounter.update([g.nodes[edge[v]]["depth"]])
+    depthCounter.update([g.nodes[v]["depth"]])
 
     if i % 1000 == 0:
         print(f"Depth Counter: {depthCounter}")
