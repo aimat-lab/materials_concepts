@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 from collections import Counter, deque
 from graph import Graph
+from tqdm import tqdm
 
 
 def load(path):
@@ -59,7 +60,7 @@ depthCounter = Counter()
 
 # sample 5000 edges
 sample = np.random.choice(len(pos_edges), 5000, replace=False)
-for i, (u, v) in enumerate(pos_edges[sample]):
+for i, (u, v) in tqdm(enumerate(pos_edges[sample])):
     bfs_to_depth(g, u)
     depthCounter.update([g.nodes[edge[v]]["depth"]])
 
