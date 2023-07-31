@@ -39,30 +39,6 @@ def bfs_to_depth(graph, start_node, max_depth=None):
                 graph.nodes[i]["depth"] = depth + 1
 
 
-class EdgeHolder:
-    def __init__(self, edges):
-        self.edges = edges
-
-    def split_edges(self, contained_node):
-        return_edges = []
-        new_edges = []
-
-        for edge in self.edges:
-            if contained_node in edge:
-                return_edges.append(edge)
-            else:
-                new_edges.append(edge)
-
-        self.edges = new_edges
-        return return_edges
-
-    def __len__(self):
-        return len(self.edges)
-
-    def empty(self):
-        return len(self) == 0
-
-
 print("Loading data")
 data = load("data/model/data.M.pkl")
 
@@ -79,26 +55,17 @@ print("Loading graph")
 g = Graph.from_path("data/graph/edges.M.pkl").get_nx_graph(data["year_train"])
 
 
-edgeHolder = EdgeHolder(pos_edges)
 depthCounter = Counter()
-for node, count in c.most_common():
-    if edgeHolder.empty():
-        break
 
-    print("Applying BFS")
-    bfs_to_depth(g, node)  # in-place
+# sample 5000 edges
+sample = np.random.choice(len(pos_edges), 5000, replace=False)
+for i, (u, v) in enumerate(pos_edges[sample]):
+    bfs_to_depth(g, u)
+    depthCounter.update([g.nodes[edge[v]]["depth"]])
 
-    print(f"Node: {node}, Count: {count}")
+    if i % 1000 == 0:
+        print(f"Depth Counter: {depthCounter}")
 
-    # Get all edges that contain the node
-    edges = edgeHolder.split_edges(node)
-    print(f"# Edges: {len(edges)} | # Edges left: {len(edgeHolder)}")
 
-    other_nodes = set([i for edge in edges for i in edge if i != node])
-    assert len(other_nodes) == len(edges)
-
-    # Get the depths of the other nodes, based on start_node 'node'
-    depths = [g.nodes[i]["depth"] for i in other_nodes]
-    depthCounter.update(depths)
-
+print("Finished")
 print(f"Depth Counter: {depthCounter}")
