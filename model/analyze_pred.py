@@ -56,7 +56,7 @@ FN = 2
 FP = 3
 TP = 4
 
-SAMPLE_SIZE = 1000
+SAMPLE_SIZE = 10000
 
 print("Loading data")
 data = load("data/model/data.M.pkl")
