@@ -87,10 +87,13 @@ print("Loading graph")
 g = Graph.from_path("data/graph/edges.M.pkl").get_nx_graph(data["year_test"])
 
 edges_depth = {}
-for _class in (TN, FN, FP, TP):
+for _class in (FN, FP, TP):
     print(f"Class: {_class}")
 
-    index_sample = np.random.choice(index[_class], SAMPLE_SIZE, replace=False)
+    if len(index[_class]) < SAMPLE_SIZE:
+        index_sample = index[_class]
+    else:
+        index_sample = np.random.choice(index[_class], SAMPLE_SIZE, replace=False)
 
     depthCounter = Counter()
 
@@ -105,3 +108,5 @@ for _class in (TN, FN, FP, TP):
     print("-" * 80)
 
 save(edges_depth, "data/model/combi/edges_depth.pkl")
+
+# TN (1): Counter({3: 638, 2: 360, 4: 2})
