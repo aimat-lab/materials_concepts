@@ -15,13 +15,13 @@ constants = dict(
     num_epochs=5000,
     log_interval=50,
     lr=0.0005,
-    gamma=0.8,
-    step_size=80,
 )
 
 config = dict(
-    pos_ratio=[0.1, 0.2, 0.3, 0.4, 0.5],
-    dropout=[0, 0.25, 0.5],
+    pos_ratio=[0.3, 0.35],
+    dropout=[0.35, 0.4],
+    step_size=[80, 100],
+    gamma=[0.8, 0.9],
 )
 
 
@@ -93,4 +93,4 @@ if __name__ == "__main__":
     grid_search = GridSearch(config, blacklist=blacklist)
     grid_search.run(randomize=False)
 
-# 6.719126e+12 => OK w/ batch size 1000
+# 6.72e+12 => OK w/ batch size 1000
