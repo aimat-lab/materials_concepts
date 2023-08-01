@@ -58,6 +58,12 @@ def load_compressed(path):
         return pickle.load(f)
 
 
+def save_compressed(obj, path):
+    logger.info(f"Saving compressed file {path}")
+    with gzip.open(path, "wb") as f:
+        pickle.dump(obj, f)
+
+
 class BaselineNetwork(nn.Module):
     def __init__(self, layer_dims: list, dropout: float):
         """
@@ -127,7 +133,8 @@ def main(
     layers=[1556, 1556, 933, 10, 1],
     dropout=0.25,
     model_path="data/model/combi/pos_rate-dropout-tuned.pt",
-    output_path="data/model/combi/threshold_tuning.csv",
+    csv_path="data/model/combi/threshold_tuning.csv",
+    pred_path="data/model/combi/predictions.pkl.gz",
 ):
     reload(logging)
     global logger
@@ -154,7 +161,7 @@ def main(
 
     stats = []
     for threshold in np.arange(0.5, 1, 0.05):
-        auc, (precision, recall, fscore, support), (tn, fp, fn, tp) = test(
+        auc, (precision, recall, fscore, _), (tn, fp, fn, tp) = test(
             d_test.labels, predictions, threshold=threshold
         )
 
@@ -164,7 +171,6 @@ def main(
             precision=precision,
             recall=recall,
             fscore=fscore,
-            support=support,
             tn=tn,
             fp=fp,
             fn=fn,
@@ -173,7 +179,12 @@ def main(
         stats.append(metrics)
 
     df = pd.DataFrame(stats)
-    df.to_csv(output_path, index=False)
+    df.to_csv(csv_path, index=False)
+
+    save_compressed(
+        predictions,
+        pred_path,
+    )
 
 
 if __name__ == "__main__":
