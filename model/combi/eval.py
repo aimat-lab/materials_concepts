@@ -179,6 +179,7 @@ def main(
         stats.append(metrics)
 
     df = pd.DataFrame(stats)
+    df = df.round(4)
     df.to_csv(csv_path, index=False)
 
     save_compressed(
