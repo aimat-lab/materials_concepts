@@ -21,7 +21,7 @@ def load_compressed(path):
         return pickle.load(f)
 
 
-def bfs_to_depth(graph, start_node, max_depth=None):
+def bfs_distance(graph, start_node, target_node):
     # Initialize all nodes as not visited
     for node in graph:
         graph.nodes[node]["visited"] = False
@@ -38,17 +38,17 @@ def bfs_to_depth(graph, start_node, max_depth=None):
         # Dequeue a vertex from queue and print it
         node, depth = queue.popleft()
 
-        # If depth reached is equal to max_depth, stop exploring its neighbors
-        if max_depth and depth == max_depth:
-            break
+        # Get all adjacent vertices of the dequeued vertex s.
+        # If a adjacent has not been visited, then mark it
+        # visited and enqueue it
+        for neighbor in graph.neighbors(node):
+            if neighbor == target_node:
+                return depth + 1
 
-        # Get all neighbors of the dequeued vertex node
-        # If a neighbor hasn't been visited, then mark it visited and enqueue it
-        for i in graph.neighbors(node):
-            if not graph.nodes[i]["visited"]:
-                queue.append((i, depth + 1))
-                graph.nodes[i]["visited"] = True
-                graph.nodes[i]["depth"] = depth + 1
+            if not graph.nodes[neighbor]["visited"]:
+                graph.nodes[neighbor]["visited"] = True
+                graph.nodes[neighbor]["depth"] = depth + 1
+                queue.append((neighbor, depth + 1))
 
 
 TN = 1
@@ -100,9 +100,9 @@ for _class in (FN, FP, TP):
     for ind in tqdm(index_sample):
         u, v = data["X_test"][ind]
 
-        bfs_to_depth(g, u)
-        depthCounter.update([g.nodes[v]["depth"]])
-        edges_depth[ind] = g.nodes[v]["depth"]
+        distance = bfs_distance(g, u, v)
+        depthCounter.update([distance])
+        edges_depth[ind] = distance
 
     print(f"Depth Counter: {depthCounter}")
     print("-" * 80)
