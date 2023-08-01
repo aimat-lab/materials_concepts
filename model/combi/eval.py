@@ -1,6 +1,7 @@
 from torch import nn
 import torch
 import numpy as np
+import pandas as pd
 import pickle
 import fire
 import sys, os
@@ -126,6 +127,7 @@ def main(
     layers=[1556, 1556, 933, 10, 1],
     dropout=0.25,
     model_path="data/model/combi/pos_rate-dropout-tuned.pt",
+    output_path="data/model/combi/threshold_tuning.csv",
 ):
     reload(logging)
     global logger
@@ -150,8 +152,28 @@ def main(
 
     predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
 
+    stats = []
     for threshold in np.arange(0.5, 1, 0.05):
-        print_metrics(d_test.labels, predictions, threshold=threshold)
+        auc, (precision, recall, fscore, support), (tn, fp, fn, tp) = test(
+            d_test.labels, predictions, threshold=threshold
+        )
+
+        metrics = dict(
+            threshold=threshold,
+            auc=auc,
+            precision=precision,
+            recall=recall,
+            fscore=fscore,
+            support=support,
+            tn=tn,
+            fp=fp,
+            fn=fn,
+            tp=tp,
+        )
+        stats.append(metrics)
+
+    df = pd.DataFrame(stats)
+    df.to_csv(output_path, index=False)
 
 
 if __name__ == "__main__":
