@@ -87,7 +87,7 @@ print("Loading graph")
 g = Graph.from_path("data/graph/edges.M.pkl").get_nx_graph(data["year_test"])
 
 edges_depth = {}
-for _class in (FN, FP, TP):
+for _class in (TN, FN, FP, TP):
     print(f"Class: {_class}")
 
     if len(index[_class]) < SAMPLE_SIZE:
@@ -109,4 +109,8 @@ for _class in (FN, FP, TP):
 
 save(edges_depth, "data/model/combi/edges_depth.pkl")
 
+# First Run:
 # TN (1): Counter({3: 638, 2: 360, 4: 2})
+# FN (2): Counter({2: 31, 3: 15})
+# FP (3): Counter({2: 806, 3: 194})
+# TP (4): Counter({2: 232, 3: 12})
