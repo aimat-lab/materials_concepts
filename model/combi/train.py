@@ -282,6 +282,8 @@ def main(
     logger.info(f"layers: {layers}")
     logger.info(f"step_size: {step_size}")
     logger.info(f"gamma: {gamma}")
+    logger.info(f"log_interval: {log_interval}")
+    logger.info(f"sliding_window: {sliding_window}")
 
     data = load_data(data_path)
 
