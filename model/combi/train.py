@@ -133,6 +133,9 @@ class EarlyStopping:
         return np.mean(self.losses[-self.sliding_window * 2 : -self.sliding_window])
 
     def should_stop_early(self):
+        if not self.sliding_window:
+            return False
+
         if len(self.aucs) < self.sliding_window * 2:
             return False
 
@@ -145,6 +148,21 @@ class EarlyStopping:
             return False
 
         return True
+
+
+class Loader:
+    def __init__(self, y):
+        self.indices = torch.randperm(len(y))
+        self.count = 0
+
+    def __call__(self, batch_size):
+        if self.count > len(self.indices) - batch_size:
+            self.indices = torch.randperm(len(self.indices))
+            self.count = 0
+
+        batch = self.indices[self.count : self.count + batch_size]
+        self.count += 1
+        return batch
 
 
 class Trainer:
@@ -160,6 +178,7 @@ class Trainer:
         pos_ratio,
         early_stopping,
         log_interval,
+        use_loader=False,
     ):
         self.model = model
         self.train_data = train_data
@@ -171,6 +190,8 @@ class Trainer:
         self.pos_ratio = pos_ratio
         self.log_interval = log_interval
         self.early_stopping = early_stopping
+        self.use_loader = use_loader
+        self.data_loader = Loader(train_data.labels)
 
     def train(self, num_epochs):
         logger.info("Training model")
@@ -198,7 +219,10 @@ class Trainer:
         self.optimizer.zero_grad()
 
         # get batch
-        batch_indices = sample_batch(data.labels, self.batch_size, self.pos_ratio)
+        if self.use_loader:
+            batch_indices = self.data_loader(self.batch_size)
+        else:
+            batch_indices = sample_batch(data.labels, self.batch_size, self.pos_ratio)
 
         inputs = get_embeddings(
             data.pairs[batch_indices],
@@ -268,6 +292,7 @@ def main(
     log_file="logs.log",
     save_model=False,
     sliding_window=5,
+    use_loader=False,
 ):
     reload(logging)
     global logger
@@ -284,6 +309,7 @@ def main(
     logger.info(f"gamma: {gamma}")
     logger.info(f"log_interval: {log_interval}")
     logger.info(f"sliding_window: {sliding_window}")
+    logger.info(f"use_loader: {use_loader}")
 
     data = load_data(data_path)
 
@@ -322,6 +348,7 @@ def main(
         pos_ratio=pos_ratio,
         early_stopping=EarlyStopping(sliding_window=sliding_window),
         log_interval=log_interval,
+        use_loader=use_loader,
     )
     trainer.train(num_epochs)
 
