@@ -267,6 +267,7 @@ def main(
     log_interval=10,
     log_file="logs.log",
     save_model=False,
+    sliding_window=5,
 ):
     reload(logging)
     global logger
@@ -317,7 +318,7 @@ def main(
         criterion=nn.BCELoss(),
         batch_size=batch_size,
         pos_ratio=pos_ratio,
-        early_stopping=EarlyStopping(sliding_window=5),
+        early_stopping=EarlyStopping(sliding_window=sliding_window),
         log_interval=log_interval,
     )
     trainer.train(num_epochs)
