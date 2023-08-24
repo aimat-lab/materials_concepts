@@ -28,7 +28,7 @@ depthCounter = Counter()
 
 # sample N edges
 sample = np.random.choice(len(pos_edges), N, replace=False)
-for i, (u, v) in tqdm(enumerate(pos_edges[sample])):
+for i, (u, v) in tqdm(enumerate(pos_edges[sample]), total=N):
     distance = bfs.distance(g, u, v)
     depthCounter.update([distance])
 
