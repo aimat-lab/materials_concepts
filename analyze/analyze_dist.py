@@ -6,7 +6,7 @@ from tqdm import tqdm
 import bfs
 import sys
 
-N = sys.argv[1] or 10000
+N = int(sys.argv[1]) or 10000
 
 print("Loading data")
 data = load("data/model/data.M.pkl")

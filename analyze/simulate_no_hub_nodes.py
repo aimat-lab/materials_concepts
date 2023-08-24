@@ -6,8 +6,8 @@ import pandas as pd
 import bfs
 import sys
 
-N = sys.argv[1] or 50
-POWER_HUBS_CUTOFF = sys.argv[2] or 500
+N = int(sys.argv[1]) or 50
+POWER_HUBS_CUTOFF = int(sys.argv[2]) or 500
 SAVE_PATH = sys.argv[3] or "data/analzye/depth_distribution.csv"
 
 print("Loading graph")
