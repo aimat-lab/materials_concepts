@@ -4,21 +4,17 @@ from graph import Graph
 from tqdm import tqdm
 import pandas as pd
 import bfs
+import sys
 
-N = 50
-POWER_HUBS_CUTOFF = 2000
+N = sys.argv[1] or 50
+POWER_HUBS_CUTOFF = sys.argv[2] or 500
+SAVE_PATH = sys.argv[3] or "data/analzye/depth_distribution.csv"
 
 print("Loading graph")
 g = Graph.from_path("data/graph/edges.M.pkl").get_nx_graph(2023)
 
 
-degs = [deg for _, deg in g.degree]
-degs = sorted(degs, reverse=True)
-
-cut_off_degree = degs[POWER_HUBS_CUTOFF]
-print("Cut-off degree:", cut_off_degree)
-
-hub_nodes = [node for node, deg in g.degree if deg > cut_off_degree]
+hub_nodes = sorted(g.degree, key=lambda x: x[1], reverse=True)[:POWER_HUBS_CUTOFF]
 
 print("Removing hub nodes")
 g.remove_nodes_from(hub_nodes)
@@ -39,7 +35,7 @@ for node in tqdm(sample):
 df = pd.DataFrame(sample_data)
 
 
-df.to_csv("data/depth_distribution_wo_2000_hubs.csv", index=False)
+df.to_csv(SAVE_PATH, index=False)
 
 pd.set_option("display.float_format", "{:.0f}".format)
 print(df.describe().round(0).drop("count").drop("origin", axis=1))
