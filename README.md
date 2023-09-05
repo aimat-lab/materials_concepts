@@ -137,12 +137,10 @@ Output:
   "year_delta": 3,
   "min_links": 1,
   "max_v_degree": None,
-  "X_train": [(v1, v2), ...] unnconnected vertex pairs until 2016,
-  "y_train": [0, 1, 1, 0, ...] indicating whether the vertex pairs will be connected in 2016 + 3
-  "X_train_eval":
-  "X_
-
-  (year_delta),
+  "X_train": [(v1, v2), ...] unnconnected vertex pairs until 2016, (80%)
+  "y_train": [0, 1, 1, 0, ...] indicating whether the vertex pairs will be connected in 2019 (2016 + 3) (80%)
+  "X_val": (20%) unnconnected vertex pairs until 2016,
+  "y_val": (20%) whether the vertex pairs will be connected in 2019,
   "X_test": [(v1, v2), ...] unnconnected vertex pairs until 2019,
   "y_test": whether the vertex pairs will be connected in 2022,
 }
