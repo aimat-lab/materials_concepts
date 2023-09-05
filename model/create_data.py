@@ -5,6 +5,7 @@ import pickle
 from collections import Counter
 import fire
 from graph import Graph
+from sklearn.model_selection import train_test_split
 
 
 class DataGenerator:
@@ -26,12 +27,19 @@ class DataGenerator:
         self.past_graph = self.graph.get_nx_graph(until_year=year_start)
         self.future_graph = self.graph.get_nx_graph(until_year=self.year_end)
 
-    def generate(self, edges_used: int, min_links: int = 1, max_v_degree: int = None):
+    def generate(
+        self,
+        edges_used: int,
+        train_val_split: float = None,
+        min_links: int = 1,
+        max_v_degree: int = None,
+    ):
         """
         Generates training or test data, based on chosen strategy in constructor.
 
         Parameters:
         edges_used: number of vertex pairs to generate
+        train_val_split: percentage of training data to be used for validation
         min_links: minimum number of links (at time = year_start + delta) between vertex pairs to be counted as positive sample
         max_v_degree: maximum degree of vertices which are considered for sampling
 
@@ -45,10 +53,24 @@ class DataGenerator:
             X, y = self._generate_test(edges_used, min_links, max_v_degree)
 
         if self.verbose:
-            print(f"# {len(X)} samples")
-            print(f"{Counter(y)} solution distribution")
+            print(f"# {len(X)} samples with {Counter(y)} label distribution")
 
-        return X, y
+        if train_val_split is None:
+            return X, y
+
+        X_train, X_val, y_train, y_val = train_test_split(
+            X, y, train_size=train_val_split, shuffle=True
+        )
+
+        if self.verbose:
+            print(
+                f"# {len(X_train)} training samples with {Counter(y_train)} label distribution"
+            )
+            print(
+                f"# {len(X_val)} validation samples with {Counter(y_val)} label distribution"
+            )
+
+        return X_train, X_val, y_train, y_val
 
     def _generate_train(self, edges_used: int, min_links: int, max_v_degree: int):
         """Generate training data by taking all positive samples and randomly drawing negative samples until the desired number of samples is reached.
@@ -186,6 +208,7 @@ def main(
     year_delta=3,
     edges_used_train=4_000_000,
     edges_used_test=1_000_000,
+    train_val_split=0.8,
     min_links=1,
     max_v_degree=None,
     verbose=True,
@@ -206,12 +229,18 @@ def main(
         verbose=verbose,
     )
 
-    X_train, y_train = train_generator.generate(
-        edges_used=edges_used_train, min_links=min_links, max_v_degree=max_v_degree
+    X_train, X_val, y_train, y_val = train_generator.generate(
+        edges_used=edges_used_train,
+        train_val_split=train_val_split,  # training data is split into train and validation
+        min_links=min_links,
+        max_v_degree=max_v_degree,
     )
 
     X_test, y_test = test_generator.generate(
-        edges_used=edges_used_test, min_links=min_links, max_v_degree=max_v_degree
+        edges_used=edges_used_test,
+        train_val_split=None,  # testing data is not split into train and validation
+        min_links=min_links,
+        max_v_degree=max_v_degree,
     )
 
     storage = {
@@ -222,6 +251,8 @@ def main(
         "max_v_degree": max_v_degree,
         "X_train": X_train,
         "y_train": y_train,
+        "X_val": X_val,
+        "y_val": y_val,
         "X_test": X_test,
         "y_test": y_test,
     }

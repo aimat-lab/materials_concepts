@@ -120,8 +120,9 @@ python model/create_data.py \
  --year_start_train 2016 \
  --year_start_test 2019 \
  --year_delta 3 \
- --edges_used_train 4_000_000 \
+ --edges_used_train 5_000_000 \
  --edges_used_test 2_000_000 \
+ --train_val_split 0.8 \
  --min_links 1 \
  --max_v_degree=None \
  --verbose=True
@@ -137,7 +138,11 @@ Output:
   "min_links": 1,
   "max_v_degree": None,
   "X_train": [(v1, v2), ...] unnconnected vertex pairs until 2016,
-  "y_train": [0, 1, 1, 0, ...] indicating whether the vertex pairs will be connected in 2016 + 3 (year_delta),
+  "y_train": [0, 1, 1, 0, ...] indicating whether the vertex pairs will be connected in 2016 + 3
+  "X_train_eval":
+  "X_
+
+  (year_delta),
   "X_test": [(v1, v2), ...] unnconnected vertex pairs until 2019,
   "y_test": whether the vertex pairs will be connected in 2022,
 }
