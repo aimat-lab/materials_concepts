@@ -207,7 +207,7 @@ class LengthFilter:
 def main(
     input_path="data/materials-science.llama.works.csv",
     output_path="data/graph/edges.pkl",
-    lookup_path="data/table/lookup.csv",
+    output_lookup_path="data/table/lookup.csv",
     colname="llama_concepts",
     min_occurence=3,
     min_words=1,
@@ -315,7 +315,7 @@ def main(
     print(f"# edges: {len(all_edges):,.0f}")
 
     lookup_df["in_graph"] = lookup_df.id.apply(lambda id: id in nodes)
-    lookup_df.to_csv(lookup_path, index=False)
+    lookup_df.to_csv(output_lookup_path, index=False)
 
     with open(output_path, "wb") as f:
         pickle.dump(
@@ -323,7 +323,7 @@ def main(
                 "num_of_vertices": len(nodes),
                 "edges": all_edges,
                 "input_path": input_path,
-                "lookup_path": lookup_path,
+                "lookup_path": output_lookup_path,
                 "colname": colname,
                 "min_occurence": min_occurence,
                 "min_words": min_words,

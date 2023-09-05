@@ -83,13 +83,13 @@ Build concepts graph by executing the following command:
 
 ```
 python graph/build.py \
-  --input_path data/table/materials-science.llama.works.csv \
-  --output_path data/graph/edges_small.pkl \
-  --lookup_path data/table/lookup/lookup_small.csv \
+  --input_path data/table/materials-science.llama2.works.csv \
+  --output_path data/graph/edges.S.pkl \
+  --output_lookup_path data/table/lookup/lookup.S.csv \
   --colname llama_concepts \
   --min_occurence 3 \
   --min_words 3 \
-  --max_words 10 \
+  --max_words 20 \
   --min_occurence_elements 3 \
   --min_amount_elements 2
 ```
