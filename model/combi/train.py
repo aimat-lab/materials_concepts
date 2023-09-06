@@ -114,7 +114,23 @@ def angle_between(vec1, vec2):
     return np.arccos(np.clip(cosine_sim, -1.0, 1.0))
 
 
-def get_embeddings(pairs, feature_embeddings, concept_embeddings):
+def concat_embs(emb1, emb2):
+    return torch.cat([emb1, emb2])
+
+
+def handcrafted_features(emb1, emb2):
+    a = euclidean_distance(emb1, emb2)
+    b = cosine_similarity(emb1, emb2)
+
+    return np.array([a, b])
+
+
+# other approach: PCA on embeddings => 4D embedding
+
+
+def get_embeddings(
+    pairs, feature_embeddings, concept_embeddings, feature_func=concat_embs
+):
     logger.debug(f"Getting embeddings for {len(pairs)} samples")
 
     l = []
@@ -132,12 +148,9 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
         emb1_c = np.array(concept_embeddings[i1])
         emb2_c = np.array(concept_embeddings[i2])
 
-        a = euclidean_distance(emb1_c, emb2_c)
-        b = cosine_similarity(emb1_c, emb2_c)
-        c = dot_product(emb1_c, emb2_c)
-        d = angle_between(emb1_c, emb2_c)
-
-        features = np.array([a, b, c, d])
+        features = []
+        if feature_func:
+            features = feature_func(emb1_c, emb2_c)
 
         l.append(np.concatenate([emb1_f, emb2_f, features]))
     return torch.tensor(np.array(l)).float()
