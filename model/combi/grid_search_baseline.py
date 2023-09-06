@@ -5,23 +5,36 @@ import hashlib
 import json
 
 constants = dict(
-    data_path="data/model/data.M.pkl",
-    emb_f_train_path="data/model/combi/features_2016.M.pkl.gz",
-    emb_f_test_path="data/model/combi/features_2019.M.pkl.gz",
-    emb_c_train_path="data/model/concept_embs/av_embs_2016.M.pkl.gz",
-    emb_c_test_path="data/model/concept_embs/av_embs_2019.M.pkl.gz",
-    layers=[1556, 1556, 933, 10, 1],
+    data_path="data-v2/model/data.M.pkl",
+    emb_f_train_path="data-v2/model/baseline/features.2016.binary.M.pkl.gz",
+    emb_f_test_path="data-v2/model/baseline/features.2019.binary.M.pkl.gz",
+    emb_c_train_path="data-v2/model/combi/word-embs.2016.M.pkl.gz",
+    emb_c_test_path="data-v2/model/combi/word-embs.2019.M.pkl.gz",
     batch_size=1000,
     num_epochs=5000,
     log_interval=50,
-    lr=0.0005,
+    lr=0.001,
+    pos_ratio=0.3,
+    dropout=0.1,
+    step_size=80,
+    gamma=0.85,
 )
 
 config = dict(
-    pos_ratio=[0.3, 0.35],
-    dropout=[0.35, 0.4],
-    step_size=[80, 100],
-    gamma=[0.8, 0.9],
+    layer_count=[
+        2,
+        4,
+    ],
+    hidden_dim=[
+        200,
+        768,
+        1556,
+    ],
+    layer_decrease=[
+        0.4,
+        0.6,
+        0.8,
+    ],
 )
 
 
@@ -48,11 +61,19 @@ class GridSearch:
             self._print_dict(run_config)
             print("-" * 80)
 
+            layer_dims = self._generate_layer_dims(
+                run_config["layer_count"],
+                run_config["hidden_dim"],
+                run_config["layer_decrease"],
+            )
+
+            layer_dims = [1556] + layer_dims + [10, 1]
+
             main(
                 **constants,
                 **run_config,
-                log_file=f"logs/{params_hash}.log",
-                save_model=f"data/model/combi/{params_hash}.pt",
+                log_file=f"logs-v2/gridsearch/{self.base_model}/{params_hash}.log",
+                save_model=f"data-v2/model/{self.base_model}/gridsearch/{params_hash}.pt",
             )
 
     def _generate_run_config(self):
