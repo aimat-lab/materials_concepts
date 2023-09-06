@@ -52,6 +52,9 @@ def load_data(data_path):
 
 
 def load_compressed(path):
+    if not path:
+        return None
+
     logger.info(f"Loading compressed file {path}")
     with gzip.open(path, "rb") as f:
         return pickle.load(f)
@@ -97,6 +100,10 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
 
         emb1_f = np.array(feature_embeddings[i1])
         emb2_f = np.array(feature_embeddings[i2])
+
+        if concept_embeddings is None:
+            l.append(np.concatenate([emb1_f, emb2_f]))
+            continue
 
         emb1_c = np.array(concept_embeddings[i1])
         emb2_c = np.array(concept_embeddings[i2])
