@@ -12,7 +12,7 @@ def load_compressed(path):
 
 
 k = 6
-embeddings_path = "data/model/concept_embs/real_av_embs_2016.pkl.gz"
+embeddings_path = "data/model/concept_embs/word-embs.full.M.pkl.gz"
 data = load_compressed(embeddings_path)
 
 keys = sorted(data.keys())
@@ -23,6 +23,7 @@ nbrs = NearestNeighbors(n_neighbors=k, algorithm="auto").fit(values)
 
 def get_knn(concept):
     if concept not in keys:
+        print(f"Concept {concept} not found")
         return []
     else:
         distances, indices = nbrs.kneighbors([np.array(data[concept])])
@@ -37,12 +38,12 @@ def print_knn(concept):
     print(tabulate.tabulate(knn))
 
 
-print("chemical reduction route")
-print_knn("chemical reduction route")
+print("pyrocarbon matrix")
+print_knn("pyrocarbon matrix")
 print("\n\n")
 
-print("carbon fiber volume fraction")
-print_knn("carbon fiber volume fraction")
+print("adiabatic temperature change")
+print_knn("adiabatic temperature change")
 print("\n\n")
 
 print("pure titanium sheet")
