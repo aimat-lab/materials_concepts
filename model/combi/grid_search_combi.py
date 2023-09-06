@@ -26,8 +26,8 @@ config = dict(
         4,
     ],
     hidden_dim=[
-        200,
-        768,
+        512,
+        1024,
         1556,
     ],
     layer_decrease=[
@@ -39,7 +39,8 @@ config = dict(
 
 
 class GridSearch:
-    def __init__(self, config, blacklist=[]):
+    def __init__(self, base_model, config, blacklist=[]):
+        self.base_model = base_model
         self.config = config
         self.blacklist = blacklist
 
@@ -111,7 +112,7 @@ class GridSearch:
 blacklist = []  # list of config hashes to skip
 
 if __name__ == "__main__":
-    grid_search = GridSearch(config, blacklist=blacklist)
+    grid_search = GridSearch("combi", config, blacklist=blacklist)
     grid_search.run(randomize=False)
 
 # 6.72e+12 => OK w/ batch size 1000
