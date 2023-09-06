@@ -72,7 +72,7 @@ class GridSearch:
 
             main(
                 **constants,
-                **run_config,
+                layers=layer_dims,
                 log_file=f"logs-v2/gridsearch/{self.base_model}/{params_hash}.log",
                 save_model=f"data-v2/model/{self.base_model}/gridsearch/{params_hash}.pt",
             )
