@@ -8,8 +8,8 @@ constants = dict(
     data_path="data-v2/model/data.M.pkl",
     emb_f_train_path="data-v2/model/baseline/features.2016.binary.M.pkl.gz",
     emb_f_test_path="data-v2/model/baseline/features.2019.binary.M.pkl.gz",
-    emb_c_train_path="data-v2/model/combi/word-embs.2016.M.pkl.gz",
-    emb_c_test_path="data-v2/model/combi/word-embs.2019.M.pkl.gz",
+    emb_c_train_path=False,
+    emb_c_test_path=False,
     batch_size=1000,
     num_epochs=5000,
     log_interval=50,
@@ -26,9 +26,9 @@ config = dict(
         4,
     ],
     hidden_dim=[
+        50,
+        100,
         200,
-        768,
-        1556,
     ],
     layer_decrease=[
         0.4,
@@ -39,9 +39,10 @@ config = dict(
 
 
 class GridSearch:
-    def __init__(self, config, blacklist=[]):
+    def __init__(self, base_model, config, blacklist=[]):
         self.config = config
         self.blacklist = blacklist
+        self.base_model = base_model
 
     def run(self, randomize=False):
         run_configs = self._generate_run_config()
@@ -67,7 +68,7 @@ class GridSearch:
                 run_config["layer_decrease"],
             )
 
-            layer_dims = [1556] + layer_dims + [10, 1]
+            layer_dims = [20] + layer_dims + [10, 1]
 
             main(
                 **constants,
@@ -111,7 +112,5 @@ class GridSearch:
 blacklist = []  # list of config hashes to skip
 
 if __name__ == "__main__":
-    grid_search = GridSearch(config, blacklist=blacklist)
+    grid_search = GridSearch("baseline", config, blacklist=blacklist)
     grid_search.run(randomize=False)
-
-# 6.72e+12 => OK w/ batch size 1000
