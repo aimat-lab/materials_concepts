@@ -115,7 +115,7 @@ def angle_between(vec1, vec2):
 
 
 def concat_embs(emb1, emb2):
-    return torch.cat([emb1, emb2])
+    return np.concatenate([emb1, emb2])
 
 
 def handcrafted_features(emb1, emb2):
