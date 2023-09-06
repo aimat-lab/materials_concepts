@@ -90,6 +90,30 @@ class BaselineNetwork(nn.Module):
         return res
 
 
+def euclidean_distance(vec1, vec2):
+    """Compute the Euclidean distance between two vectors."""
+    return np.linalg.norm(vec1 - vec2)
+
+
+def cosine_similarity(vec1, vec2):
+    """Compute the cosine similarity between two vectors."""
+    dot_prod = np.dot(vec1, vec2)
+    norm1 = np.linalg.norm(vec1)
+    norm2 = np.linalg.norm(vec2)
+    return dot_prod / (norm1 * norm2)
+
+
+def dot_product(vec1, vec2):
+    """Compute the dot product between two vectors."""
+    return np.dot(vec1, vec2)
+
+
+def angle_between(vec1, vec2):
+    """Compute the angle (in radians) between two vectors."""
+    cosine_sim = cosine_similarity(vec1, vec2)
+    return np.arccos(np.clip(cosine_sim, -1.0, 1.0))
+
+
 def get_embeddings(pairs, feature_embeddings, concept_embeddings):
     logger.debug(f"Getting embeddings for {len(pairs)} samples")
 
@@ -108,7 +132,14 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
         emb1_c = np.array(concept_embeddings[i1])
         emb2_c = np.array(concept_embeddings[i2])
 
-        l.append(np.concatenate([emb1_f, emb2_f, emb1_c, emb2_c]))
+        a = euclidean_distance(emb1_c, emb2_c)
+        b = cosine_similarity(emb1_c, emb2_c)
+        c = dot_product(emb1_c, emb2_c)
+        d = angle_between(emb1_c, emb2_c)
+
+        features = np.array([a, b, c, d])
+
+        l.append(np.concatenate([emb1_f, emb2_f, features]))
     return torch.tensor(np.array(l)).float()
 
 
