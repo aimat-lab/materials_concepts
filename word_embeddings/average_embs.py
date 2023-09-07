@@ -164,7 +164,7 @@ def main(
     df = prepare_dataframe(
         df=pd.read_csv(concepts_path),
         lookup_df=pd.read_csv(lookup_path),
-        cols=["id", "concepts", "publication_date"],
+        cols=["id", "concepts", "publication_date", "abstract"],
     )
 
     compute_containment(df)
