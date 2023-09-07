@@ -170,6 +170,9 @@ def main(
 
     compute_containment(df)
 
+    print(df.head(4)["concept_contained"].tolist())
+    exit(1)
+
     filter_df = pd.read_csv(filter_path)
 
     concept_filter = set(filter_df["concept"])
