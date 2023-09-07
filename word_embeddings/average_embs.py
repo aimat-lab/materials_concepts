@@ -43,8 +43,29 @@ class EmbeddingAverager:
             old_value, count = self.storage[key]
             self.storage[key] = (old_value + value, count + 1)
 
+    def add(self, key, value, contained):
+        """If a concept is contained, we store these embeddings separately, as they are exact.
+        If the concept is not contained, the embedding is only averaged, which isn't that valuable.
+        """
+        if key not in self.storage:
+            self.storage[key] = {"exact_matches": ([], 0), "averaged": ([], 0)}
+
+        to_store = "exact_matches" if contained else "averaged"
+
+        old_value, count = self.storage[key][to_store]
+
+        self.storage[key][to_store] = (old_value + value, count + 1)
+
     def __getitem__(self, key):
-        value, count = self.storage[key]
+        """Returns the averaged embedding for a concept. If there is at least one exact match,
+        the average of these exact matches is returned.
+        Otherwise, the already averaged embeddings are averaged again.
+        """
+        _, exact_count = self.storage[key]["exact_matches"]
+
+        to_retrieve = "exact_matches" if exact_count > 0 else "averaged"
+
+        value, count = self.storage[key][to_retrieve]
         return value / count
 
     def __contains__(self, key):
@@ -103,6 +124,9 @@ class DataReader:
                 if id not in ids:
                     continue
 
+                # select field "concept_contained" where df.id == id
+                containment = self.df[self.df.id == id]["concept_contained"].iloc[0]
+
                 for con, emb in embeddings.items():
                     if con in concepts_filter:
                         averaged_embeddings[con] = emb
@@ -114,6 +138,16 @@ class DataReader:
         with open(path, "rb") as f:
             compressed = f.read()
         return pickle.loads(gzip.decompress(compressed))
+
+
+def compute_containment(df: pd.DataFrame):
+    df["concept_contained"] = df.apply(
+        lambda row: {
+            concept: concept.lower() in row["abstract"].lower()
+            for concept in row["llama_concepts"]
+        },
+        axis=1,
+    )
 
 
 def main(
@@ -132,6 +166,8 @@ def main(
         lookup_df=pd.read_csv(lookup_path),
         cols=["id", "concepts", "publication_date"],
     )
+
+    compute_containment(df)
 
     filter_df = pd.read_csv(filter_path)
 
