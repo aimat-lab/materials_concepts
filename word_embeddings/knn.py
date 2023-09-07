@@ -3,6 +3,17 @@ import pickle
 import gzip
 from sklearn.neighbors import NearestNeighbors
 import tabulate
+import pandas as pd
+
+lookup = pd.read_csv("data/table/lookup/lookup.M.2.csv")
+
+
+def id_to_concept(id):
+    return lookup[lookup["id"] == id]["concept"].values[0]
+
+
+def concept_to_id(concept):
+    return lookup[lookup["concept"] == concept]["id"].values[0]
 
 
 def load_compressed(path):
@@ -12,7 +23,7 @@ def load_compressed(path):
 
 
 k = 6
-embeddings_path = "data/model/concept_embs/word-embs.full.M.pkl.gz"
+embeddings_path = "data/model/concept_embs/hq.word-embs.2016.M.pkl.gz"
 data = load_compressed(embeddings_path)
 
 keys = sorted(data.keys())
@@ -32,19 +43,26 @@ def get_knn(concept):
         ]
 
 
-def print_knn(concept):
+def print_knn(concept, translate=False):
     """Print tabulated knn for concept"""
+    concept = concept_to_id(concept) if translate else concept
+
     knn = get_knn(concept)
+    if translate:
+        knn = [(id_to_concept(c), d) for c, d in knn]
+
     print(tabulate.tabulate(knn))
 
 
+TRANSLATE = True
+
 print("pyrocarbon matrix")
-print_knn("pyrocarbon matrix")
+print_knn("pyrocarbon matrix", translate=TRANSLATE)
 print("\n\n")
 
 print("adiabatic temperature change")
-print_knn("adiabatic temperature change")
+print_knn("adiabatic temperature change", translate=TRANSLATE)
 print("\n\n")
 
 print("pure titanium sheet")
-print_knn("pure titanium sheet")
+print_knn("pure titanium sheet", translate=TRANSLATE)
