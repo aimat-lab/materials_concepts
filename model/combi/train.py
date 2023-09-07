@@ -230,6 +230,7 @@ class Trainer:
         early_stopping,
         log_interval,
         use_loader=False,
+        emb_strategy=concat_embs,
     ):
         self.model = model
         self.train_data = train_data
@@ -243,6 +244,7 @@ class Trainer:
         self.early_stopping = early_stopping
         self.use_loader = use_loader
         self.data_loader = Loader(train_data.labels)
+        self.emb_strategy = emb_strategy
 
     def train(self, num_epochs):
         logger.info("Training model")
@@ -279,6 +281,7 @@ class Trainer:
             data.pairs[batch_indices],
             feature_embeddings=data.feature_embeddings,
             concept_embeddings=data.concept_embeddings,
+            feature_func=self.emb_strategy,
         ).to(device)
         labels = data.labels[batch_indices].to(device)
 
@@ -325,12 +328,19 @@ def eval(model, data: Data):
     return auc, confusion_matrix
 
 
+emb_strategies = {
+    "concat": concat_embs,
+    "handcrafted": handcrafted_features,
+}
+
+
 def main(
     data_path="data/model/data.pkl",
     emb_f_train_path=None,
     emb_f_test_path=None,
     emb_c_train_path=None,
     emb_c_test_path=None,
+    emb_comb_strategy="concat",
     lr=0.001,
     gamma=0.8,
     batch_size=100,
@@ -402,6 +412,7 @@ def main(
         early_stopping=EarlyStopping(sliding_window=sliding_window),
         log_interval=log_interval,
         use_loader=use_loader,
+        emb_strategy=emb_strategies[emb_comb_strategy],
     )
     trainer.train(num_epochs)
 
