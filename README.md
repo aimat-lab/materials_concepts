@@ -146,23 +146,35 @@ Output:
 }
 ```
 
-## How to add new model
+## Classification Process
 
 The classification process can typically be divided into two steps:
 
-1. Generate embeddings for node pairs
-2. Train a (binary) classifier on the embeddings
+1. Generate embeddings for nodes
+2. Train a (binary) classifier on the (concatenated) embeddings
 
-## Example: Baseline Model
+## Baseline Model
 
 1. Generate the embeddings
 
+Embeddings for training:
+
 ```
-python model/baseline/create_embeddings.py \
- --graph_path data/graph/edges.pkl \
- --data_path data/model/data.pkl \
- --output_path data/model/baseline/embeddings.pkl \
- --include_jaccard False
+python -u model/combi/pre_compute.py \
+  --graph_path data/graph/edges.M.pkl \
+  --output_path data/model/baseline/features.2016.binary.M.pkl.gz \
+  --binary True \
+  --years "[2012, 2013, 2014, 2015, 2016]"
+```
+
+Embeddings for validation:
+
+```
+python -u model/combi/pre_compute.py \
+  --graph_path data/graph/edges.M.pkl \
+  --output_path data/model/baseline/features.2019.binary.M.pkl.gz \
+  --binary True \
+  --years "[2015, 2016, 2017, 2018, 2019]"
 ```
 
 2. Train the model
@@ -180,6 +192,36 @@ python model/baseline/train.py \
   --eval_mode False
 ```
 
+## MLP
+
+1. Use concatentation of baseline features and word embeddings as input. Take a look at the chapter `Word Embeddings` to see how to generate word embeddings.
+
+2. Train the model
+
+```
+python -u model/combi/train.py \
+  --data_path data/model/data.pkl \
+  --emb_f_train_path data/model/combi/features_2016.M.pkl.gz \
+  --emb_f_test_path data/model/combi/features_2019.M.pkl.gz \
+  --emb_c_train_path data/model/concept_embs/av_embs_2016.M.pkl.gz \
+  --emb_c_test_path data/model/concept_embs/av_embs_2019.M.pkl.gz \
+  --lr 0.001 \
+  --gamma 0.8 \
+  --batch_size 100 \
+  --num_epochs 1000 \
+  --pos_ratio 0.3 \
+  --dropout 0.1 \
+  --layers "[1556, 1024, 512, 256, 64, 32, 16, 8, 4, 1]" \
+  --step_size 40 \
+  --log_interval 10 \
+  --log_file "logs.log" \
+  --save_model False \
+  --sliding_window 5 \
+  --use_loader False
+,
+
+```
+
 # Word Embeddings
 
 ## Generate Word Embeddings
@@ -188,9 +230,9 @@ Word embeddings are generated using BERT or a fine-tuned version of BERT e.g. Ma
 To extract ambeddings for all concepts (all embedded tokens comprising a concept are `averaged`), run:
 
 ```
-python word_embeddings/generate.py \
+python -u word_embeddings/generate.py \
   --concepts_path data/table/materials-science.llama.works.csv \
-  --lookup_path data/table/lookup/lookup_large.csv \
+  --lookup_path data/table/lookup/lookup.Ls.csv \
   --output_path data/embeddings/large/ \
   --log_to_stdout False \
   --step_size 500 \
@@ -216,27 +258,7 @@ python word_embeddings/average_embs.py \
   --until_year 2016
 ```
 
-## Train MLP
-
-```
-python model/concept_embs/train.py \
-  --data_path data/model/data.pkl \
-  --emb_train_path data/model/concept_embs/av_embs_2016.pkl.gz \
-  --emb_test_path data/model/concept_embs/av_embs_2019.pkl.gz \
-  --lr 0.001 \
-  --batch_size 100 \
-  --num_epochs 1 \
-  --train_model True \
-  --save_model data/model/concept_embs/model.pt \
-  --metrics_path data/model/concept_embs/metrics.pkl \
-  --pos_to_neg_ratio 0.03 \
-  --input_dim 1536 \
-  --eval_mode False
-```
-
-## Train GNN
-
-# TODO General
+# TODO
 
 ## Process
 
@@ -269,15 +291,15 @@ python model/concept_embs/train.py \
     - [x] Trainloop: with early stopping and eval on every ith epoch on test set
   - [x] Generate embeddings "on the fly", just store the squared adjacency matrix
 
-- [ ] Optimize Hyperparameters: Layer
-- [ ] Optimize Hyperparameters: LR + Gamma
-- [ ] Optimize Hyperparameters: Pos rate
-- [ ] Optimize Hyperparameters: Dropout (?)
+- [x] Optimize Hyperparameters: Layer
+- [x] Optimize Hyperparameters: LR + Gamma
+- [x] Optimize Hyperparameters: Pos rate
+- [x] Optimize Hyperparameters: Dropout (?)
 
-- [ ] Build API to query prediction service
-- [ ] Build Tiny Frontend
-  - [ ] Build Search Bar
-  - [ ] Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
+- [x] Build API to query prediction service
+- [x] Build Tiny Frontend
+  - [x] Build Search Bar
+  - [x] Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
   - [ ] Every researcher is a subgraph, calculate collaboration in O(C1 \* C2) where C1 and C2 are the number of concepts of the researchers. Highest ranked concept combinations are the most promising collaborations.
 
 ## Optimization
@@ -287,8 +309,8 @@ python model/concept_embs/train.py \
 - [x] How to speed up text processing in pandas? Pandas 2.0 (x) or other option to achieve pyarrow backend
 - [ ] Dockerize what comes after data fetching
 - [ ] How to optimize "concept synergy" query for concept v? (Naive: `O(n * pred(x,v))`)
-  - [ ] Caching: Precalculate and store
-  - [ ] Online Algorithm: Enter new concept (Get embeddings, likely to work better if word embeddings are used in addition)
+  - [x] Caching: Precalculate and store
+  - [x] Online Algorithm: Enter new concept (Get embeddings, likely to work better if word embeddings are used in addition)
 
 # My handy tools
 
