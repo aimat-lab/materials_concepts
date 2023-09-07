@@ -144,7 +144,7 @@ def compute_containment(df: pd.DataFrame):
     df["concept_contained"] = df.apply(
         lambda row: {
             concept: concept.lower() in row["abstract"].lower()
-            for concept in row["llama_concepts"]
+            for concept in row["concepts"]
         },
         axis=1,
     )
