@@ -50,10 +50,13 @@ def analyze(df):
     df["ratio"] = df["containment"] / df["count"]
     df = df[df["count"] >= 3]
     print(
-        "% of concepts contained 0 times: ", len(df[df["containment"] == 0] / len(df))
+        "% of concepts contained 0 times: ", len(df[df["containment"] == 0]) / len(df)
     )
-    print("% of concepts where ratio is < 0.5: ", len(df[df["ratio"] < 0.5] / len(df)))
+    print("% of concepts where ratio is < 0.5: ", len(df[df["ratio"] < 0.5]) / len(df))
 
+
+prepare(df_v1)
+prepare(df_v2)
 
 compute_contained_ratio(df_v1)
 compute_contained_ratio(df_v2)
@@ -70,8 +73,6 @@ print(df_v2["contained_ratio"].describe())
 
 print("\n" * 2)
 
-prepare(df_v1)
-prepare(df_v2)
 
 df_c_v1 = compute_containment_per_concept(df_v1)
 df_c_v2 = compute_containment_per_concept(df_v2)
