@@ -126,10 +126,11 @@ class DataReader:
 
                 # select field "concept_contained" where df.id == id
                 containment = self.df[self.df.id == id]["concept_contained"].iloc[0]
+                self.logger.debug(f"Containment: {containment}")
 
                 for con, emb in embeddings.items():
                     if con in concepts_filter:
-                        averaged_embeddings[con] = emb
+                        averaged_embeddings.add(con, emb, containment[con])
 
         return averaged_embeddings
 
