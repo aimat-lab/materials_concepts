@@ -140,13 +140,13 @@ def get_embeddings(
 
         feature_vector = []
 
-        if feature_embeddings:
+        if feature_embeddings is not None:
             emb1_f = np.array(feature_embeddings[i1])
             emb2_f = np.array(feature_embeddings[i2])
 
             feature_vector.extend([emb1_f, emb2_f])
 
-        if concept_embeddings:
+        if concept_embeddings is not None:
             emb1_c = np.array(concept_embeddings[i1])
             emb2_c = np.array(concept_embeddings[i2])
 
@@ -327,10 +327,10 @@ def eval(model, data: Data):
 
 def main(
     data_path="data/model/data.pkl",
-    emb_f_train_path="data/model/combi/features_2016.M.pkl.gz",
-    emb_f_test_path="data/model/combi/features_2019.M.pkl.gz",
-    emb_c_train_path=False,
-    emb_c_test_path=False,
+    emb_f_train_path=None,
+    emb_f_test_path=None,
+    emb_c_train_path=None,
+    emb_c_test_path=None,
     lr=0.001,
     gamma=0.8,
     batch_size=100,
