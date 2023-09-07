@@ -364,16 +364,18 @@ def main(
 
     data = load_data(data_path)
 
+    features_train = load_compressed(emb_f_train_path)
     d_train = Data(
         pairs=torch.tensor(data["X_train"]),
-        feature_embeddings=load_compressed(emb_f_train_path)["v_features"],
+        feature_embeddings=features_train["v_features"] if features_train else None,
         concept_embeddings=load_compressed(emb_c_train_path),
         labels=torch.tensor(data["y_train"], dtype=torch.float),
     )
 
+    features_test = load_compressed(emb_f_test_path)
     d_test = Data(
         pairs=torch.tensor(data["X_test"]),
-        feature_embeddings=load_compressed(emb_f_test_path)["v_features"],
+        feature_embeddings=features_test["v_features"] if features_test else None,
         concept_embeddings=load_compressed(emb_c_test_path),
         labels=torch.tensor(data["y_test"], dtype=torch.float),
     )
