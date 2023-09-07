@@ -115,7 +115,7 @@ def angle_between(vec1, vec2):
 
 
 def concat_embs(emb1, emb2):
-    return torch.cat([emb1, emb2])
+    return np.concatenate([emb1, emb2])
 
 
 def handcrafted_features(emb1, emb2):
@@ -138,21 +138,21 @@ def get_embeddings(
         i1 = int(v1.item())
         i2 = int(v2.item())
 
-        emb1_f = np.array(feature_embeddings[i1])
-        emb2_f = np.array(feature_embeddings[i2])
+        feature_vector = []
 
-        if concept_embeddings is None:
-            l.append(np.concatenate([emb1_f, emb2_f]))
-            continue
+        if feature_embeddings:
+            emb1_f = np.array(feature_embeddings[i1])
+            emb2_f = np.array(feature_embeddings[i2])
 
-        emb1_c = np.array(concept_embeddings[i1])
-        emb2_c = np.array(concept_embeddings[i2])
+            feature_vector.extend([emb1_f, emb2_f])
 
-        features = []
-        if feature_func:
-            features = feature_func(emb1_c, emb2_c)
+        if concept_embeddings:
+            emb1_c = np.array(concept_embeddings[i1])
+            emb2_c = np.array(concept_embeddings[i2])
 
-        l.append(np.concatenate([emb1_f, emb2_f, features]))
+            feature_vector.append(feature_func(emb1_c, emb2_c))
+
+        l.append(np.concatenate(feature_vector))
     return torch.tensor(np.array(l)).float()
 
 
@@ -364,16 +364,18 @@ def main(
 
     data = load_data(data_path)
 
+    features_train = load_compressed(emb_f_train_path)
     d_train = Data(
         pairs=torch.tensor(data["X_train"]),
-        feature_embeddings=load_compressed(emb_f_train_path)["v_features"],
+        feature_embeddings=features_train["v_features"] if features_train else None,
         concept_embeddings=load_compressed(emb_c_train_path),
         labels=torch.tensor(data["y_train"], dtype=torch.float),
     )
 
+    features_test = load_compressed(emb_f_test_path)
     d_test = Data(
         pairs=torch.tensor(data["X_test"]),
-        feature_embeddings=load_compressed(emb_f_test_path)["v_features"],
+        feature_embeddings=features_test["v_features"] if features_test else None,
         concept_embeddings=load_compressed(emb_c_test_path),
         labels=torch.tensor(data["y_test"], dtype=torch.float),
     )
