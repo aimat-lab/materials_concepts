@@ -6,6 +6,7 @@ from tqdm import tqdm
 import logging
 import sys
 import fire
+import torch
 
 DIM_EMBEDDING = 768
 
@@ -48,7 +49,10 @@ class EmbeddingAverager:
         If the concept is not contained, the embedding is only averaged, which isn't that valuable.
         """
         if key not in self.storage:
-            self.storage[key] = {"exact_matches": ([], 0), "averaged": ([], 0)}
+            self.storage[key] = {
+                "exact_matches": (torch.zeros(DIM_EMBEDDING), 0),
+                "averaged": (torch.zeros(DIM_EMBEDDING), 0),
+            }
 
         to_store = "exact_matches" if contained else "averaged"
 
