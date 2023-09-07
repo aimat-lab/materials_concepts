@@ -229,8 +229,8 @@ class Trainer:
         pos_ratio,
         early_stopping,
         log_interval,
+        emb_strategy,
         use_loader=False,
-        emb_strategy=concat_embs,
     ):
         self.model = model
         self.train_data = train_data
@@ -253,7 +253,9 @@ class Trainer:
             loss = self._train_epoch()
 
             if epoch % self.log_interval == 0:
-                auc, (tn, fp, fn, tp) = eval(self.model, self.eval_data)
+                auc, (tn, fp, fn, tp) = eval(
+                    self.model, self.eval_data, feature_func=self.emb_strategy
+                )
 
                 self.early_stopping.append(loss=loss, auc=auc)
 
@@ -314,12 +316,12 @@ def sample_batch(y, batch_size, pos_ratio=0.5):
     return batch_indices
 
 
-def eval(model, data: Data):
+def eval(model, data: Data, feature_func):
     """Load the pytorch model and evaluate it on the test set"""
     model.eval()
 
     inputs = get_embeddings(
-        data.pairs, data.feature_embeddings, data.concept_embeddings
+        data.pairs, data.feature_embeddings, data.concept_embeddings, feature_func
     ).to(device)
 
     predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
@@ -371,6 +373,7 @@ def main(
     logger.info(f"log_interval: {log_interval}")
     logger.info(f"sliding_window: {sliding_window}")
     logger.info(f"use_loader: {use_loader}")
+    logger.info(f"emb_comb_strategy: {emb_comb_strategy}")
 
     data = load_data(data_path)
 
