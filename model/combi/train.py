@@ -138,21 +138,21 @@ def get_embeddings(
         i1 = int(v1.item())
         i2 = int(v2.item())
 
-        emb1_f = np.array(feature_embeddings[i1])
-        emb2_f = np.array(feature_embeddings[i2])
+        feature_vector = []
 
-        if concept_embeddings is None:
-            l.append(np.concatenate([emb1_f, emb2_f]))
-            continue
+        if feature_embeddings:
+            emb1_f = np.array(feature_embeddings[i1])
+            emb2_f = np.array(feature_embeddings[i2])
 
-        emb1_c = np.array(concept_embeddings[i1])
-        emb2_c = np.array(concept_embeddings[i2])
+            feature_vector.extend([emb1_f, emb2_f])
 
-        features = []
-        if feature_func:
-            features = feature_func(emb1_c, emb2_c)
+        if concept_embeddings:
+            emb1_c = np.array(concept_embeddings[i1])
+            emb2_c = np.array(concept_embeddings[i2])
 
-        l.append(np.concatenate([emb1_f, emb2_f, features]))
+            feature_vector.append(feature_func(emb1_c, emb2_c))
+
+        l.append(np.concatenate(feature_vector))
     return torch.tensor(np.array(l)).float()
 
 
