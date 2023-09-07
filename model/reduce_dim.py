@@ -18,7 +18,7 @@ def save_compressed(path, data):
 def main(input_file="", output_file=""):
     data = load_compressed(input_file)
 
-    matrix = torch.stack(data.values())
+    matrix = torch.stack(tuple(data.values()))
     pca = PCA(n_components=5)
     reduced_embeddings = pca.fit_transform(matrix.numpy())
 
