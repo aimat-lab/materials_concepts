@@ -13,28 +13,15 @@ constants = dict(
     batch_size=1000,
     num_epochs=10000,
     log_interval=200,
-    lr=0.001,
+    layers=[1536, 1024, 819, 10, 1],
     pos_ratio=0.3,
     dropout=0.1,
-    step_size=80,
-    gamma=0.85,
 )
 
 config = dict(
-    layer_count=[
-        2,
-        4,
-    ],
-    hidden_dim=[
-        512,
-        1024,
-        1536,
-    ],
-    layer_decrease=[
-        0.4,
-        0.6,
-        0.8,
-    ],
+    lr=[1e-3, 5e-4, 1e-4],
+    step_size=[100, 200],
+    gamma=[0.8, 0.9, 0.95],
 )
 
 
@@ -62,17 +49,17 @@ class GridSearch:
             self._print_dict(run_config)
             print("-" * 80)
 
-            layer_dims = self._generate_layer_dims(
-                run_config["layer_count"],
-                run_config["hidden_dim"],
-                run_config["layer_decrease"],
-            )
+            # layer_dims = self._generate_layer_dims(
+            #     run_config["layer_count"],
+            #     run_config["hidden_dim"],
+            #     run_config["layer_decrease"],
+            # )
 
-            layer_dims = [1536] + layer_dims + [10, 1]
+            # layer_dims = [1536] + layer_dims + [10, 1]
 
             main(
                 **constants,
-                layers=layer_dims,
+                **run_config,
                 log_file=f"logs-v2/gridsearch/{self.base_model}/{params_hash}.log",
                 save_model=f"data-v2/model/{self.base_model}/gridsearch/{params_hash}.pt",
             )
@@ -116,3 +103,5 @@ if __name__ == "__main__":
     grid_search.run(randomize=False)
 
 # 6.72e+12 => OK w/ batch size 1000
+
+# [1536, 1024, 819, 10, 1] => AUC 0.8694
