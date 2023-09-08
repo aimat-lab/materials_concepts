@@ -15,7 +15,7 @@ constants = dict(
     log_interval=200,
     pos_ratio=0.3,
     dropout=0.1,
-    layer_dims=[20, 300, 180, 108, 64, 10, 1],
+    layers=[20, 300, 180, 108, 64, 10, 1],
 )
 
 config = dict(
