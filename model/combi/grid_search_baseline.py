@@ -26,15 +26,11 @@ config = dict(
         4,
     ],
     hidden_dim=[
-        50,
         100,
         200,
+        300,
     ],
-    layer_decrease=[
-        0.4,
-        0.6,
-        0.8,
-    ],
+    layer_decrease=[0.6, 0.8, 1],
 )
 
 
