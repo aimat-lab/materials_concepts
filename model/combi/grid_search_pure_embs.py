@@ -14,14 +14,14 @@ constants = dict(
     num_epochs=10000,
     log_interval=200,
     layers=[1536, 1024, 819, 10, 1],
-    pos_ratio=0.3,
-    dropout=0.1,
+    lr=1e-3,
+    step_size=200,
+    gamma=0.9,
 )
 
 config = dict(
-    lr=[1e-3, 5e-4, 1e-4],
-    step_size=[100, 200],
-    gamma=[0.8, 0.9, 0.95],
+    dropout=[0.1, 0.2, 0.3, 0.4, 0.5],
+    pos_ratio=[0.3, 0.4, 0.5],
 )
 
 
