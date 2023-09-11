@@ -100,7 +100,9 @@ def concat_embs(emb1, emb2):
 def get_embeddings(
     pairs, feature_embeddings, concept_embeddings, feature_func=concat_embs
 ):
-    logger.debug(f"Getting embeddings for {len(pairs)} samples")
+    logger.debug(
+        f"Getting embeddings for {len(pairs)} samples with {type(feature_embeddings)}, {type(concept_embeddings)}"
+    )
 
     l = []
     for v1, v2 in pairs:
@@ -265,6 +267,10 @@ def predict(model, data: Data, feature_func, mode):
     feature_embs = data.feature_embeddings if mode == "baseline" else None
     concept_embs = data.concept_embeddings if mode != "baseline" else None
 
+    print(
+        f"Predicting with {mode} mode, feature_embs: {feature_embs is not None} and concept_embs: {concept_embs is not None}"
+    )
+
     inputs = get_embeddings(data.pairs, feature_embs, concept_embs, feature_func).to(
         device
     )
@@ -317,7 +323,7 @@ def main(
 ):
     reload(logging)
     global logger
-    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
+    logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
 
     logger.info("Running with parameters:")
     logger.info(f"sliding_window: {sliding_window}")
