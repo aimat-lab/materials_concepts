@@ -278,7 +278,7 @@ def predict(model, data: Data, feature_func, mode):
     return np.array(flatten(model(inputs).detach().cpu().numpy()))
 
 
-def blend(predictions, data: Data, blending):
+def blend(predictions, blending):
     assert len(predictions) == len(blending)
 
     new_predictions = []
@@ -350,7 +350,7 @@ def main(
         [
             predict(
                 model,
-                data,
+                d_test,
                 feature_func=emb_strategies[emb_comb_strategy],
                 mode=architecture,
             )
