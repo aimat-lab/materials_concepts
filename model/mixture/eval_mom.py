@@ -358,7 +358,7 @@ def main(
         ]
     )
     blending = [0.5, 0.5]
-    blended_preds = blend(predictions, d_test, blending)
+    blended_preds = blend(predictions, blending)
 
     auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
     logger.info("Evaluation on test set AUC: {:.4f}".format(auc))
