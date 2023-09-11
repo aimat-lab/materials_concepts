@@ -259,12 +259,15 @@ def eval_predictions(y, predictions):
     return auc, confusion_matrix
 
 
-def predict(model, data: Data, feature_func):
+def predict(model, data: Data, feature_func, mode):
     model.eval()
 
-    inputs = get_embeddings(
-        data.pairs, data.feature_embeddings, data.concept_embeddings, feature_func
-    ).to(device)
+    feature_embs = data.feature_embeddings if mode == "baseline" else None
+    concept_embs = data.concept_embeddings if mode != "baseline" else None
+
+    inputs = get_embeddings(data.pairs, feature_embs, concept_embs, feature_func).to(
+        device
+    )
 
     return np.array(flatten(model(inputs).detach().cpu().numpy()))
 
@@ -284,7 +287,7 @@ emb_strategies = {
     "concat": concat_embs,
 }
 
-architectures = {
+architectures_map = {
     "baseline": [20, 300, 180, 108, 64, 10, 1],
     "combi": [1556, 1556, 933, 559, 335, 10, 1],
     "pure_embs": [1536, 1024, 819, 10, 1],
@@ -292,7 +295,7 @@ architectures = {
 
 
 def load_model(path, architecture):
-    model = BaselineNetwork(layer_dims=architectures[architecture], dropout=0).to(
+    model = BaselineNetwork(layer_dims=architectures_map[architecture], dropout=0).to(
         device
     )
     model.load_state_dict(torch.load(path))
@@ -306,7 +309,7 @@ def main(
     emb_comb_strategy="concat",
     model_path_1="data/model/baseline/gridsearch/74d59ea45398f5ea629137dda6b6ad70.pt",
     architecture1="baseline",
-    model_path_2="data/model/combi/gridsearch/aeddf108ae5a2e0b3fec8e1222ac0710.pt",
+    model_path_2="data/model/baseline/gridsearch/aeddf108ae5a2e0b3fec8e1222ac0710.pt",
     architecture2="baseline",
     log_file="logs/log.log",
     sliding_window=5,
@@ -335,10 +338,17 @@ def main(
         load_model(model_path_2, architecture2),
     ]
 
+    architectures = [architecture1, architecture2]
+
     predictions = np.array(
         [
-            predict(model, data, feature_func=emb_strategies[emb_comb_strategy])
-            for model in models
+            predict(
+                model,
+                data,
+                feature_func=emb_strategies[emb_comb_strategy],
+                mode=architecture,
+            )
+            for model, architecture in zip(models, architectures)
         ]
     )
     blending = [0.5, 0.5]
