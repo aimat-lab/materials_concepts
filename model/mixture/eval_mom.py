@@ -286,7 +286,7 @@ def blend(predictions, blending):
         p *= b
         new_predictions.append(p)
 
-    return np.sum(new_predictions, axis=1)
+    return np.sum(new_predictions, axis=0)
 
 
 emb_strategies = {
