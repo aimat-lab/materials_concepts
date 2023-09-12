@@ -283,8 +283,7 @@ def blend(predictions, blending):
 
     new_predictions = []
     for p, b in zip(predictions, blending):
-        p *= b
-        new_predictions.append(p)
+        new_predictions.append(p * b)
 
     return np.sum(new_predictions, axis=0)
 
