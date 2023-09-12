@@ -230,8 +230,6 @@ def main(
     )
 
     storage = {
-        "year_train": year_start_train,
-        "year_test": year_start_test,
         "year_delta": year_delta,
         "min_links": min_links,
         "max_v_degree": max_v_degree,
@@ -247,6 +245,7 @@ def main(
 
         storage.update(
             {
+                "year_train": year_start_train,
                 "X_train": X_train,
                 "y_train": y_train,
                 "X_val": X_val,
@@ -262,7 +261,13 @@ def main(
             max_v_degree=max_v_degree,
         )
 
-        storage.update({"X_test": X_test, "y_test": y_test})
+        storage.update(
+            {
+                "year_test": year_start_test,
+                "X_test": X_test,
+                "y_test": y_test,
+            }
+        )
 
     with open(data_path, "wb") as f:
         pickle.dump(storage, f)
