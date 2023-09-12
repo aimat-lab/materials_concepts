@@ -358,8 +358,9 @@ def main(
         ]
     )
 
-    for i in range(0.1, 1.0, 0.1):
-        blending = [i, 1 - i]
+    for i in range(1, 10):
+        c = i / 10
+        blending = [c, 1 - c]
         logger.info(
             f"Blending: {blending[0]} * {architectures[0]} + {blending[1]} * {architectures[1]}"
         )
