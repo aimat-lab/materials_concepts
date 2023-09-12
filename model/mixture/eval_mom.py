@@ -357,14 +357,24 @@ def main(
             for model, architecture in zip(models, architectures)
         ]
     )
-    blending = [0.5, 0.5]
-    blended_preds = blend(predictions, blending)
 
-    auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
-    logger.info("Evaluation on test set AUC: {:.4f}".format(auc))
-    logger.info(
-        "Confusion matrix: TN: {}, FP: {}, FN: {}, TP: {}".format(tn, fp, fn, tp)
-    )
+    for i in range(0.1, 1.0, 0.1):
+        blending = [i, 1 - i]
+        logger.info(
+            f"Blending: {blending[0]} * {architectures[0]} + {blending[1]} * {architectures[1]}"
+        )
+        blended_preds = blend(predictions, blending)
+
+        auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
+        logger.info(
+            "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
+        )
+        logger.info(
+            "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(
+                tp, fn, fp, tn
+            )
+        )
+        logger.info("")
 
 
 if __name__ == "__main__":
