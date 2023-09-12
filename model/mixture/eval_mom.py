@@ -358,24 +358,16 @@ def main(
         ]
     )
 
-    for i in range(1, 10):
-        c = i / 10
-        blending = [c, 1 - c]
-        logger.info(
-            f"Blending: {blending[0]} * {architectures[0]} + {blending[1]} * {architectures[1]}"
-        )
-        blended_preds = blend(predictions, blending)
+    blending = [0.5, 0.5]
+    blended_preds = blend(predictions, blending)
 
-        auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
-        logger.info(
-            "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
-        )
-        logger.info(
-            "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(
-                tp, fn, fp, tn
-            )
-        )
-        logger.info("")
+    auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
+    logger.info(
+        "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
+    )
+    logger.info(
+        "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(tp, fn, fp, tn)
+    )
 
 
 if __name__ == "__main__":
