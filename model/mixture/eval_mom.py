@@ -357,16 +357,21 @@ def main(
         ]
     )
 
-    blending = [0.5, 0.5]
-    blended_preds = blend(predictions, blending)
+    blend_options = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 
-    auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
-    logger.info(
-        "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
-    )
-    logger.info(
-        "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(tp, fn, fp, tn)
-    )
+    for b in blend_options:
+        blending = (b, 1 - b)
+        blended_preds = blend(predictions, blending)
+
+        auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
+        logger.info(
+            "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
+        )
+        logger.info(
+            "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(
+                tp, fn, fp, tn
+            )
+        )
 
 
 if __name__ == "__main__":
