@@ -229,33 +229,40 @@ def main(
         verbose=verbose,
     )
 
-    X_train, X_val, y_train, y_val = train_generator.generate(
-        edges_used=edges_used_train,
-        train_val_split=train_val_split,  # training data is split into train and validation
-        min_links=min_links,
-        max_v_degree=max_v_degree,
-    )
-
-    X_test, y_test = test_generator.generate(
-        edges_used=edges_used_test,
-        train_val_split=None,  # testing data is not split into train and validation
-        min_links=min_links,
-        max_v_degree=max_v_degree,
-    )
-
     storage = {
         "year_train": year_start_train,
         "year_test": year_start_test,
         "year_delta": year_delta,
         "min_links": min_links,
         "max_v_degree": max_v_degree,
-        "X_train": X_train,
-        "y_train": y_train,
-        "X_val": X_val,
-        "y_val": y_val,
-        "X_test": X_test,
-        "y_test": y_test,
     }
+
+    if edges_used_train > 0:
+        X_train, X_val, y_train, y_val = train_generator.generate(
+            edges_used=edges_used_train,
+            train_val_split=train_val_split,  # training data is split into train and validation
+            min_links=min_links,
+            max_v_degree=max_v_degree,
+        )
+
+        storage.update(
+            {
+                "X_train": X_train,
+                "y_train": y_train,
+                "X_val": X_val,
+                "y_val": y_val,
+            }
+        )
+
+    if edges_used_test > 0:
+        X_test, y_test = test_generator.generate(
+            edges_used=edges_used_test,
+            train_val_split=None,  # testing data is not split into train and validation
+            min_links=min_links,
+            max_v_degree=max_v_degree,
+        )
+
+        storage.update({"X_test": X_test, "y_test": y_test})
 
     with open(data_path, "wb") as f:
         pickle.dump(storage, f)
