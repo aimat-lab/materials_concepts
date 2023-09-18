@@ -51,6 +51,12 @@ def load_data(data_path):
         return pickle.load(f)
 
 
+def save_compressed(obj, path):
+    logger.info(f"Saving compressed file to {path}")
+    with gzip.open(path, "wb") as f:
+        pickle.dump(obj, f)
+
+
 def load_compressed(path):
     if not path:
         return None
@@ -125,104 +131,6 @@ def get_embeddings(
 
         l.append(np.concatenate(feature_vector))
     return torch.tensor(np.array(l)).float()
-
-
-class Loader:
-    def __init__(self, y):
-        self.indices = torch.randperm(len(y))
-        self.count = 0
-
-    def __call__(self, batch_size):
-        if self.count > len(self.indices) - batch_size:
-            self.indices = torch.randperm(len(self.indices))
-            self.count = 0
-
-        batch = self.indices[self.count : self.count + batch_size]
-        self.count += 1
-        return batch
-
-
-class Trainer:
-    def __init__(
-        self,
-        model,
-        train_data,
-        eval_data,
-        optimizer,
-        scheduler,
-        criterion,
-        batch_size,
-        pos_ratio,
-        early_stopping,
-        log_interval,
-        emb_strategy,
-        use_loader=False,
-    ):
-        self.model = model
-        self.train_data = train_data
-        self.eval_data = eval_data
-        self.optimizer = optimizer
-        self.scheduler = scheduler
-        self.criterion = criterion
-        self.batch_size = batch_size
-        self.pos_ratio = pos_ratio
-        self.log_interval = log_interval
-        self.early_stopping = early_stopping
-        self.use_loader = use_loader
-        self.data_loader = Loader(train_data.labels)
-        self.emb_strategy = emb_strategy
-
-    def train(self, num_epochs):
-        logger.info("Training model")
-
-        for epoch in range(1, num_epochs + 1):
-            loss = self._train_epoch()
-
-            if epoch % self.log_interval == 0:
-                auc, (tn, fp, fn, tp) = eval(
-                    self.model, self.eval_data, feature_func=self.emb_strategy
-                )
-
-                self.early_stopping.append(loss=loss, auc=auc)
-
-                logger.info(
-                    f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
-                )
-
-                if self.early_stopping.should_stop_early():
-                    logger.info("Early stopping triggered")
-                    break
-
-    def _train_epoch(self):
-        data = self.train_data
-
-        self.model.train()
-        self.optimizer.zero_grad()
-
-        # get batch
-        if self.use_loader:
-            batch_indices = self.data_loader(self.batch_size)
-        else:
-            batch_indices = sample_batch(data.labels, self.batch_size, self.pos_ratio)
-
-        inputs = get_embeddings(
-            data.pairs[batch_indices],
-            feature_embeddings=data.feature_embeddings,
-            concept_embeddings=data.concept_embeddings,
-            feature_func=self.emb_strategy,
-        ).to(device)
-        labels = data.labels[batch_indices].to(device)
-
-        # Forward pass
-        outputs = self.model(inputs)
-        loss = self.criterion(outputs.view(-1), labels)
-
-        # Backward and optimize
-        loss.backward()
-        self.optimizer.step()
-        self.scheduler.step()
-
-        return loss.item()
 
 
 def sample_batch(y, batch_size, pos_ratio=0.5):
@@ -317,6 +225,8 @@ def main(
     model_path_2="data/model/baseline/gridsearch/aeddf108ae5a2e0b3fec8e1222ac0710.pt",
     architecture2="baseline",
     log_file="logs/log.log",
+    save_file="data/model/mixture/predictions.pkl.gz",
+    save_blend=[0.6, 0.4],
 ):
     reload(logging)
     global logger
@@ -371,6 +281,12 @@ def main(
                 tp, fn, fp, tn
             )
         )
+
+    if save_file:
+        logger.info(f"Saving predictions to {save_file}")
+
+        to_save = blend(predictions, save_blend)
+        save_compressed(to_save, save_file)
 
 
 if __name__ == "__main__":
