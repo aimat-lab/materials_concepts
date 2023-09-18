@@ -317,15 +317,12 @@ def main(
     model_path_2="data/model/baseline/gridsearch/aeddf108ae5a2e0b3fec8e1222ac0710.pt",
     architecture2="baseline",
     log_file="logs/log.log",
-    sliding_window=5,
-    use_loader=False,
 ):
     reload(logging)
     global logger
     logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
 
     logger.info("Running with parameters:")
-    logger.info(f"sliding_window: {sliding_window}")
     logger.info(f"emb_comb_strategy: {emb_comb_strategy}")
 
     data = load_data(data_path)
@@ -365,7 +362,9 @@ def main(
 
         auc, (tn, fp, fn, tp) = eval_predictions(d_test.labels, blended_preds)
         logger.info(
-            "Evaluation on test set AUC: {:.4f} with blending: {}".format(auc, blending)
+            "Evaluation on test set AUC: {:.4f} with blending: ({:0.1f}, {:0.1f})".format(
+                auc, *blending
+            )
         )
         logger.info(
             "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(
