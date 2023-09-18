@@ -4,7 +4,6 @@ from collections import Counter
 from graph import Graph
 from tqdm import tqdm
 import bfs
-import sys
 import fire
 
 
@@ -12,12 +11,13 @@ def main(
     N=10000,
     data_path="data/model/data.M.pkl",
     graph_path="data/graph/edges.M.pkl",
+    period="train",
 ):
     print("Loading data")
     data = load(data_path)
 
-    pos_index = np.where(data["y_train"] == 1)
-    pos_edges = data["X_train"][pos_index]
+    pos_index = np.where(data[f"y_{period}"] == 1)
+    pos_edges = data[f"X_{period}"][pos_index]
 
     c = Counter()
 
@@ -25,7 +25,7 @@ def main(
         c.update(edge)
 
     print("Loading graph")
-    g = Graph.from_path(graph_path).get_nx_graph(data["year_train"])
+    g = Graph.from_path(graph_path).get_nx_graph(data[f"year_{period}"])
 
     depthCounter = Counter()
 
