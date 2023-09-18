@@ -11,13 +11,11 @@ def main(
     N=10000,
     data_path="data/model/data.M.pkl",
     graph_path="data/graph/edges.M.pkl",
-    period="train",
+    year=2016,
+    year_end=2019,
 ):
     print("Loading data")
     data = load(data_path)
-
-    pos_index = np.where(data[f"y_{period}"] == 1)
-    pos_edges = data[f"X_{period}"][pos_index]
 
     c = Counter()
 
@@ -25,7 +23,12 @@ def main(
         c.update(edge)
 
     print("Loading graph")
-    g = Graph.from_path(graph_path).get_nx_graph(data[f"year_{period}"])
+    G = Graph.from_path(graph_path)
+    g = G.get_nx_graph(year)
+    g_future = G.get_nx_graph(year_end)
+
+    pos_edges = list(set(g_future.edges()) - set(g.edges()))
+    print(f"Amount of positive edges ({year}-{year_end}): {len(pos_edges)}")
 
     depthCounter = Counter()
 
