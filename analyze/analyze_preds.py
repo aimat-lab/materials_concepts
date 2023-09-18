@@ -1,9 +1,10 @@
 import numpy as np
-from utils import load, load_compressed, save
+from utils import load, load_compressed
 from collections import Counter
 from graph import Graph
 from tqdm import tqdm
 import bfs
+import fire
 
 
 TN = 1
@@ -43,7 +44,7 @@ def main(
 
     print("Loading graph")
 
-    g = Graph.from_path("data/graph/edges.M.pkl").get_nx_graph(data["year_test"])
+    g = Graph.from_path(graph_path).get_nx_graph(data["year_test"])
 
     edges_depth = {}
     for _class in (TN, FN, FP, TP):
@@ -66,10 +67,6 @@ def main(
         print(f"Depth Counter: {depthCounter}")
         print("-" * 80)
 
-    save(edges_depth, "data/model/combi/edges_depth.pkl")
 
-    # First Run:
-    # TN (1): Counter({3: 638, 2: 360, 4: 2})
-    # FN (2): Counter({2: 31, 3: 15})
-    # FP (3): Counter({2: 806, 3: 194})
-    # TP (4): Counter({2: 232, 3: 12})
+if __name__ == "__main__":
+    fire.Fire(main)
