@@ -9,19 +9,10 @@ import fire
 
 def main(
     N=10000,
-    data_path="data/model/data.M.pkl",
     graph_path="data/graph/edges.M.pkl",
     year=2016,
     year_end=2019,
 ):
-    print("Loading data")
-    data = load(data_path)
-
-    c = Counter()
-
-    for edge in pos_edges:
-        c.update(edge)
-
     print("Loading graph")
     G = Graph.from_path(graph_path)
     g = G.get_nx_graph(year)
