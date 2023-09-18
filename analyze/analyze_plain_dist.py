@@ -1,5 +1,4 @@
 import numpy as np
-from utils import load
 from collections import Counter
 from graph import Graph
 from tqdm import tqdm
@@ -18,7 +17,7 @@ def main(
     g = G.get_nx_graph(year)
     g_future = G.get_nx_graph(year_end)
 
-    pos_edges = list(set(g_future.edges()) - set(g.edges()))
+    pos_edges = np.array(list(set(g_future.edges()) - set(g.edges())))
     print(f"Amount of positive edges ({year}-{year_end}): {len(pos_edges)}")
 
     depthCounter = Counter()
