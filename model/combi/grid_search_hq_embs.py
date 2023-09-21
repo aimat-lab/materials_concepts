@@ -13,7 +13,6 @@ constants = dict(
     batch_size=1000,
     num_epochs=10000,
     log_interval=200,
-    layers=[1536, 1024, 819, 10, 1],
     lr=1e-3,
     step_size=200,
     gamma=0.9,
