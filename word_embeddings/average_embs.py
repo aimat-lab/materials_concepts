@@ -146,7 +146,7 @@ class DataReader:
 
                 for con, emb in embeddings.items():
                     if con in concepts_filter:
-                        if not containment.get(con, False):
+                        if containment.get(con) is None:
                             self.logger.warning(
                                 f"Concept {con} not contained in work {id} with containment: {containment}"
                             )
