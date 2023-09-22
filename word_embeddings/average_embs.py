@@ -45,7 +45,7 @@ class EmbeddingAverager:
             old_value, count = self.storage[key]
             self.storage[key] = (old_value + value, count + 1)
 
-    def add(self, key, value, contained):
+    def add(self, key, value, contained: bool):
         """If a concept is contained, we store these embeddings separately, as they are exact.
         If the concept is not contained, the embedding is only averaged, which isn't that valuable.
         """
@@ -135,7 +135,7 @@ class DataReader:
             chunk = DataReader.load_compressed(os.path.join(self.embeddings_path, file))
 
             # iterate over works in file
-            for id, embeddings in tqdm(chunk.items(), desc=f"Processing works"):
+            for id, embeddings in tqdm(chunk.items(), desc="Processing works"):
                 self.logger.debug(f"Processing work - id: {id}")
                 if id not in ids:
                     continue
@@ -146,7 +146,12 @@ class DataReader:
 
                 for con, emb in embeddings.items():
                     if con in concepts_filter:
-                        averaged_embeddings.add(con, emb, containment[con])
+                        if not containment.get(con, False):
+                            self.logger.warning(
+                                f"Concept {con} not contained in work {id} with containment: {containment}"
+                            )
+
+                        averaged_embeddings.add(con, emb, containment.get(con, False))
 
         return averaged_embeddings
 
