@@ -8,7 +8,7 @@ import gzip
 import logging
 from collections import namedtuple
 from importlib import reload
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve, roc_auc_score
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
@@ -231,10 +231,11 @@ def main(
 
     print_metrics(d_test.labels, predictions, threshold=0.5)
 
+    auc = roc_auc_score(d_test.labels, predictions)
     fpr, tpr, _ = roc_curve(d_test.labels, predictions)
 
     save_compressed(predictions, predict_path)
-    save_compressed({"fpr": fpr, "tpr": tpr}, auc_curve_path)
+    save_compressed({"fpr": fpr, "tpr": tpr, "auc": auc}, auc_curve_path)
 
 
 if __name__ == "__main__":
