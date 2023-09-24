@@ -8,7 +8,7 @@ import gzip
 import logging
 from collections import namedtuple
 from importlib import reload
-
+from sklearn.metrics import roc_curve
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
@@ -199,6 +199,7 @@ def main(
     model_path="data/model/combi/model.pt",
     architecture="combi",
     predict_path="data/model/combi/predictions.pkl.gz",
+    auc_curve_path="data/model/combi/auc_curve.pkl.gz",
     log_file="logs.log",
 ):
     reload(logging)
@@ -230,7 +231,10 @@ def main(
 
     print_metrics(d_test.labels, predictions, threshold=0.5)
 
+    fpr, tpr, _ = roc_curve(d_test.labels, predictions)
+
     save_compressed(predictions, predict_path)
+    save_compressed({"fpr": fpr, "tpr": tpr}, auc_curve_path)
 
 
 if __name__ == "__main__":

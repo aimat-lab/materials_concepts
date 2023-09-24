@@ -165,7 +165,6 @@ def main(
         auc, (precision, recall, fscore, _), (tn, fp, fn, tp) = test(
             d_test.labels, predictions, threshold=threshold
         )
-        fpr, tpr, _ = roc_curve(d_test.labels, predictions)
 
         metrics = dict(
             threshold=threshold,
@@ -177,8 +176,6 @@ def main(
             fp=fp,
             fn=fn,
             tp=tp,
-            fpr=fpr,
-            tpr=tpr,
         )
         stats.append(metrics)
 
