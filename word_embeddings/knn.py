@@ -23,7 +23,7 @@ def load_compressed(path):
 
 
 k = 6
-embeddings_path = "data/model/concept_embs/hq.word-embs.2016.M.pkl.gz"
+embeddings_path = "data/model/concept_embs/word-embs.2023.M.pkl.gz"
 data = load_compressed(embeddings_path)
 
 keys = sorted(data.keys())
