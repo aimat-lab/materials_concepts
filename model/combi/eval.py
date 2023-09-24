@@ -9,6 +9,7 @@ import gzip
 import logging
 from collections import namedtuple
 from importlib import reload
+from sklearn.metrics import roc_curve
 
 
 Data = namedtuple(
@@ -164,6 +165,7 @@ def main(
         auc, (precision, recall, fscore, _), (tn, fp, fn, tp) = test(
             d_test.labels, predictions, threshold=threshold
         )
+        fpr, tpr, _ = roc_curve(d_test.labels, predictions)
 
         metrics = dict(
             threshold=threshold,
@@ -175,6 +177,8 @@ def main(
             fp=fp,
             fn=fn,
             tp=tp,
+            fpr=fpr,
+            tpr=tpr,
         )
         stats.append(metrics)
 
