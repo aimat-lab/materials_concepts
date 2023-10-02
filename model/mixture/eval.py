@@ -78,7 +78,7 @@ def main(
     predictions = load_compressed(pred_path)
 
     stats = []
-    for threshold in [0.5, 0.9, 0.95, 0.99, 0.999, 0.9999]:
+    for threshold in [0.5, 0.9, 0.95, 0.98, 0.985, 0.989, 0.99, 0.991, 0.995]:
         auc, (precision, recall, fscore, _), (tn, fp, fn, tp) = test(
             labels, predictions, threshold=threshold
         )
