@@ -54,12 +54,18 @@ def add_secondary_language(df):
     return df
 
 
+states = []
+
+
 def filter(df, func, name=None):
     before = len(df)
     if name is not None:
         print("Applying filter: ", name, end="")
     print(f" ({before} -> ", end="")
     filtered = df[func(df)]
+
+    states.append((name, df[~func(df)]))
+
     after = len(filtered)
     print(f"{after}) [{before - after} filtered]")
     return filtered
@@ -92,6 +98,9 @@ def add_materials_science_score(df):
 
 
 def apply_in_parallel(df, func, n_jobs=4):
+    if n_jobs == 1:
+        return func(df)
+
     tasks = np.array_split(df, n_jobs, axis=0)  # split df along row axis
     with ProcessPoolExecutor(max_workers=n_jobs) as executor:
         result = executor.map(func, tasks)
@@ -172,4 +181,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    main(works_file=args.works_file, folder=args.folder, n_jobs=args.njobs)
+    main(works_file=args.works_file, folder=args.folder, n_jobs=int(args.njobs))
