@@ -114,13 +114,19 @@ class DataReader:
         self.logger = logger
 
     def get_averaged_concept_embeddings(
-        self, concepts_filter, until_year=None, only_average_contained=False
+        self,
+        concepts_filter,
+        until_year=None,
+        until_month=None,
+        only_average_contained=False,
     ):
         averaged_embeddings = EmbeddingAverager(only_average_contained)
 
-        # create date from year
-        if until_year:
-            until_date = pd.to_datetime(f"{until_year+1}-01-01")
+        if until_year and until_month:  # create date from year and month
+            until_date = pd.to_datetime(f"{until_year+1}-{until_month+1}-01")
+            ids = set(self.df[self.df.publication_date < until_date]["id"])
+        elif until_year:  # create date from year
+            until_date = pd.to_datetime(f"{until_year+1}-01-")
             ids = set(self.df[self.df.publication_date < until_date]["id"])
         else:
             ids = set(self.df["id"])
@@ -180,6 +186,7 @@ def main(
     output_path="data/model/con_embs/av_embs_small_2016.pkl.gz",
     store_concepts_ids=False,
     until_year=2016,
+    until_month=None,  # 0 3 6 9
     only_average_contained=False,
 ):
     logger = setup_logger(level=logging.INFO, log_to_stdout=True)
@@ -198,7 +205,10 @@ def main(
 
     dr = DataReader(embeddings_dir, df, logger)
     averaged_embeddings = dr.get_averaged_concept_embeddings(
-        concept_filter, until_year, only_average_contained=only_average_contained
+        concept_filter,
+        until_year,
+        until_month,
+        only_average_contained=only_average_contained,
     )
 
     concept_mapping = None
