@@ -60,9 +60,19 @@ print("pyrocarbon matrix")
 print_knn("pyrocarbon matrix", translate=TRANSLATE)
 print("\n\n")
 
-print("adiabatic temperature change")
-print_knn("adiabatic temperature change", translate=TRANSLATE)
-print("\n\n")
 
 print("pure titanium sheet")
 print_knn("pure titanium sheet", translate=TRANSLATE)
+print("\n\n")
+
+print("wear resistant coating")
+print_knn("wear resistant coating", translate=TRANSLATE)
+print("\n\n")
+
+print("304l stainless steel")
+print_knn("304l stainless steel", translate=TRANSLATE)
+print("\n\n")
+
+print("compound semiconductor")
+print_knn("compound semiconductor", translate=TRANSLATE)
+print("\n\n")

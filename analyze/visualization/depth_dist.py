@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Define the labels and the data
-labels = ["TP", "FP", "FN", "TN", "2019-2022"]
-dist_2 = [97.13, 82.60, 88.78, 40.23, 89.01]
-dist_3 = [2.87, 17.40, 11.22, 59.60, 8.58]
+labels = ["TP", "FN", "FP", "TN", "2019-2022"]
+dist_2 = [97.13, 88.78, 82.60, 40.23, 89.01]
+dist_3 = [2.87, 11.22, 17.40, 59.60, 8.58]
 dist_4 = [0.00, 0.00, 0.00, 0.17, 0.06]
 
 
@@ -36,13 +36,13 @@ axs[1].bar(
 # )
 axs[1].axhline(y=89.01, color="k", linestyle="dashed", alpha=0.5)
 axs[1].axhline(y=8.58, color="k", linestyle="dashed", alpha=0.5)
-axs[1].set_title("Pure Embs")
+axs[1].set_title("Concept Embeddings")
 
 plt.ylabel("Percentage %", fontweight="bold")
 
 # Modify the data as per your second plot
-dist_2_second_plot = [99.53, 95.93, 82.98, 38.80, 89.01]
-dist_3_second_plot = [0.47, 4.07, 17.02, 60.97, 8.58]
+dist_2_second_plot = [99.53, 82.98, 95.93, 38.80, 89.01]
+dist_3_second_plot = [0.47, 17.02, 4.07, 60.97, 8.58]
 dist_4_second_plot = [0.00, 0.00, 0.00, 0.23, 0.06]
 
 # 99,53%	0,47%	0,00%
@@ -80,7 +80,7 @@ axs[0].set_title("Baseline")
 plt.setp(
     axs, xticks=[r + barWidth * 0.5 for r in range(len(dist_2))], xticklabels=labels
 )
-plt.suptitle("Distance Distribution for Confusion Matrix and Real Data")
+plt.suptitle("Distance Distribution for Confusion Matrix and Real Data", fontsize=20)
 
 
 # Adding the legend

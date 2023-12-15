@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 from ast import literal_eval
 from tqdm import tqdm
 
@@ -14,6 +15,8 @@ df = pd.read_csv("data/table/materials-science.llama2.works.csv")
 df.llama_concepts = df.llama_concepts.apply(literal_eval)
 df["publication_date"] = pd.to_datetime(df["publication_date"])
 df["year"] = df["publication_date"].dt.year
+
+df = df[df["year"] <= 2022]
 
 
 G = Graph.from_path("data/graph/edges.L.pkl")
@@ -33,11 +36,12 @@ possible_connections = cumulative_unique_concepts**2
 
 plt.figure(figsize=(10, 6))
 cumulative_unique_concepts.plot(kind="line", marker="o", color="b")
-plt.title("Accumulated Number of Unique Concepts per Year")
+plt.title("Accumulated Number of Unique Concepts per Year", fontsize=20, y=1.05)
 plt.ylabel("Accumulated Number of Unique Concepts")
 plt.xlabel("Year")
 plt.xticks(rotation=45)
-plt.tight_layout()
+ax = plt.gca()  # Get the current axis instance
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=False, useOffset=False))
 plt.show()
 
 # Plotting Possible and Actual Number of Connections with Two Axes
@@ -58,7 +62,7 @@ plt.plot(possible_connections.index, connections, "g-o", label="Actual Connectio
 # Setting labels, title, and legends
 plt.xlabel("Year")
 plt.ylabel("Number of Connections")
-plt.title("Possible and Actual Connections per Year")
+plt.title("Possible and Actual Connections per Year", fontsize=20, y=1.05)
 
 # Applying symlog scale to y-axis
 plt.yscale("log")

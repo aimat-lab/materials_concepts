@@ -178,7 +178,6 @@ def main(csv_file, folder, n_jobs, min_len):
     df = apply_in_parallel(df, prepare_df, n_jobs=n_jobs)
 
     df = df[df.abstract.str.len() > min_len]  # some abstracts are empty after cleaning
-    # TODO: Ask Pascal whether we should also remove abstracts <= some max length
 
     df.to_csv(output_file, index=False)
 
@@ -211,4 +210,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+    print(args.works_file)
     main(args.works_file, args.folder, n_jobs=args.njobs, min_len=args.minlen)
