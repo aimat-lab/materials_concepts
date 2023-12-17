@@ -93,8 +93,7 @@ class Analyser:
 
     def legacy_print_2d_word_embeddings_map(self, to: Path):
         embeddings = {
-            key: self.all_embeddings[key]
-            for key in self.all_embeddings.keys()
+            key: self.all_embeddings[key] for key in self.all_embeddings.keys()
         }
 
         # Extracting x and y coordinates and terms
@@ -111,11 +110,13 @@ class Analyser:
         # Showing the plot
         fig.update_layout(
             xaxis_range=[-12, 12],  # Replace xmin and xmax with your desired values
-            yaxis_range=[-12, 12]   # Replace ymin and ymax with your desired values
+            yaxis_range=[-12, 12],  # Replace ymin and ymax with your desired values
         )
 
         fig.write_image(str(to), width=1200, height=1200)
 
+    # TODO: Refactor into a function that takes a list of concepts
+    # that are highlighted (or dict with colors and lists as values)
     def save_whole_2d_word_embeddings_map(self, to: Path, fig_size: int = 1200):
         fig = go.Figure()
 
@@ -276,7 +277,6 @@ class Analyser:
             title=f"Map of Materials Science (Reduced to {len(non_winner_points) + len(winner_points)} / {len(self.all_embeddings)} concepts )",
         )
 
-
         logger.info("Saving whole embeddings map w/ landmarks")
         as_html = fig.to_html(
             full_html=True,
@@ -284,9 +284,8 @@ class Analyser:
             default_height="100vh",
             default_width="80vw",
         )
-        with open("map.html", "w") as f:
-            f.write(as_html)
-        fig.show()
+        # with open("map.html", "w") as f:
+        #     f.write(as_html)
         fig.write_image(str(to), width=fig_size, height=fig_size)
 
     def _suggestions_to_own_concepts(self):
@@ -336,6 +335,41 @@ class Analyser:
             new_keyword: suggested_new_keywords[new_keyword]
             for new_keyword, _ in interesting_new_keywords
         }
+
+    def get_potentially_interesting_predictions(
+        self, max_other_degree, min_distance, max_distance
+    ) -> list[tuple[str, str, float, float]]:
+        all_predictions = self.own_predictions + self.other_predictions
+
+        # pred = set(other for _, other, _ in all_predictions)
+        # logger.info(f"Found {len(pred)} unique predictions")
+        # embedded_concepts = set(self.all_embeddings.keys())
+        # logger.info(f"Found {len(embedded_concepts)} embedded concepts")
+        # remaining = pred - embedded_concepts
+        # logger.info(f"Found {len(remaining)} remaining concepts: {remaining}")
+        # TODO: type heterojunction is missing
+
+        after_degree_filter = [
+            (x, y, score)
+            for x, y, score in all_predictions
+            if self.degrees[y] <= max_other_degree
+        ]
+
+        after_distance_filter = [
+            (x, y, score, concept_dist)
+            for x, y, score in after_degree_filter
+            if min_distance <= (concept_dist := self.emb_distance(x, y)) <= max_distance
+        ]
+
+        return sorted(after_distance_filter, key=lambda x: x[2], reverse=True)
+
+    def emb_distance(self, concept_1: str, concept_2: str):
+        try:
+            emb_1 = self.all_embeddings[concept_1]
+            emb_2 = self.all_embeddings[concept_2]
+        except KeyError:
+            return -1
+        return ((emb_1[0] - emb_2[0]) ** 2 + (emb_1[1] - emb_2[1]) ** 2) ** 0.5
 
 
 class Report:
@@ -441,6 +475,37 @@ class Report:
                                 NoEscape(f"{own_concept}: {round(score, 4)}")
                             )
 
+    def add_potentially_interesting_predictions(
+        self, top_k: int, max_degree, min_dist, max_dist
+    ):
+        logger.info(
+            f"Adding Potentially Interesting Predictions Section for {max_degree} max degree and {min_dist} <= distance <= {max_dist}"
+        )
+
+        potentially_interesting_connections = (
+            analyser.get_potentially_interesting_predictions(
+                max_degree, min_dist, max_dist
+            )[:top_k]
+        )
+
+        with self.doc.create(
+            Section(
+                f"Top {top_k} Concepts that have other concept with degree <= {max_degree} and {min_dist} <= distance <= {max_dist}"
+            )
+        ):
+            with self.doc.create(Itemize()) as itemize:
+                for (
+                    concept_own,
+                    concept_other,
+                    score,
+                    concept_dist,
+                ) in potentially_interesting_connections:
+                    itemize.add_item(
+                        NoEscape(
+                            f"\\textbf{{{concept_own}}} and {concept_other}: {round(score, 4)} (distance: {round(concept_dist, 1)})"
+                        )
+                    )
+
     def add_sources(self):
         logger.info("Adding Sources Section")
         with self.doc.create(Section("Used Papers")):
@@ -483,14 +548,16 @@ if __name__ == "__main__":
         all_embeddings=Path("transformed.pkl.gz"),
         occurance_filter=2,
     )
-    analyser.save_map_with_important_landmarks("x.png", panel_size=1)
-    exit()
+    # analyser.save_map_with_important_landmarks("x.png", panel_size=1)
 
     r = Report("Pascal Friederich", analyser=analyser)
-    r.add_introduction()
-    r.add_keywords_section()
-    r.add_suggestions_section(top_k=25)
-    r.add_highly_connective_predictions(top_k=20, threshold=0.999)
-    r.add_map_of_materials_science_map()
-    r.add_sources()
-    r.generate_pdf(Path("research_keyword_analysis"))
+    # r.add_introduction()
+    # r.add_keywords_section()
+    # r.add_suggestions_section(top_k=25)
+    # r.add_highly_connective_predictions(top_k=20, threshold=0.999)
+    # r.add_map_of_materials_science_map()
+    r.add_potentially_interesting_predictions(
+        top_k=30, max_degree=100, min_dist=3, max_dist=6
+    )
+    # r.add_sources()
+    r.generate_pdf(Path("research_keyword_analysis"), clean_tex=True)
