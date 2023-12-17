@@ -23,6 +23,7 @@ from pylatex import (
 )
 from pylatex.utils import italic, bold
 from tqdm import tqdm
+from typing import Union
 
 
 def load_compressed(path):
@@ -55,7 +56,10 @@ class Analyser:
         self.occurance_filter = occurance_filter
         self.df = _df[_df["source"] == source]  # relevant data for source
         self.all_concepts = Counter(
-            item for sublist in self.df["llama_concepts"].values for item in sublist
+            item
+            for sublist in self.df["llama_concepts"].values
+            for item in sublist
+            if item in self.all_embeddings  # only consider concepts with embeddings
         )
         self.interesting_concepts = {
             concept: count
@@ -71,7 +75,11 @@ class Analyser:
         (
             self.own_predictions,
             self.other_predictions,
-        ) = self.suggestions_to_own_and_other_concepts()
+        ) = self._suggestions_to_own_and_other_concepts()
+        logger.info(f"Loaded {len(self.own_predictions)} predictions to own concepts")
+        logger.info(
+            f"Loaded {len(self.other_predictions)} predictions to other concepts"
+        )
 
     def save_world_cloud(
         self, to: Path, mode: Literal["all", "interesting"] = "interesting"
@@ -89,8 +97,9 @@ class Analyser:
         plt.axis("off")
         plt.tight_layout(pad=0)
 
-        plt.savefig(to, format="png")
+        plt.savefig(to)
 
+    # UNUSED
     def legacy_print_2d_word_embeddings_map(self, to: Path):
         embeddings = {
             key: self.all_embeddings[key] for key in self.all_embeddings.keys()
@@ -114,6 +123,111 @@ class Analyser:
         )
 
         fig.write_image(str(to), width=1200, height=1200)
+
+    def get_grid(self, panel_size: int = 2):
+        """For each panel, return a list of concepts that are in that panel.
+        Splits the 2D space into a grid of squares with side length panel_size."""
+
+        grid = defaultdict(list)
+
+        for concept, point in tqdm(self.all_embeddings.items()):
+            grid_x = int(point[0] // panel_size)
+            grid_y = int(point[1] // panel_size)
+            grid[(grid_x, grid_y)].append(concept)
+
+        return grid
+
+    def _add_background_trace(
+        self,
+        fig: go.Figure,
+        max_concepts_for_total_inclusion: int = 300,
+        inclusion_rate: float = 0.2,
+        color: str = "#BEBADA",
+    ):
+        included_subset = []
+        for _, concepts in self.get_grid(panel_size=1).items():  # Iter over all panels
+            if len(concepts) > max_concepts_for_total_inclusion:
+                include_amt = round(inclusion_rate * len(concepts))
+                included_subset.extend(random.sample(concepts, include_amt))
+            else:
+                included_subset.extend(concepts)
+
+        background = {
+            "x": [self.all_embeddings[concept][0] for concept in included_subset],
+            "y": [self.all_embeddings[concept][1] for concept in included_subset],
+        }
+
+        fig.add_trace(
+            go.Scatter(
+                x=background["x"],
+                y=background["y"],
+                mode="markers",
+                name=f"All embeddings (inclusion: {inclusion_rate * 100}%)",
+                text=[],
+                textposition="top center",
+                marker=dict(color=color),
+            )
+        )
+
+    def _add_concepts_trace(
+        self,
+        fig: go.Figure,
+        concepts: list[str],
+        name: str,
+        color: str,
+        display_text: bool = True,
+    ):
+        fig.add_trace(
+            go.Scatter(
+                x=[self.all_embeddings[concept][0] for concept in concepts],
+                y=[self.all_embeddings[concept][1] for concept in concepts],
+                mode="markers+text",
+                name=name,
+                text=concepts if display_text else [],
+                textposition="top center",
+                marker=dict(color=color),
+            )
+        )
+
+    def generate_map(
+        self,
+        include_concepts: dict[str, list[str]],
+        colors: Union[dict[str], None] = None,
+        background_concepts: bool = True,
+        max_concepts_for_total_inclusion: int = 300,
+        background_inclusion_rate: float = 0.2,
+        background_color: str = "#BEBADA",
+    ):
+        # include concepts:
+        # name
+
+        fig = go.Figure()
+
+        if background_concepts:
+            self._add_background_trace(
+                fig,
+                max_concepts_for_total_inclusion,
+                background_inclusion_rate,
+                background_color,
+            )
+
+        for name, concepts in include_concepts.items():
+            color = colors[name] if colors else None
+            self._add_concepts_trace(fig, concepts, name, color, display_text=True)
+
+        # fig.add_trace(
+        #     go.Scatter(
+        #         x=background["x"],
+        #         y=background["y"],
+        #         mode="markers+text",
+        #         name=f"All embeddings (inclusion rate: {background_inclusion_rate})",
+        #         text=[],
+        #         textposition="top center",
+        #         marker=dict(color=background_color),
+        #     )
+        # )
+
+        return fig
 
     # TODO: Refactor into a function that takes a list of concepts
     # that are highlighted (or dict with colors and lists as values)
@@ -196,14 +310,14 @@ class Analyser:
             else:
                 non_winners[grid_key].append(concept)
 
-        ## PRINT ##
-        max_x = max(key[0] for key in non_winners) + 1
-        max_y = max(key[1] for key in non_winners) + 1
-        for x in range(max_x):
-            for y in range(max_y):
-                print(f"{len(non_winners.get((x, y), ' ')): 5d}", end=" ")
-            print()
-        ## END PRINT ##
+        # ## PRINT ##
+        # max_x = max(key[0] for key in non_winners) + 1
+        # max_y = max(key[1] for key in non_winners) + 1
+        # for x in range(max_x):
+        #     for y in range(max_y):
+        #         print(f"{len(non_winners.get((x, y), ' ')): 5d}", end=" ")
+        #     print()
+        # ## END PRINT ##
 
         # Now that we have the winners, let's separate the points
         winner_points = {
@@ -288,26 +402,30 @@ class Analyser:
         #     f.write(as_html)
         fig.write_image(str(to), width=fig_size, height=fig_size)
 
-    def _suggestions_to_own_concepts(self):
-        for concept, predictions in self.predictions.items():
-            for prediction in predictions:
-                if prediction["concept"] in self.all_concepts:
-                    yield concept, prediction["concept"], prediction["score"]
+    def _iter_suggestions(self, combined_with: Literal["own", "other"]):
+        for own_concept, all_predictions in self.predictions.items():
+            for prediction in all_predictions:
+                if (
+                    combined_with == "own"
+                    and prediction["concept"] in self.all_concepts
+                ) or (
+                    combined_with == "other"
+                    and prediction["concept"] not in self.all_concepts
+                ):
+                    yield own_concept, prediction["concept"], prediction["score"]
 
-    def _suggestions_to_other_concepts(self):
-        for concept, predictions in self.predictions.items():
-            for prediction in predictions:
-                if prediction["concept"] not in self.all_concepts:
-                    yield concept, prediction["concept"], prediction["score"]
-
-    def suggestions_to_own_and_other_concepts(self):
+    def _suggestions_to_own_and_other_concepts(self):
         sort_by_score = lambda x: x[2]
         return (
             sorted(
-                self._suggestions_to_own_concepts(), key=sort_by_score, reverse=True
+                self._iter_suggestions(combined_with="own"),
+                key=sort_by_score,
+                reverse=True,
             ),
             sorted(
-                self._suggestions_to_other_concepts(), key=sort_by_score, reverse=True
+                self._iter_suggestions(combined_with="other"),
+                key=sort_by_score,
+                reverse=True,
             ),
         )
 
@@ -315,16 +433,18 @@ class Analyser:
         logger.info(f"Retrieving predictions with score > {threshold}")
         all_predictions = self.own_predictions + self.other_predictions
 
-        all_predictions = [
+        highly_scored_predictions = [
             (x, y, score) for x, y, score in all_predictions if score > threshold
         ]
-        logger.info(f"Found {len(all_predictions)} predictions (score > {threshold})")
+        logger.info(
+            f"Found {len(highly_scored_predictions)} predictions (score > {threshold})"
+        )
 
         suggested_new_keywords = defaultdict(list)
-        for own_concept, new_concept, score in all_predictions:
+        for own_concept, new_concept, score in highly_scored_predictions:
             suggested_new_keywords[new_concept].append((own_concept, score))
 
-        new_keyword_matches = {
+        new_keyword_matches = {  # how many of the own concepts are very likely to be combined with the new concept
             key: len(value) for key, value in suggested_new_keywords.items()
         }
         interesting_new_keywords = sorted(
@@ -340,26 +460,25 @@ class Analyser:
         self, max_other_degree, min_distance, max_distance
     ) -> list[tuple[str, str, float, float]]:
         all_predictions = self.own_predictions + self.other_predictions
+        logger.info(f"{len(all_predictions)} predictions available")
 
-        # pred = set(other for _, other, _ in all_predictions)
-        # logger.info(f"Found {len(pred)} unique predictions")
-        # embedded_concepts = set(self.all_embeddings.keys())
-        # logger.info(f"Found {len(embedded_concepts)} embedded concepts")
-        # remaining = pred - embedded_concepts
-        # logger.info(f"Found {len(remaining)} remaining concepts: {remaining}")
-        # TODO: type heterojunction is missing
-
+        logger.info(f"Retrieving predictions with degree <= {max_other_degree}")
         after_degree_filter = [
             (x, y, score)
             for x, y, score in all_predictions
             if self.degrees[y] <= max_other_degree
         ]
+        logger.info(f"Found {len(after_degree_filter)} predictions")
 
+        logger.info(
+            f"Retrieving predictions with {min_distance} <= distance <= {max_distance}"
+        )
         after_distance_filter = [
             (x, y, score, concept_dist)
             for x, y, score in after_degree_filter
             if min_distance <= (concept_dist := self.emb_distance(x, y)) <= max_distance
         ]
+        logger.info(f"Found {len(after_distance_filter)} predictions")
 
         return sorted(after_distance_filter, key=lambda x: x[2], reverse=True)
 
@@ -368,7 +487,7 @@ class Analyser:
             emb_1 = self.all_embeddings[concept_1]
             emb_2 = self.all_embeddings[concept_2]
         except KeyError:
-            return -1
+            return -1  # If there is no embedding, an impossible distance is returned
         return ((emb_1[0] - emb_2[0]) ** 2 + (emb_1[1] - emb_2[1]) ** 2) ** 0.5
 
 
@@ -548,14 +667,28 @@ if __name__ == "__main__":
         all_embeddings=Path("transformed.pkl.gz"),
         occurance_filter=2,
     )
+    # TESTING FUNCTIONALITY
+    fig = analyser.generate_map(
+        {
+            "Test": [
+                "graph neural network",
+                "particle detection",
+                "particle tracking",
+            ]
+        },
+        {"Test": "#FF0000"},
+    )
+    fig.write_image("background_test.png", width=1200, height=1200)
+    exit(-1)
+
     # analyser.save_map_with_important_landmarks("x.png", panel_size=1)
 
     r = Report("Pascal Friederich", analyser=analyser)
-    # r.add_introduction()
-    # r.add_keywords_section()
-    # r.add_suggestions_section(top_k=25)
-    # r.add_highly_connective_predictions(top_k=20, threshold=0.999)
-    # r.add_map_of_materials_science_map()
+    r.add_introduction()
+    r.add_keywords_section()
+    r.add_suggestions_section(top_k=25)
+    r.add_highly_connective_predictions(top_k=20, threshold=0.999)
+    r.add_map_of_materials_science_map()
     r.add_potentially_interesting_predictions(
         top_k=30, max_degree=100, min_dist=3, max_dist=6
     )
