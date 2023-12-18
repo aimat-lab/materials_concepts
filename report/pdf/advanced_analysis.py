@@ -1,3 +1,5 @@
+import zipfile
+import numpy as np
 import pandas as pd
 import random
 from ast import literal_eval
@@ -24,6 +26,7 @@ from pylatex import (
 from pylatex.utils import italic, bold
 from tqdm import tqdm
 from typing import Union
+import os
 
 
 def load_compressed(path):
@@ -39,6 +42,7 @@ def load_pickle(path):
 class Analyser:
     def __init__(
         self,
+        base_dir: Path,
         _df: pd.DataFrame,
         source: str,
         predictions: Path,
@@ -50,7 +54,7 @@ class Analyser:
 
         self.all_embeddings: dict = load_compressed(str(all_embeddings))
 
-        lookup = pd.read_csv("lookup.M.new.csv")
+        lookup = pd.read_csv(base_dir / "lookup.M.new.csv")
         self.degrees = dict(zip(lookup["concept"], lookup["count"]))
 
         self.occurance_filter = occurance_filter
@@ -76,9 +80,9 @@ class Analyser:
             self.own_predictions,
             self.other_predictions,
         ) = self._suggestions_to_own_and_other_concepts()
-        logger.info(f"Loaded {len(self.own_predictions)} predictions to own concepts")
+        logger.info(f"Loaded {len(self.own_predictions):,} predictions to own concepts")
         logger.info(
-            f"Loaded {len(self.other_predictions)} predictions to other concepts"
+            f"Loaded {len(self.other_predictions):,} predictions to other concepts"
         )
 
     def save_world_cloud(
@@ -198,9 +202,6 @@ class Analyser:
         background_inclusion_rate: float = 0.2,
         background_color: str = "#BEBADA",
     ):
-        # include concepts:
-        # name
-
         fig = go.Figure()
 
         if background_concepts:
@@ -211,193 +212,53 @@ class Analyser:
                 background_color,
             )
 
-        for name, concepts in include_concepts.items():
-            color = colors[name] if colors else None
+        default_colors = [
+            "#FF0000",
+            "#f5d742",
+            "#0000FF",
+            "#00FF00",
+            "#FF00FF",
+            "#00FFFF",
+        ]
+        for index, (name, concepts) in enumerate(include_concepts.items()):
+            logger.info(f"Adding {name} concepts trace to map")
+            color_default = default_colors[index]
+            color = colors.get(name, color_default) if colors else color_default
             self._add_concepts_trace(fig, concepts, name, color, display_text=True)
-
-        # fig.add_trace(
-        #     go.Scatter(
-        #         x=background["x"],
-        #         y=background["y"],
-        #         mode="markers+text",
-        #         name=f"All embeddings (inclusion rate: {background_inclusion_rate})",
-        #         text=[],
-        #         textposition="top center",
-        #         marker=dict(color=background_color),
-        #     )
-        # )
 
         return fig
 
-    # TODO: Refactor into a function that takes a list of concepts
-    # that are highlighted (or dict with colors and lists as values)
-    def save_whole_2d_word_embeddings_map(self, to: Path, fig_size: int = 1200):
-        fig = go.Figure()
-
-        # Add all embeddings as a gray scatter plot
-        # You can extract the points for the gray embeddings as lists, similar to how you did before
-        gray_x = [
-            point[0]
-            for key, point in self.all_embeddings.items()
-            if key not in self.interesting_concepts
-        ]
-        gray_y = [
-            point[1]
-            for key, point in self.all_embeddings.items()
-            if key not in self.interesting_concepts
-        ]
-
-        fig.add_trace(
-            go.Scatter(
-                x=gray_x,
-                y=gray_y,
-                mode="markers",
-                name="Other embeddings",
-                marker=dict(color="#BEBADA"),
-                textposition="top center",
-            )
+    def save_map_with_interesting_concepts(self, to: Path, fig_size: int = 1200):
+        fig = self.generate_map(
+            include_concepts={"Interesting": list(self.interesting_concepts.keys())}
         )
-
-        # Now add the interesting embeddings on top with text annotations
-        interesting_x = [
-            point[0]
-            for key, point in self.all_embeddings.items()
-            if key in self.interesting_concepts
-        ]
-        interesting_y = [
-            point[1]
-            for key, point in self.all_embeddings.items()
-            if key in self.interesting_concepts
-        ]
-        interesting_text = [
-            key
-            for key in self.all_embeddings.keys()
-            if key in self.interesting_concepts
-        ]
-
-        fig.add_trace(
-            go.Scatter(
-                x=interesting_x,
-                y=interesting_y,
-                mode="markers+text",
-                name="Interesting embeddings",
-                text=interesting_text,
-                textposition="top center",
-            )
-        )
-
-        logger.info("Saving whole embeddings map")
+        logger.info(f"Saving whole embeddings map w/ interesting concepts {to}")
         fig.write_image(str(to), width=fig_size, height=fig_size)
 
     def save_map_with_important_landmarks(
-        self, to: Path, panel_size=2, fig_size: int = 1200
+        self, to: Path, panel_size=1, fig_size: int = 1200
     ):
-        winners = {}
-        non_winners = defaultdict(list)
+        landmarks = {}
 
-        # Process the coordinates and find the winners
-        for concept, point in tqdm(self.all_embeddings.items()):
-            # Calculate the grid square's indices
-            grid_x = int(point[0] // panel_size)
-            grid_y = int(point[1] // panel_size)
-            grid_key = (grid_x, grid_y)
+        for panel, panel_concepts in tqdm(self.get_grid(panel_size=panel_size).items()):
+            degrees = {concept: self.degrees[concept] for concept in panel_concepts}
+            index_of_max_degree = np.argmax(list(degrees.values()))
+            landmarks[panel] = panel_concepts[index_of_max_degree]
 
-            # Check if we already have a winner for this square and if this point has a higher degree
-            if grid_key not in winners or self.degrees[concept] > self.degrees.get(
-                winners.get(grid_key, "nonexistant"), -1
-            ):
-                winners[grid_key] = concept
-            else:
-                non_winners[grid_key].append(concept)
-
-        # ## PRINT ##
-        # max_x = max(key[0] for key in non_winners) + 1
-        # max_y = max(key[1] for key in non_winners) + 1
-        # for x in range(max_x):
-        #     for y in range(max_y):
-        #         print(f"{len(non_winners.get((x, y), ' ')): 5d}", end=" ")
-        #     print()
-        # ## END PRINT ##
-
-        # Now that we have the winners, let's separate the points
-        winner_points = {
-            concept: self.all_embeddings[concept] for concept in winners.values()
-        }
-
-        # non_winner_points = {
-        #     concept: self.all_embeddings[concept]
-        #     for concept in self.all_embeddings
-        #     if concept not in winner_points
-        # }
-
-        subset_non_winners = []
-        for key in tqdm(non_winners):
-            current_points = non_winners[key]
-            if len(current_points) > 300:
-                subset_non_winners.extend(
-                    random.sample(current_points, round(0.2 * len(current_points)))
-                )
-            else:
-                subset_non_winners.extend(current_points)
-
-        logger.info(
-            f"Found {len(subset_non_winners)} non-winners: {subset_non_winners[:10]}"
+        fig = self.generate_map(
+            include_concepts={"Landmarks": list(landmarks.values())},
+            colors={"Landmarks": "#FF0000"},
         )
 
-        non_winner_points = {
-            concept: self.all_embeddings[concept] for concept in subset_non_winners
-        }
-        logger.info(f"Found {len(non_winner_points)} non-winners")
+        fig.update_layout(title="Map of Materials Science")
 
-        # Prepare traces for the Plotly figure
-        winner_x = [point[0] for point in winner_points.values()]
-        winner_y = [point[1] for point in winner_points.values()]
-        winner_text = [concept for concept in winner_points.keys()]
-
-        non_winner_x = [point[0] for point in non_winner_points.values()]
-        non_winner_y = [point[1] for point in non_winner_points.values()]
-
-        # Create the figure
-        fig = go.Figure()
-
-        # Add non-winners as a basic colored trace
-        fig.add_trace(
-            go.Scatter(
-                x=non_winner_x,
-                y=non_winner_y,
-                mode="markers",
-                name="Non-winners",
-                hovertext=list(non_winner_points.keys()),
-                marker=dict(color="#BEBADA"),
-            )
-        )
-
-        # Add winners with red color and text
-        fig.add_trace(
-            go.Scatter(
-                x=winner_x,
-                y=winner_y,
-                mode="markers+text",
-                name="Winners",
-                text=winner_text,
-                textposition="top center",
-                hovertext=winner_text,
-                hoverinfo="text",
-                marker=dict(color="red"),
-            )
-        )
-
-        fig.update_layout(
-            title=f"Map of Materials Science (Reduced to {len(non_winner_points) + len(winner_points)} / {len(self.all_embeddings)} concepts )",
-        )
-
-        logger.info("Saving whole embeddings map w/ landmarks")
-        as_html = fig.to_html(
-            full_html=True,
-            include_plotlyjs=True,
-            default_height="100vh",
-            default_width="80vw",
-        )
+        logger.info(f"Saving whole embeddings map w/ landmarks {to}")
+        # as_html = fig.to_html(
+        #     full_html=True,
+        #     include_plotlyjs=True,
+        #     default_height="100vh",
+        #     default_width="80vw",
+        # )
         # with open("map.html", "w") as f:
         #     f.write(as_html)
         fig.write_image(str(to), width=fig_size, height=fig_size)
@@ -457,10 +318,12 @@ class Analyser:
         }
 
     def get_potentially_interesting_predictions(
-        self, max_other_degree, min_distance, max_distance
+        self,
+        max_other_degree: int = 100,
+        min_distance: float = 3,
+        max_distance: float = 6,
     ) -> list[tuple[str, str, float, float]]:
         all_predictions = self.own_predictions + self.other_predictions
-        logger.info(f"{len(all_predictions)} predictions available")
 
         logger.info(f"Retrieving predictions with degree <= {max_other_degree}")
         after_degree_filter = [
@@ -468,7 +331,7 @@ class Analyser:
             for x, y, score in all_predictions
             if self.degrees[y] <= max_other_degree
         ]
-        logger.info(f"Found {len(after_degree_filter)} predictions")
+        logger.info(f"Found {len(after_degree_filter):,} predictions")
 
         logger.info(
             f"Retrieving predictions with {min_distance} <= distance <= {max_distance}"
@@ -478,9 +341,23 @@ class Analyser:
             for x, y, score in after_degree_filter
             if min_distance <= (concept_dist := self.emb_distance(x, y)) <= max_distance
         ]
-        logger.info(f"Found {len(after_distance_filter)} predictions")
+        logger.info(f"Found {len(after_distance_filter):,} predictions")
 
-        return sorted(after_distance_filter, key=lambda x: x[2], reverse=True)
+        ordered_combinations = sorted(
+            after_distance_filter, key=lambda x: x[2], reverse=True
+        )
+
+        # fig = self.generate_map(
+        #     include_concepts={
+        #         "Own Concepts": [x for x, _, _, _ in ordered_combinations],
+        #         "Other Concepts": [y for _, y, _, _ in ordered_combinations],
+        #     },
+        # )
+        # fig.write_image(
+        #     "potentially_interesting_predictions.png", width=1200, height=1200
+        # )
+
+        return ordered_combinations
 
     def emb_distance(self, concept_1: str, concept_2: str):
         try:
@@ -492,11 +369,15 @@ class Analyser:
 
 
 class Report:
-    def __init__(self, author_name: str, analyser: Analyser):
-        logger.info("Initializing Report")
+    def __init__(self, base_dir: Path, author_name: str, analyser: Analyser):
+        logger.info(f"Initializing Report at {base_dir}")
+        if not base_dir.exists():
+            os.makedirs(base_dir)
+
+        self.base_dir = base_dir
         self.analyser = analyser
 
-        _doc = Document("basic")
+        _doc = Document(str(this_reports_base))
         _doc.preamble.append(Command("title", "Research Keywords Analysis"))
         _doc.preamble.append(Command("author", author_name))
         _doc.preamble.append(Command("date", Command("today")))
@@ -511,28 +392,32 @@ class Report:
         # TODO: Describe project
         with self.doc.create(Section("Introduction")):
             self.doc.append(
-                "This document presents a comprehensive analysis of research concepts."
+                "This document contains suggestions on how to combine concepts that appeared in your work"
+                + " with other concepts such that the combination is new, i.e. the two concepts forming the combination"
+                + " have not been mentioned together in an abstract."
             )
 
     def add_image(self, path: Path, caption: str):
         with self.doc.create(Figure(position="H")) as image_figure:
-            image_figure.add_image(str(path))
+            image_figure.add_image(str(path.name))
             image_figure.add_caption(caption)
 
     def add_keywords_section(self):
         logger.info("Adding Keywords Section")
         with self.doc.create(Section("Keyword Analysis")):
             #### WORDCLOUD
-            wordcloud = Path("wordcloud.png")
+            wordcloud = Path(self.base_dir / "wordcloud.png")
             self.analyser.save_world_cloud(to=wordcloud, mode="interesting")
             self.add_image(wordcloud, "Wordcloud of interesting concepts (count > 2).")
 
             #### EMBEDDINGS MAP
-            embeddings_map = Path("embeddings_map.pdf")
-            self.analyser.save_whole_2d_word_embeddings_map(
+            embeddings_map = Path(self.base_dir / "embeddings_map.pdf")
+            self.analyser.save_map_with_interesting_concepts(
                 to=embeddings_map, fig_size=1600
             )
-            self.add_image(embeddings_map, "2D Embeddings Map of interesting concepts.")
+            self.add_image(
+                embeddings_map, "2D Embeddings Map of your interesting concepts."
+            )
 
             #### LIST of interesting keywords
             self.doc.append(
@@ -636,12 +521,13 @@ class Report:
 
             with self.doc.create(Itemize()) as itemize:
                 for title in all_titles:
-                    itemize.add_item(title)
+                    only_ascii = "".join([char for char in title if ord(char) < 128])
+                    itemize.add_item(only_ascii)
 
     def add_map_of_materials_science_map(self):
         logger.info("Adding Map of Materials Science Section")
 
-        map_of_materials_science = Path("map_of_materials_science.pdf")
+        map_of_materials_science = Path(self.base_dir / "map_of_materials_science.pdf")
         self.analyser.save_map_with_important_landmarks(
             to=map_of_materials_science, panel_size=1, fig_size=1600
         )
@@ -653,44 +539,68 @@ class Report:
             )
 
     def generate_pdf(self, output: Path, clean_tex: bool = False):
+        logger.info(f"Generating PDF to {output}")
         self.doc.generate_pdf(str(output), clean_tex=clean_tex)
 
 
+generation_base = Path("report/pdf/generation")
+prediction_base = generation_base / "predictions"
 if __name__ == "__main__":
-    author_name = "Pascal Friederich"
-    df = pd.read_csv("fixed_concepts.csv")
-    df["llama_concepts"] = df["llama_concepts"].apply(literal_eval)  # make usable
-    analyser = Analyser(
-        df,
+    sources = [
+        "alexander_colsmann.txt",
+        "pavel_levkin.txt",
+        "christoph_kirchlechner_own.txt",
+        "eva_blasco.txt",
         "pascal_friederich.txt",
-        predictions=Path("friederich.pickle"),
-        all_embeddings=Path("transformed.pkl.gz"),
-        occurance_filter=2,
-    )
-    # TESTING FUNCTIONALITY
-    fig = analyser.generate_map(
-        {
-            "Test": [
-                "graph neural network",
-                "particle detection",
-                "particle tracking",
-            ]
-        },
-        {"Test": "#FF0000"},
-    )
-    fig.write_image("background_test.png", width=1200, height=1200)
-    exit(-1)
+        "yolita_eggeler_own.txt",
+        "uli_lemmer.txt",
+        "jens_bauer.txt",
+        "jasmin_aghassi.txt",
+        "horst_hahn.txt",
+    ]
 
-    # analyser.save_map_with_important_landmarks("x.png", panel_size=1)
+    for source in sources:
+        raw_name = source.split(".")[0]
+        author_name = " ".join(name.capitalize() for name in raw_name.split("_"))
+        logger.info(f"Generating report for '{author_name}'")
+        this_reports_base = generation_base / raw_name
+        if this_reports_base.exists():
+            logger.warning(f"Skipping {author_name}")
+            continue
 
-    r = Report("Pascal Friederich", analyser=analyser)
-    r.add_introduction()
-    r.add_keywords_section()
-    r.add_suggestions_section(top_k=25)
-    r.add_highly_connective_predictions(top_k=20, threshold=0.999)
-    r.add_map_of_materials_science_map()
-    r.add_potentially_interesting_predictions(
-        top_k=30, max_degree=100, min_dist=3, max_dist=6
-    )
-    # r.add_sources()
-    r.generate_pdf(Path("research_keyword_analysis"), clean_tex=True)
+        predictions = prediction_base / f"{raw_name}.pkl"
+
+        df = pd.read_csv(generation_base / "fixed_concepts.csv")
+        df["llama_concepts"] = df["llama_concepts"].apply(literal_eval)  # make usable
+        analyser = Analyser(
+            generation_base,
+            df,
+            source,
+            predictions=predictions,
+            all_embeddings=generation_base / "transformed.pkl.gz",
+            occurance_filter=2,
+        )
+        # analyser.save_map_with_important_landmarks("x.png", panel_size=1)
+
+        r = Report(this_reports_base, author_name, analyser=analyser)
+        r.add_introduction()
+        r.add_keywords_section()
+        r.add_suggestions_section(top_k=25)
+        r.add_highly_connective_predictions(top_k=20, threshold=0.999)
+        r.add_potentially_interesting_predictions(
+            top_k=50, max_degree=100, min_dist=3, max_dist=6
+        )
+        r.add_map_of_materials_science_map()
+        r.add_sources()
+        r.generate_pdf(this_reports_base / raw_name, clean_tex=False)
+
+        logger.info(f"Finished report for '{author_name}'\n\n\n")
+
+    # add all reports to a zip file
+    with zipfile.ZipFile(generation_base / "all_reports.zip", "w") as zipf:
+        for source in sources:
+            raw_name = source.split(".")[0]
+            this_reports_base = generation_base / raw_name
+            pdf_report = this_reports_base / f"{raw_name}.pdf"
+            logger.info(f"Adding {pdf_report} to zip file")
+            zipf.write(pdf_report, arcname=pdf_report.name)
