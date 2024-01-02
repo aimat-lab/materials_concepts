@@ -122,11 +122,13 @@ class DataReader:
     ):
         averaged_embeddings = EmbeddingAverager(only_average_contained)
 
-        if until_year and until_month:  # create date from year and month
+        if (
+            until_year is not None and until_month is not None
+        ):  # create date from year and month
             until_date = pd.to_datetime(f"{until_year+1}-{until_month+1}-01")
             ids = set(self.df[self.df.publication_date < until_date]["id"])
-        elif until_year:  # create date from year
-            until_date = pd.to_datetime(f"{until_year+1}-01-")
+        elif until_year is not None:  # create date from year
+            until_date = pd.to_datetime(f"{until_year+1}-01-01")
             ids = set(self.df[self.df.publication_date < until_date]["id"])
         else:
             ids = set(self.df["id"])

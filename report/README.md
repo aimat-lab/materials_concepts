@@ -30,8 +30,30 @@ python3 -u inference.py \
 --max_new_tokens 650
 ```
 
-[...]
+## Post-proces concepts
 
-# Project Embeddings:
+`python report/post_process_concepts.py --concepts report/concepts.csv --to_merge report/analysis_works.elements.works.csv --output report/fixed_concepts.csv`
 
-`python model/reduce_dim.py --input_file report/pdf/word-embs.full.M.pkl.gz report/pdf/transformed.pkl.gz``
+# Run combinations inference
+
+1. Upload `fixed_concepts.csv` to BWUniCluster
+2. Run `job.sh` in `backend` folder which will run `analysis_inference.py`.
+3. Download `.pkl` files with predictions to `report/pdf/generation/` folder.
+   `scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-linkpr/fb6372-graph/backend/predictions/christoph_brabec_all.txt.pkl report/pdf/generation/predictions/christoph_brabec.pkl`
+
+## Project Embeddings:
+
+Download embeddings `word-embs.full.M.pkl.gz` from BWUniCluster.
+
+Use `reduce_dim.py` to reduce the dimensionality of the embeddings to 2D:
+`python model/reduce_dim.py --input_file report/pdf/generation/word-embs.full.M.pkl.gz report/pdf/generation/transformed.pkl.gz``
+
+# TODO
+
+- [ ] Update this README
+- [ ] Workflow -> Generate Reports
+- [ ] Map: own concepts highlighted and suggested concepts highlighted
+- [ ] Potentially interesting concepts: Node_Degree <= N && min_dist <= Concepts_Distance <= max_dist
+- [ ] Works: request unique OpenAlex WorkID
+- [x] Evolution: average for all years and month = 0
+- [ ] "type heterojunction" is missing from embeddings because of one work (OpenAlex ID) exists 8 times -> Clean up

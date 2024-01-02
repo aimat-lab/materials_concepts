@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 from tqdm import tqdm
+import fire
 
 tqdm.pandas()
 
@@ -158,7 +159,11 @@ def process_work(text):
         text = add_last_bracket(text)  # if bracket missing
         text = trim_to_first_close_bracket(text)
         text = between_brackets.search(text).group(1)  # extract text between brackets
-        return _eval(text)
+        try:
+            return eval(text)
+        except Exception as e:
+            print("Normal eval failed, using fallback")
+            return _eval(text)
     except Exception as e:
         print(e, "in", text)
         return []
@@ -206,28 +211,35 @@ def substitute_single_elements(row):
     return sorted(set(concepts))
 
 
-if __name__ == "__main__":
-    import os
+def main(
+    concepts="report/concepts.csv",
+    to_merge="report/analysis_works.elements.works.csv",
+    output="report/fixed_concepts.csv",
+):
+    df = pd.read_csv(concepts)
 
-    WORK_FILE = "report/analysis_works.elements.works.csv"
-    OUT_FILE = "report/fixed_concepts.csv"
+    concept_column = "concepts"
+    if "concepts" not in df.columns and "generated" in df.columns:
+        concept_column = "generated"
 
-    df = pd.read_csv("report/concepts.csv")
-
-    df.concepts = df.concepts.progress_apply(process_work)
-    df.concepts = df.concepts.progress_apply(clean_concepts)
+    df[concept_column] = df[concept_column].progress_apply(process_work)
+    df[concept_column] = df[concept_column].progress_apply(clean_concepts)
 
     # merge with original data
 
-    df = df.rename(columns={"concepts": "llama_concepts"})
+    df = df.rename(columns={concept_column: "llama_concepts"})
 
-    original = pd.read_csv(WORK_FILE)
+    original = pd.read_csv(to_merge)
 
-    m = original.merge(df, on="id")
+    m = original.merge(df, on="id", how="inner", validate="one_to_one")
 
     # substitute single elements
 
     m["elements"] = m["elements"].fillna("")
     m["llama_concepts"] = m.progress_apply(substitute_single_elements, axis=1)
 
-    m.to_csv(OUT_FILE, index=False)
+    m.to_csv(output, index=False)
+
+
+if __name__ == "__main__":
+    fire.Fire(main)

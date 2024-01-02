@@ -65,6 +65,7 @@ class Analyser:
             for item in sublist
             if item in self.all_embeddings  # only consider concepts with embeddings
         )
+        logger.info(f"Found {len(self.all_concepts)} concepts in {source}")
         self.interesting_concepts = {
             concept: count
             for concept, count in self.all_concepts.items()
@@ -547,16 +548,18 @@ generation_base = Path("report/pdf/generation")
 prediction_base = generation_base / "predictions"
 if __name__ == "__main__":
     sources = [
-        "alexander_colsmann.txt",
-        "pavel_levkin.txt",
-        "christoph_kirchlechner_own.txt",
-        "eva_blasco.txt",
-        "pascal_friederich.txt",
-        "yolita_eggeler_own.txt",
-        "uli_lemmer.txt",
-        "jens_bauer.txt",
-        "jasmin_aghassi.txt",
-        "horst_hahn.txt",
+        # "alexander_colsmann.txt",
+        # "pavel_levkin.txt",
+        # "christoph_kirchlechner_own.txt",
+        # "eva_blasco.txt",
+        # "pascal_friederich.txt",
+        # "yolita_eggeler_own.txt",
+        # "uli_lemmer.txt",
+        # "jens_bauer.txt",
+        # "jasmin_aghassi.txt",
+        # "horst_hahn.txt",
+        "christoph_brabec.txt",
+        "rebecca_davis.txt",
     ]
 
     for source in sources:

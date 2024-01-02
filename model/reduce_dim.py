@@ -41,7 +41,7 @@ def main_umap(input_file="", output_file="", n_components=2):
     matrix = torch.stack(tuple(data.values()))
 
     logger.info(f"Reducing dimensionality to {n_components} using UMAP")
-    umap_reducer = umap.UMAP(n_components=n_components)
+    umap_reducer = umap.UMAP(n_components=n_components, random_state=42)
     reduced_embeddings = umap_reducer.fit_transform(matrix.numpy())
 
     # restore dict-like structure
