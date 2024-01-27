@@ -29,7 +29,11 @@ from typing import Union
 import os
 
 
-def load_compressed(path):
+def load(path: str):
+    return load_pickle(path) if path.endswith(".pkl") else load_compressed(path)
+
+
+def load_compressed(path: str):
     with gzip.open(path, "rb") as f:
         return pickle.load(f)
 
@@ -52,7 +56,7 @@ class Analyser:
     ):
         self.source = source
 
-        self.all_embeddings: dict = load_compressed(str(all_embeddings))
+        self.all_embeddings: dict = load(str(all_embeddings))
 
         lookup = pd.read_csv(base_dir / "lookup.M.new.csv")
         self.degrees = dict(zip(lookup["concept"], lookup["count"]))
@@ -547,21 +551,10 @@ class Report:
 generation_base = Path("report/pdf/generation")
 prediction_base = generation_base / "predictions"
 if __name__ == "__main__":
-    sources = [
-        # "alexander_colsmann.txt",
-        # "pavel_levkin.txt",
-        # "christoph_kirchlechner_own.txt",
-        # "eva_blasco.txt",
-        # "pascal_friederich.txt",
-        # "yolita_eggeler_own.txt",
-        # "uli_lemmer.txt",
-        # "jens_bauer.txt",
-        # "jasmin_aghassi.txt",
-        # "horst_hahn.txt",
-        "christoph_brabec.txt",
-        "rebecca_davis.txt",
-    ]
+    df = pd.read_csv(generation_base / "fixed_concepts.csv")
+    df["llama_concepts"] = df["llama_concepts"].apply(literal_eval)  # make usable
 
+    sources = sorted(set(df["source"].tolist()))  # you can also use manual mode
     for source in sources:
         raw_name = source.split(".")[0]
         author_name = " ".join(name.capitalize() for name in raw_name.split("_"))
@@ -573,8 +566,6 @@ if __name__ == "__main__":
 
         predictions = prediction_base / f"{raw_name}.pkl"
 
-        df = pd.read_csv(generation_base / "fixed_concepts.csv")
-        df["llama_concepts"] = df["llama_concepts"].apply(literal_eval)  # make usable
         analyser = Analyser(
             generation_base,
             df,
