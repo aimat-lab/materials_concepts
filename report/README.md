@@ -1,10 +1,21 @@
+## 1
+
+Put abstracts as separate .txt files in `report/abstracts/` folder.
 `python report/parse_txts.py`
 
-`python preparation/clean_abstracts.py analysis_works.csv --folder report `
+## 2
 
-`python preparation/extract_elements.py analysis_works.cleaned.works.csv --folder report/`
+`python preparation/clean_abstracts.py --input report/analysis_works.csv --output report/analysis_works.cleaned.works.csv`
 
-Copy `analysis_works.elements.works.csv` to BWUniCluster
+## 3
+
+`python preparation/extract_elements.py --input report/analysis_works.cleaned.works.csv --output report/analysis_works.elements.works.csv`
+
+Copy `analysis_works.elements.works.csv` to BWUniCluster:
+
+```
+scp report/analysis_works.elements.works.csv fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconcepts/pfs/work7/workspace/scratch/fb6372-matconcepts/
+```
 
 Extract concepts with model `ft-xxl`:
 
@@ -30,6 +41,16 @@ python3 -u inference.py \
 --max_new_tokens 650
 ```
 
+Adjust --inf_limit and time accordingly. Run `sbatch infere.sh`. `analysis_works.elements.works.csv` needs to contain column `id` and `abstract`.
+
+Time estimation: 300 abstracts with batch_size 20 takes ~730 seconds (12 minutes).
+
+Copy back to local machine:
+
+```
+scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconcepts/pfs/work7/workspace/scratch/fb6372-matconcepts/data/inference_13B-v2/ft-xxl/2024-01-24_23-16-11_ft-xxl.csv report/concepts.csv
+```
+
 ## Post-proces concepts
 
 `python report/post_process_concepts.py --concepts report/concepts.csv --to_merge report/analysis_works.elements.works.csv --output report/fixed_concepts.csv`
@@ -37,11 +58,26 @@ python3 -u inference.py \
 # Run combinations inference
 
 1. Upload `fixed_concepts.csv` to BWUniCluster
+
+   ```
+   scp report/fixed_concepts.csv fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-linkpr/fb6372-graph/backend/predictions/
+   ```
+
 2. Run `job.sh` in `backend` folder which will run `analysis_inference.py`.
+   Make sure to adapt the --concepts argument in `job.sh` to the correct path.
+
 3. Download `.pkl` files with predictions to `report/pdf/generation/` folder.
    `scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-linkpr/fb6372-graph/backend/predictions/christoph_brabec_all.txt.pkl report/pdf/generation/predictions/christoph_brabec.pkl`
 
+## Generate PDFs
+
+Place `fixed_concepts.csv` in `report/pdf/generation` folder.
+
+Edit `report/pdf/advanced_analysis.py` to list `sources` that should be processed.
+
 ## Project Embeddings:
+
+(You only need to run this once!)
 
 Download embeddings `word-embs.full.M.pkl.gz` from BWUniCluster.
 
@@ -50,10 +86,11 @@ Use `reduce_dim.py` to reduce the dimensionality of the embeddings to 2D:
 
 # TODO
 
-- [ ] Update this README
+- [x] Update this README
 - [ ] Workflow -> Generate Reports
 - [ ] Map: own concepts highlighted and suggested concepts highlighted
-- [ ] Potentially interesting concepts: Node_Degree <= N && min_dist <= Concepts_Distance <= max_dist
+- [x] Potentially interesting concepts: Node_Degree <= N && min_dist <= Concepts_Distance <= max_dist
 - [ ] Works: request unique OpenAlex WorkID
 - [x] Evolution: average for all years and month = 0
 - [ ] "type heterojunction" is missing from embeddings because of one work (OpenAlex ID) exists 8 times -> Clean up
+- [ ] Concept combination prediction step should write files with `.txt` part to disc
