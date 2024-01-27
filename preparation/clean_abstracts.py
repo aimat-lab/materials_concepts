@@ -3,6 +3,8 @@ import pandas as pd
 import sys
 import os
 from tqdm import tqdm
+import click
+from pathlib import Path
 
 # Add the parent directory to sys.path
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -164,10 +166,27 @@ def prepare_df(df):
     return df
 
 
-def main(csv_file, folder, n_jobs, min_len):
-    input_file = os.path.join(folder, csv_file)
-    topic = csv_file.split(".")[0]
-    output_file = os.path.join(folder, f"{topic}.cleaned.works.csv")
+@click.command()
+@click.option("--input", type=click.Path(exists=True))
+@click.option("--output", type=click.Path())
+@click.option(
+    "--n_jobs",
+    default=1,
+    help="Number of processes to use for parallelization. Defaults to 8.",
+)
+@click.option(
+    "--min_len",
+    default=250,
+    help="Minimum length of abstracts. Defaults to 250.",
+)
+@click.option(
+    "--max_len",
+    default=3_000,
+    help="Maximum length of abstracts. Defaults to 3000.",
+)
+def main(input, output, n_jobs, min_len, max_len):
+    input_file = Path(input)
+    output_file = Path(output)
 
     df = pd.read_csv(input_file)
 
@@ -175,40 +194,18 @@ def main(csv_file, folder, n_jobs, min_len):
         df.abstract, sep=". "
     )  # add title to abstract
 
-    df = apply_in_parallel(df, prepare_df, n_jobs=n_jobs)
+    df = (
+        apply_in_parallel(df, prepare_df, n_jobs=n_jobs)
+        if n_jobs > 1
+        else prepare_df(df)
+    )
 
     df = df[df.abstract.str.len() > min_len]  # some abstracts are empty after cleaning
+
+    df = df[df.abstract.str.len() < max_len]
 
     df.to_csv(output_file, index=False)
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Script to clean abstracts.")
-    parser.add_argument(
-        "works_file",
-        help="The .csv file containing the works which should be filtered.",
-    )
-    parser.add_argument(
-        "--folder",
-        help="Where input file is located and where output file will be created. Defaults to 'data/'",
-        default="data/",
-    )
-
-    parser.add_argument(
-        "--njobs",
-        help="How many processes should be used for the heavier tasks. Defaults to 8.",
-        default=8,
-    )
-
-    parser.add_argument(
-        "--minlen",
-        help="Minimum length of abstracts. Defaults to 250.",
-        default=250,
-        type=int,
-    )
-
-    args = parser.parse_args()
-    print(args.works_file)
-    main(args.works_file, args.folder, n_jobs=args.njobs, min_len=args.minlen)
+    main()

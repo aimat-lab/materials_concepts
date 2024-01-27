@@ -3,6 +3,7 @@ from tqdm import tqdm
 from chem_tokenizer import get_tokens, merge_tokens, filter_element_tokens
 
 import sys, os
+import click
 
 # Add the parent directory to sys.path
 parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,38 +65,25 @@ def extract_elements(partial_df):
     return partial_df
 
 
-def main(input_file, folder, n_jobs):
-    df = pd.read_csv(os.path.join(folder, input_file))
+@click.command()
+@click.option("--input", type=click.Path(exists=True))
+@click.option("--output", type=click.Path())
+@click.option(
+    "--n_jobs",
+    help="How many processes should be used for the heavier tasks. Defaults to 1.",
+    default=1,
+)
+def main(input, output, n_jobs):
+    df = pd.read_csv(input)
 
-    df = apply_in_parallel(df, extract_elements, n_jobs)
+    df = (
+        apply_in_parallel(df, extract_elements, n_jobs)
+        if n_jobs > 1
+        else extract_elements(df)
+    )
 
-    topic = input_file.split(".")[0]
-    output_file = os.path.join(folder, f"{topic}.elements.works.csv")
-    df.to_csv(output_file, index=False)
+    df.to_csv(output, index=False)
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Script to extract elements from abstracts and merge detected ones into one word in the abstract text."
-    )
-    parser.add_argument(
-        "works_file",
-        help="The .csv file containing the works whose abstracts should be processed.",
-    )
-    parser.add_argument(
-        "--folder",
-        help="Where input file is located and where output file will be created. Defaults to 'data/'",
-        default="data/",
-    )
-
-    parser.add_argument(
-        "--njobs",
-        help="How many processes should be used for the heavier tasks. Defaults to 8.",
-        default=8,
-    )
-
-    args = parser.parse_args()
-
-    main(input_file=args.works_file, folder=args.folder, n_jobs=args.njobs)
+    main()
