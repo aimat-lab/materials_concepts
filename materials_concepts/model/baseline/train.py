@@ -1,30 +1,26 @@
-from torch import nn
-import torch
-import numpy as np
-import pickle
+import logging
+
 import fire
-import sys, os
+import numpy as np
+import torch
+from torch.utils.data import DataLoader, TensorDataset
+from torch import nn
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from metrics import print_metrics
-
+from materials_concepts.model.metrics import print_metrics
+from materials_concepts.utils.utils import flatten, load_pickle, setup_logger
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-def flatten(t):
-    return [item for sublist in t for item in sublist]
+logger = setup_logger(
+    logging.getLogger(__name__), file="logs/baseline.log", level=logging.DEBUG
+)
 
 
 def load_data(data_path, embeddings_path):
-    print("Loading data...")
-    with open(data_path, "rb") as f:
-        data = pickle.load(f)
+    logger.info("Loading data...")
+    data = load_pickle(data_path)
 
-    with open(embeddings_path, "rb") as f:
-        embeddings = pickle.load(f)
+    embeddings = load_pickle(embeddings_path)
 
     return data, embeddings
 
@@ -34,12 +30,12 @@ class BaselineNetwork(nn.Module):
         """
         Fully Connected layers
         """
-        super(BaselineNetwork, self).__init__()
+        super().__init__()
 
         layer_dims.append(1)
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.ReLU())
 
@@ -47,7 +43,7 @@ class BaselineNetwork(nn.Module):
         layers.append(nn.Sigmoid())
 
         self.net = nn.Sequential(*layers)
-        print(self.net)
+        logger.debug(self.net)
 
     def forward(self, x):
         """
@@ -58,18 +54,18 @@ class BaselineNetwork(nn.Module):
         return res
 
 
-def train(model, X_train, y_train, learning_rate, batch_size, num_epochs):
-    print(f"Training model... ({len(X_train):,})")
+def train(
+    model: BaselineNetwork, X_train, y_train, learning_rate, batch_size, num_epochs
+):
+    logger.info(f"Training model... ({len(X_train):,})")
     X_train = torch.Tensor(np.array(X_train))
     y_train = torch.Tensor(np.array(y_train))
 
     # Create a PyTorch dataset
-    dataset = torch.utils.data.TensorDataset(X_train, y_train)
+    dataset = TensorDataset(X_train, y_train)
 
     # Create a data loader
-    data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=True
-    )
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     criterion = nn.BCELoss()
 
@@ -105,11 +101,11 @@ def train(model, X_train, y_train, learning_rate, batch_size, num_epochs):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-            # Print or log information
+            # logger.info or log information
             if (i + 1) % 1000 == 0:
                 batch_loss = running_loss / 10
                 batch_accuracy = correct / total
-                print(
+                logger.debug(
                     f"Epoch [{epoch+1}/{num_epochs}], Batch [{i+1}/{len(data_loader)}], Loss: {batch_loss:.4f}, Accuracy: {batch_accuracy:.4f}"
                 )
                 running_loss = 0.0
@@ -134,12 +130,12 @@ def train(model, X_train, y_train, learning_rate, batch_size, num_epochs):
         accuracy_values.append(accuracy)
 
         # Print the average loss for the epoch
-        print(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
+        logger.info(f"Epoch [{epoch+1}/{num_epochs}], Accuracy: {accuracy:.4f}")
 
 
 def eval(model, data, embeddings, metrics_path):
     """Load the pytorch model and evaluate it on the test set"""
-    print("Evaluating...")
+    logger.info("Evaluating...")
     X_test = torch.tensor(np.array(embeddings["X_test"]), dtype=torch.float).to(device)
     predictions = np.array(flatten(model(X_test).detach().cpu().numpy()))
 
@@ -195,7 +191,7 @@ def main(
     model = BaselineNetwork([input_dim, 100, 100, 10]).to(device)
 
     if train_model:
-        print("Training...")
+        logger.info("Training...")
         model.train()
         train(
             model,
@@ -205,14 +201,14 @@ def main(
             batch_size=batch_size,
             num_epochs=num_epochs,
         )
-        print("Saving model...")
+        logger.info("Saving model...")
         if save_model:
             torch.save(model.state_dict(), save_model)
     elif eval_mode:
-        print("Loading model...")
+        logger.info("Loading model...")
         model.load_state_dict(torch.load(eval_mode))
     else:
-        print("Please specify either --train_model or --eval_model")
+        logger.info("Please specify either --train_model or --eval_model")
         return
 
     eval(model, data, embeddings, metrics_path)

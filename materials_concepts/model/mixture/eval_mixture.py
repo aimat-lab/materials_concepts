@@ -1,60 +1,31 @@
-from torch import nn
-import torch
-import numpy as np
-import pickle
-import fire
-import sys, os
 import gzip
 import logging
+import pickle
 from collections import namedtuple
-from importlib import reload
+
+import fire
+import numpy as np
+import torch
+from torch import nn
+
+from materials_concepts.model.metrics import test
+from materials_concepts.utils.utils import (
+    flatten,
+    load_pickle,
+    save_compressed,
+    setup_logger,
+)
+
+logger = setup_logger(
+    logging.getLogger(__name__), file="logs/eval.log", level=logging.DEBUG
+)
 
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
 )
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from metrics import test
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-def setup_logger(file, level=logging.INFO, log_to_stdout=True):
-    logger = logging.getLogger()
-    logger.setLevel(level)
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s", "%H:%M:%S"
-    )
-
-    if log_to_stdout:
-        stdout_handler = logging.StreamHandler(sys.stdout)
-        stdout_handler.setFormatter(formatter)
-        logger.addHandler(stdout_handler)
-
-    file_handler = logging.FileHandler(file)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    return logger
-
-
-def flatten(t):
-    return [item for sublist in t for item in sublist]
-
-
-def load_data(data_path):
-    logger.info("Loading data")
-    with open(data_path, "rb") as f:
-        return pickle.load(f)
-
-
-def save_compressed(obj, path):
-    logger.info(f"Saving compressed file to {path}")
-    with gzip.open(path, "wb") as f:
-        pickle.dump(obj, f)
 
 
 def load_compressed(path):
@@ -74,7 +45,7 @@ class BaselineNetwork(nn.Module):
         super(BaselineNetwork, self).__init__()
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.BatchNorm1d(out_))
             layers.append(nn.ReLU())
@@ -190,7 +161,7 @@ def blend(predictions, blending):
     assert len(predictions) == len(blending)
 
     new_predictions = []
-    for p, b in zip(predictions, blending):
+    for p, b in zip(predictions, blending, strict=False):
         new_predictions.append(p * b)
 
     return np.sum(new_predictions, axis=0)
@@ -224,18 +195,13 @@ def main(
     architecture1="baseline",
     model_path_2="data/model/baseline/gridsearch/aeddf108ae5a2e0b3fec8e1222ac0710.pt",
     architecture2="baseline",
-    log_file="logs/log.log",
     save_file="data/model/mixture/predictions.pkl.gz",
     save_blend=[0.6, 0.4],
 ):
-    reload(logging)
-    global logger
-    logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
-
     logger.info("Running with parameters:")
     logger.info(f"emb_comb_strategy: {emb_comb_strategy}")
 
-    data = load_data(data_path)
+    data = load_pickle(data_path)
 
     features_test = load_compressed(emb_f_test_path)
     d_test = Data(
@@ -260,7 +226,7 @@ def main(
                 feature_func=emb_strategies[emb_comb_strategy],
                 mode=architecture,
             )
-            for model, architecture in zip(models, architectures)
+            for model, architecture in zip(models, architectures, strict=False)
         ]
     )
 
@@ -276,11 +242,7 @@ def main(
                 auc, *blending
             )
         )
-        logger.info(
-            "Evaluation on test set: TP: {}, FN: {}, FP: {}, TN: {}".format(
-                tp, fn, fp, tn
-            )
-        )
+        logger.info(f"Evaluation on test set: TP: {tp}, FN: {fn}, FP: {fp}, TN: {tn}")
 
     if save_file:
         logger.info(f"Saving predictions to {save_file}")

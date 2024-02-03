@@ -1,12 +1,15 @@
-import pandas as pd
-from utils import prepare_dataframe
-import os
-import pickle, gzip
-from tqdm import tqdm
+import gzip
 import logging
+import os
+import pickle
 import sys
+
 import fire
+import pandas as pd
 import torch
+from tqdm import tqdm
+
+from materials_concepts.utils.utils import prepare_dataframe
 
 DIM_EMBEDDING = 768
 
@@ -216,7 +219,9 @@ def main(
     concept_mapping = None
 
     if store_concepts_ids:
-        concept_mapping = {c: i for i, c in zip(filter_df.id, filter_df.concept)}
+        concept_mapping = {
+            c: i for i, c in zip(filter_df.id, filter_df.concept, strict=False)
+        }
 
     averaged_embeddings.save(
         output_path,

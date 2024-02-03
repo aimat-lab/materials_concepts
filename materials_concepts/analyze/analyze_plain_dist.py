@@ -1,9 +1,11 @@
-import numpy as np
 from collections import Counter
-from graph import Graph
-from tqdm import tqdm
-import bfs
+
 import fire
+import numpy as np
+from tqdm import tqdm
+
+from materials_concepts.analyze.bfs import distance as bfs_distance
+from materials_concepts.model.graph import Graph
 
 
 def main(
@@ -25,7 +27,7 @@ def main(
     # sample N edges
     sample = np.random.choice(len(pos_edges), N, replace=False)
     for i, (u, v) in tqdm(enumerate(pos_edges[sample]), total=N):
-        distance = bfs.distance(g, u, v)
+        distance = bfs_distance(g, u, v)
         depthCounter.update([distance])
 
         if (i + 1) % 1000 == 0:

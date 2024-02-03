@@ -1,10 +1,10 @@
-import pandas as pd
-from langdetect import detect
-from langdetect import DetectorFactory
-from tqdm import tqdm
 from ast import literal_eval
 from concurrent.futures import ProcessPoolExecutor
+
 import numpy as np
+import pandas as pd
+from langdetect import DetectorFactory, detect
+from tqdm import tqdm
 
 tqdm.pandas()
 

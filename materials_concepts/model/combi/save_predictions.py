@@ -1,60 +1,31 @@
-from torch import nn
-import torch
-import numpy as np
-import pickle
-import fire
-import sys, os
 import gzip
 import logging
+import pickle
 from collections import namedtuple
-from importlib import reload
-from sklearn.metrics import roc_curve, roc_auc_score
+
+import fire
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score, roc_curve
+from torch import nn
+
+from materials_concepts.model.metrics import print_metrics, test
+from materials_concepts.utils.utils import (
+    flatten,
+    load_pickle,
+    save_compressed,
+    setup_logger,
+)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+logger = setup_logger(
+    logging.getLogger(__name__), file="logs/eval.log", level=logging.DEBUG
+)
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
 )
-
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from metrics import test, print_metrics
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-def setup_logger(file, level=logging.INFO, log_to_stdout=True):
-    logger = logging.getLogger()
-    logger.setLevel(level)
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s", "%H:%M:%S"
-    )
-
-    if log_to_stdout:
-        stdout_handler = logging.StreamHandler(sys.stdout)
-        stdout_handler.setFormatter(formatter)
-        logger.addHandler(stdout_handler)
-
-    file_handler = logging.FileHandler(file)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    return logger
-
-
-def flatten(t):
-    return [item for sublist in t for item in sublist]
-
-
-def load_data(data_path):
-    logger.info("Loading data")
-    with open(data_path, "rb") as f:
-        return pickle.load(f)
-
-
-def save_compressed(obj, path):
-    logger.info(f"Saving compressed file {path}")
-    with gzip.open(path, "wb") as f:
-        pickle.dump(obj, f)
 
 
 def load_compressed(path):
@@ -74,7 +45,7 @@ class BaselineNetwork(nn.Module):
         super(BaselineNetwork, self).__init__()
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.BatchNorm1d(out_))
             layers.append(nn.ReLU())
@@ -200,16 +171,11 @@ def main(
     architecture="combi",
     predict_path="data/model/combi/predictions.pkl.gz",
     auc_curve_path="data/model/combi/auc_curve.pkl.gz",
-    log_file="logs.log",
 ):
-    reload(logging)
-    global logger
-    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
-
     logger.info("Running with parameters:")
     logger.info(f"emb_comb_strategy: {emb_comb_strategy}")
 
-    data = load_data(data_path)
+    data = load_pickle(data_path)
 
     features_test = load_compressed(emb_f_test_path)
     d_test = Data(

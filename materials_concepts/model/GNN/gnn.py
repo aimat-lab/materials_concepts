@@ -1,17 +1,14 @@
-from torch_geometric.nn import GCNConv, GATConv, GATv2Conv
-import torch.nn.functional as F
-import torch
-from torch_geometric.data import Data
-import fire
 import pickle
+
+import fire
 import numpy as np
-import sys, os
+import torch
+import torch.nn.functional as F
+from torch_geometric.data import Data
+from torch_geometric.nn import GATv2Conv
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from graph import Graph
-from metrics import print_metrics
+from materials_concepts.model.graph import Graph
+from materials_concepts.model.metrics import print_metrics
 
 
 class GCN(torch.nn.Module):

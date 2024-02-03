@@ -4,10 +4,10 @@ import pickle
 from scipy import sparse
 import networkx as nx
 
+from materials_concepts.utils.constants import ORIGIN_DAY
+
 
 class Graph:
-    DAY_ORIGIN = date(1970, 1, 1)
-
     def __init__(self, path=None, edge_list=None):
         if path is None and edge_list is None:
             raise ValueError("Either path or edge_list must be provided.")
@@ -83,7 +83,7 @@ class Graph:
         return np.array(adj_mat.sum(0))[0]
 
     def get_until(self, date):
-        return self.edges[self.edges[:, 2] < (date - Graph.DAY_ORIGIN).days]
+        return self.edges[self.edges[:, 2] < (date - ORIGIN_DAY).days]
 
     def get_until_year(self, year):
         return self.get_until(date(year + 1, 1, 1))

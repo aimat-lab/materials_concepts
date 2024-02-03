@@ -1,18 +1,17 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv, GATv2Conv
-from torch_geometric.data import Data
-from sklearn.metrics import roc_auc_score, confusion_matrix
-import pickle, gzip
-import os, sys
+import gzip
 import logging
+import pickle
+import sys
+
 import fire
+import torch
+import torch.nn.functional as F
+from sklearn.metrics import confusion_matrix, roc_auc_score
+from torch import nn
+from torch_geometric.data import Data
+from torch_geometric.nn import GATv2Conv
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from graph import Graph
+from materials_concepts.model.graph import Graph
 
 NODE_DIM = 5
 
@@ -98,7 +97,7 @@ class MLP(nn.Module):
         super(MLP, self).__init__()
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.ReLU())
 

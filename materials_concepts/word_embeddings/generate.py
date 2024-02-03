@@ -1,14 +1,16 @@
-import pandas as pd
-from utils import prepare_dataframe
-from tqdm import tqdm
-import logging
-import sys
-from transformers import AutoTokenizer, AutoModel
-import torch
-import pickle
 import gzip
-import fire
+import logging
 import os
+import pickle
+import sys
+
+import fire
+import pandas as pd
+import torch
+from tqdm import tqdm
+from transformers import AutoModel, AutoTokenizer
+
+from materials_concepts.utils.utils import prepare_dataframe
 
 tqdm.pandas()
 
@@ -142,7 +144,7 @@ def process_works(df, desc):
     store = {}
 
     for id, abstract, concepts in tqdm(
-        zip(df.id, df.abstract, df.concepts), total=len(df), desc=desc
+        zip(df.id, df.abstract, df.concepts, strict=False), total=len(df), desc=desc
     ):
         logger.info(
             f"Process {id}: abstract len of {len(abstract)} with {len(concepts)} concepts"

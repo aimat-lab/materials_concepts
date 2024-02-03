@@ -1,55 +1,27 @@
-from torch import nn
-import torch
-import numpy as np
-import pickle
-import fire
-import sys, os
-import gzip
 import logging
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
+import fire
+import numpy as np
+import torch
+from torch import nn
 
-from metrics import print_metrics
+from materials_concepts.model.metrics import print_metrics
+from materials_concepts.utils.utils import (
+    flatten,
+    load_compressed,
+    load_pickle,
+    setup_logger,
+)
+
+logger = setup_logger(
+    logger=logging.getLogger(__name__),
+    file="logs/concept_embs_train.py",
+    level=logging.DEBUG,
+)
 
 TENSOR_DIM = 768
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-def setup_logger(level=logging.INFO, log_to_stdout=True):
-    logger = logging.getLogger()
-    logger.setLevel(level)
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s", "%H:%M:%S"
-    )
-
-    if log_to_stdout:
-        stdout_handler = logging.StreamHandler(sys.stdout)
-        stdout_handler.setFormatter(formatter)
-        logger.addHandler(stdout_handler)
-
-    file_handler = logging.FileHandler("logs.log")
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    return logger
-
-
-def flatten(t):
-    return [item for sublist in t for item in sublist]
-
-
-def load_data(data_path):
-    logger.info("Loading data")
-    with open(data_path, "rb") as f:
-        return pickle.load(f)
-
-
-def load_compressed(path):
-    logger.info(f"Loading compressed file {path}")
-    with gzip.open(path, "rb") as f:
-        return pickle.load(f)
 
 
 class BaselineNetwork(nn.Module):
@@ -62,7 +34,7 @@ class BaselineNetwork(nn.Module):
         layer_dims.append(1)
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             # TODO: nn.Dropout
             layers.append(nn.ReLU())
@@ -248,10 +220,7 @@ def main(
     pos_to_neg_ratio=0.03,
     input_dim=1536,
 ):
-    global logger
-    logger = setup_logger(level=logging.INFO, log_to_stdout=True)
-
-    data = load_data(data_path)
+    data = load_pickle(data_path)
 
     embeddings = {
         "X_train": load_compressed(emb_train_path),

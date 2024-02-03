@@ -9,7 +9,7 @@ import gzip
 import sys
 
 
-def legacy_prepare_dataframe(df, lookup_df, cols):
+def legacy_prepare_dataframe(df, lookup_df, cols):  # TODO: Refactor?
     lookup = {key: True for key in lookup_df["concept"]}
 
     df.abstract = df.abstract.str.lower()

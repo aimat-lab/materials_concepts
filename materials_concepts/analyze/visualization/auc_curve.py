@@ -1,12 +1,6 @@
 import matplotlib.pyplot as plt
-import gzip, pickle
 
-
-def load_compressed(path):
-    with open(path, "rb") as f:
-        compressed = f.read()
-    return pickle.loads(gzip.decompress(compressed))
-
+from materials_concepts.utils.utils import load_compressed
 
 models = ["baseline", "pure_embs", "combi", "mixture"]
 model_name = {
@@ -20,7 +14,7 @@ model_name = {
 colors = ["red", "green", "blue", "orange"]
 
 plt.figure(figsize=(10, 7))
-for model, color in zip(models, colors):
+for model, color in zip(models, colors, strict=False):
     data = load_compressed(f"data/analyze/{model}.auc_curve.pkl.gz")
 
     plt.plot(
