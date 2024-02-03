@@ -1,23 +1,21 @@
-from torch import nn
-import torch
-import numpy as np
-import pickle
-import fire
-import sys, os
 import gzip
 import logging
+import pickle
+import sys
 from collections import namedtuple
 from importlib import reload
 
+import fire
+import numpy as np
+import torch
+from torch import nn
+
+from materials_concepts.model.metrics import test
 
 Data = namedtuple(
     "Data", ["pairs", "feature_embeddings", "concept_embeddings", "labels"]
 )
 
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_directory)
-
-from metrics import test
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -68,7 +66,7 @@ class BaselineNetwork(nn.Module):
         super(BaselineNetwork, self).__init__()
 
         layers = []
-        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:]):
+        for in_, out_ in zip(layer_dims[:-1], layer_dims[1:], strict=False):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.BatchNorm1d(out_))
             layers.append(nn.ReLU())

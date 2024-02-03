@@ -1,125 +1,6 @@
 from enum import Enum
 
-elements = [
-    "H",
-    "He",
-    "Li",
-    "Be",
-    "B",
-    "C",
-    "N",
-    "O",
-    "F",
-    "Ne",
-    "Na",
-    "Mg",
-    "Al",
-    "Si",
-    "P",
-    "S",
-    "Cl",
-    "Ar",
-    "K",
-    "Ca",
-    "Sc",
-    "Ti",
-    "V",
-    "Cr",
-    "Mn",
-    "Fe",
-    "Co",
-    "Ni",
-    "Cu",
-    "Zn",
-    "Ga",
-    "Ge",
-    "As",
-    "Se",
-    "Br",
-    "Kr",
-    "Rb",
-    "Sr",
-    "Y",
-    "Zr",
-    "Nb",
-    "Mo",
-    "Tc",
-    "Ru",
-    "Rh",
-    "Pd",
-    "Ag",
-    "Cd",
-    "In",
-    "Sn",
-    "Sb",
-    "Te",
-    "I",
-    "Xe",
-    "Cs",
-    "Ba",
-    "La",
-    "Ce",
-    "Pr",
-    "Nd",
-    "Pm",
-    "Sm",
-    "Eu",
-    "Gd",
-    "Tb",
-    "Dy",
-    "Ho",
-    "Er",
-    "Tm",
-    "Yb",
-    "Lu",
-    "Hf",
-    "Ta",
-    "W",
-    "Re",
-    "Os",
-    "Ir",
-    "Pt",
-    "Au",
-    "Hg",
-    "Tl",
-    "Pb",
-    "Bi",
-    "Po",
-    "At",
-    "Rn",
-    "Fr",
-    "Ra",
-    "Ac",
-    "Th",
-    "Pa",
-    "U",
-    "Np",
-    "Pu",
-    "Am",
-    "Cm",
-    "Bk",
-    "Cf",
-    "Es",
-    "Fm",
-    "Md",
-    "No",
-    "Lr",
-    "Rf",
-    "Db",
-    "Sg",
-    "Bh",
-    "Hs",
-    "Mt",
-    "Ds",
-    "Rg",
-    "Cn",
-    "Nh",
-    "Fl",
-    "Mc",
-    "Lv",
-    "Ts",
-    "Og",
-]
+from materials_concepts.dataset.preparation.chem.elements import elements
 
 
 class TokenType(Enum):
@@ -167,7 +48,7 @@ class Tokenizer:
     def __init__(self, text) -> None:
         self.text = text
         self.pos = 0
-        self.tokens = []
+        self.tokens: list[Token] = []
 
     def _advance(self, n=1):
         self.pos += n
@@ -321,7 +202,7 @@ class Tokenizer:
             self.tokens.pop()
 
 
-def filter_tokens(tokens, type: TokenType):
+def filter_tokens(tokens: list[Token], type: TokenType):
     return {token.value for token in tokens if token.type == type}
 
 
@@ -333,7 +214,7 @@ def get_tokens(text) -> list[Token]:
     return Tokenizer(text).tokenize()
 
 
-def merge_tokens(tokens):
+def merge_tokens(tokens: list[Token]):
     return "".join(token.value for token in tokens)
 
 

@@ -1,5 +1,5 @@
-from Downloader import OADownloader, InMemoryHandler, Converter
-from helper import make_valid_filename
+from materials_concepts.dataset.downloader.Downloader import Converter, OADownloader
+from materials_concepts.utils.utils import make_valid_filename
 
 converter = Converter(
     {

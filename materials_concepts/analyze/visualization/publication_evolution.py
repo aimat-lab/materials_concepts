@@ -1,9 +1,7 @@
-import pandas as pd
 import matplotlib.pyplot as plt
-
 import numpy as np
+import pandas as pd
 from sklearn.linear_model import LinearRegression
-
 
 df = pd.read_csv("data/table/materials-science.cleaned.works.csv")
 
@@ -25,8 +23,8 @@ yearly_counts = df.groupby("year").size()
 X = yearly_counts.index.values.reshape(-1, 1)  # Years as independent variable
 y = yearly_counts.values  # Counts as dependent variable
 
-from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures
 
 # Degree of the polynomial. You can adjust based on your data.
 degree = 3

@@ -1,9 +1,11 @@
 # custom imports
-from Downloader import OADownloader, FileHandler, Converter
-from helper import Timer
 import os
+
 import pandas as pd
 from tqdm import tqdm
+
+from materials_concepts.dataset.downloader.Downloader import Converter, OADownloader
+from materials_concepts.utils.utils import Timer
 
 WORKS_URL = "https://api.openalex.org/works"
 
@@ -105,7 +107,7 @@ def merge_files(csv_file, folder):
 
 
 def get_line_count(filepath):
-    with open(filepath, "r") as file:
+    with open(filepath) as file:
         line_count = sum(1 for _ in file) - 1  # subtract 1 for the header
     return line_count
 
@@ -127,7 +129,7 @@ def fetch_multiple(csv_file, fetch_limit=None, folder="data/"):
     df = pd.read_csv(csv_file)
     sources_count = len(df)
     for index, (source_id, display_name, works_count) in enumerate(
-        zip(df["id"], df["display_name"], df["works_count"])
+        zip(df["id"], df["display_name"], df["works_count"], strict=False)
     ):
         if file_cached(source_id, folder, works_count):
             print(

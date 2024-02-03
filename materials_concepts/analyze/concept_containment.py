@@ -1,5 +1,6 @@
-import pandas as pd
 from ast import literal_eval
+
+import pandas as pd
 
 df_v1 = pd.read_csv("data/table/materials-science.llama.works.csv")
 df_v2 = pd.read_csv("data/table/materials-science.llama2.works.csv")

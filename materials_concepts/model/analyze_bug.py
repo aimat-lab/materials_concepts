@@ -1,16 +1,7 @@
-from graph import Graph
-from utils import prepare_dataframe
 import pandas as pd
-import pickle
-import gzip
+from graph import Graph
 
-ORIGIN_DAY = pd.to_datetime("1970-01-01")
-
-
-def load_compressed(path):
-    with open(path, "rb") as f:
-        compressed = f.read()
-    return pickle.loads(gzip.decompress(compressed))
+from materials_concepts.utils.utils import load_compressed, prepare_dataframe
 
 
 def get_concepts_until_table(df, year):
@@ -44,7 +35,7 @@ print("# concepts", len(table_concepts))
 
 
 df_l = pd.read_csv("data/table/lookup/lookup_small.csv")
-lookup_cs = {id: concept for id, concept in zip(df_l.id, df_l.concept)}
+lookup_cs = {id: concept for id, concept in zip(df_l.id, df_l.concept, strict=False)}
 lookup_concepts = set(lookup_cs.values())
 print("# lookup concepts", len(lookup_concepts))
 

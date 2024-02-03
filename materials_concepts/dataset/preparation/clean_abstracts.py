@@ -1,17 +1,11 @@
 import re
-import pandas as pd
-import sys
-import os
-from tqdm import tqdm
-import click
 from pathlib import Path
 
-# Add the parent directory to sys.path
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if parent_directory not in sys.path:
-    sys.path.append(parent_directory)
+import click
+import pandas as pd
+from tqdm import tqdm
 
-from utils.utils import apply_in_parallel
+from materials_concepts.utils.utils import apply_in_parallel
 
 tqdm.pandas()
 
@@ -71,7 +65,7 @@ def remove_intro(text):
     return text
 
 
-def replace_oxide_numbers(text):
+def replace_oxide_numbers(text: str):
     # replace roman numerals with numbers
     text = text.replace("(I)", "1+")
     text = text.replace("(II)", "2+")
@@ -190,8 +184,8 @@ def main(input, output, n_jobs, min_len, max_len):
 
     df = pd.read_csv(input_file)
 
-    df.abstract = df.display_name.str.cat(
-        df.abstract, sep=". "
+    df["abstract"] = df["display_name"].str.cat(
+        df["abstract"], sep=". "
     )  # add title to abstract
 
     df = (
@@ -200,9 +194,11 @@ def main(input, output, n_jobs, min_len, max_len):
         else prepare_df(df)
     )
 
-    df = df[df.abstract.str.len() > min_len]  # some abstracts are empty after cleaning
+    df: pd.DataFrame = df[
+        df["abstract"].str.len() > min_len
+    ]  # some abstracts are empty after cleaning
 
-    df = df[df.abstract.str.len() < max_len]
+    df = df[df["abstract"].str.len() < max_len]
 
     df.to_csv(output_file, index=False)
 

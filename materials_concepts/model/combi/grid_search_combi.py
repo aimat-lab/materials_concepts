@@ -1,8 +1,9 @@
-from train import main
-import itertools
-import random
 import hashlib
+import itertools
 import json
+import random
+
+from materials_concepts.model.combi.train import main
 
 constants = dict(
     data_path="data-v2/model/data.M.pkl",
@@ -68,7 +69,9 @@ class GridSearch:
         keys = self.config.keys()
         values = (self.config[key] for key in keys)
         combinations = list(itertools.product(*values))
-        return [dict(zip(keys, combination)) for combination in combinations]
+        return [
+            dict(zip(keys, combination, strict=False)) for combination in combinations
+        ]
 
     def _print_begin(self, desc, width=40):
         print("=" * width)

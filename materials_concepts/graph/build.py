@@ -1,14 +1,17 @@
-import pandas as pd
-import numpy as np
-from tqdm import tqdm
-from collections import Counter
-from ast import literal_eval
-from nltk import pos_tag
-import re
-from fire import Fire
 import pickle
+import re
+from ast import literal_eval
+from collections import Counter
+from datetime import datetime
+from typing import cast
 
-ORIGIN_DAY = pd.to_datetime("1970-01-01")
+import numpy as np
+import pandas as pd
+from fire import Fire
+from nltk import pos_tag
+from tqdm import tqdm
+
+from materials_concepts.utils.constants import ORIGIN_DAY
 
 
 def str_to_set(str):
@@ -277,7 +280,7 @@ def main(
 
     # encode publication date as days since origin
     df["pub_date_days"] = pd.to_datetime(df.publication_date).apply(
-        lambda ts: (ts - ORIGIN_DAY).days
+        lambda dt: (cast(datetime, dt) - ORIGIN_DAY).days
     )
 
     def get_pairs(items):
@@ -296,7 +299,14 @@ def main(
 
     for concept_list, element_list, pub_date, date, work_id in tqdm(
         list(
-            zip(df[colname], df.elements, df.pub_date_days, df.publication_date, df.id)
+            zip(
+                df[colname],
+                df.elements,
+                df.pub_date_days,
+                df.publication_date,
+                df.id,
+                strict=False,
+            )
         )
     ):
         works_concepts = [c.lower() for c in concept_list] + list(element_list)

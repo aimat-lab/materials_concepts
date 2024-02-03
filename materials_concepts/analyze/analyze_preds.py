@@ -1,11 +1,12 @@
-import numpy as np
-from utils import load, load_compressed
 from collections import Counter
-from graph import Graph
-from tqdm import tqdm
-import bfs
-import fire
 
+import fire
+import numpy as np
+from tqdm import tqdm
+
+from materials_concepts.analyze.bfs import distance as bfs_distance
+from materials_concepts.model.graph import Graph
+from materials_concepts.utils.utils import load_compressed, load_pickle
 
 TN = 1
 FN = 2
@@ -20,7 +21,7 @@ def main(
     predictions_path="data/model/combi/predictions.pkl.gz",
 ):
     print("Loading data")
-    data = load(data_path)
+    data = load_pickle(data_path)
     truth = data["y_test"]
     scores = load_compressed(predictions_path)
 
@@ -60,7 +61,7 @@ def main(
         for ind in tqdm(index_sample):
             u, v = data["X_test"][ind]
 
-            distance = bfs.distance(g, u, v)
+            distance = bfs_distance(g, u, v)
             depthCounter.update([distance])
             edges_depth[ind] = distance
 

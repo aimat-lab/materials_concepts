@@ -1,16 +1,13 @@
+import click
 import pandas as pd
 from tqdm import tqdm
-from chem_tokenizer import get_tokens, merge_tokens, filter_element_tokens
-
-import sys, os
-import click
-
-# Add the parent directory to sys.path
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if parent_directory not in sys.path:
-    sys.path.append(parent_directory)
-
 from utils.utils import apply_in_parallel
+
+from materials_concepts.dataset.preparation.chem.chem_tokenizer import (
+    filter_element_tokens,
+    get_tokens,
+    merge_tokens,
+)
 
 tqdm.pandas()
 

@@ -1,17 +1,17 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import pickle
 from datetime import date
 
-DAY_ORIGIN = date(1970, 1, 1)
+import matplotlib.pyplot as plt
+import numpy as np
+
+from materials_concepts.utils.constants import ORIGIN_DAY
+from materials_concepts.utils.utils import load_pickle
 
 
 def get_until(graph, day):
-    return graph[graph[:, 2] < (day - DAY_ORIGIN).days]
+    return graph[graph[:, 2] < (day - ORIGIN_DAY).days]
 
 
-with open("data/graph/edges.M.pkl", "rb") as f:
-    edge_holder = pickle.load(f)
+edge_holder = load_pickle("data/graph/edges.M.pkl")
 
 edges = edge_holder["edges"]
 
@@ -21,7 +21,7 @@ percentiles = np.linspace(0, 1, 100)
 
 plt.figure(figsize=(10, 7))
 
-for year, color in zip(years, colors):
+for year, color in zip(years, colors, strict=False):
     print(year)
     cutoff_day = date(year, 1, 1)
     edges_until_year = get_until(edges, cutoff_day)

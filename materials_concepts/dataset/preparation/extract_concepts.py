@@ -6,12 +6,25 @@ from tqdm import tqdm
 import pandas as pd
 from keybert import KeyBERT
 
-# Add the parent directory to sys.path
-parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if parent_directory not in sys.path:
-    sys.path.append(parent_directory)
+from materials_concepts.utils.utils import apply_in_parallel
 
-from utils.utils import apply_in_parallel
+# INIT
+# import nltk
+# import ssl
+
+# try:
+#     _create_unverified_https_context = ssl._create_unverified_context
+# except AttributeError:
+#     pass
+# else:
+#     ssl._create_default_https_context = _create_unverified_https_context
+
+
+# nltk.download("averaged_perceptron_tagger")
+# nltk.download("stopwords")
+# nltk.download("punkt")
+# nltk.download("wordnet")
+
 
 tqdm.pandas()
 

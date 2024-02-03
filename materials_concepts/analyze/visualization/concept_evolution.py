@@ -1,15 +1,11 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.ticker import ScalarFormatter
 from ast import literal_eval
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.ticker import ScalarFormatter
 from tqdm import tqdm
 
-import os, sys
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from graph import Graph
-
+from materials_concepts.model.graph import Graph
 
 df = pd.read_csv("data/table/materials-science.llama2.works.csv")
 df.llama_concepts = df.llama_concepts.apply(literal_eval)

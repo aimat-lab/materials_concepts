@@ -1,5 +1,5 @@
 import unittest
-from chem_tokenizer import get_elements
+from materials_concepts.dataset.preparation.chem.chem_tokenizer import get_elements
 
 
 class TestChemTokenizer(unittest.TestCase):

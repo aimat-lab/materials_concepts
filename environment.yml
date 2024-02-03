@@ -1,3 +1,12 @@
 name: materials-concepts
 dependencies:
   - pandas
+  - click
+  - nltk
+  - rake_nltk
+  - keybert
+  - fire
+  - langdetect
+  - scipy
+  - networkx
+  - pyarrow

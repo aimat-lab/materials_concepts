@@ -1,31 +1,15 @@
-from tqdm import tqdm
-import pickle, gzip
-import fire
 import logging
-import os
-import sys
+
+import fire
 import numpy as np
+from tqdm import tqdm
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from graph import Graph
+from materials_concepts.model.graph import Graph
+from materials_concepts.utils.utils import save_compressed, setup_logger
 
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    "%(asctime)s | %(levelname)s | %(message)s", "%m-%d-%Y %H:%M:%S"
+logger = setup_logger(
+    logging.getLogger(__name__), file="logs/pre_compute.log", level=logging.DEBUG
 )
-
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setLevel(logging.DEBUG)
-stdout_handler.setFormatter(formatter)
-
-file_handler = logging.FileHandler("logs.log")
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-
-logger.addHandler(stdout_handler)
-logger.addHandler(file_handler)
 
 
 def get_node_features(graph_path, years, binary):
@@ -55,12 +39,6 @@ def get_node_features(graph_path, years, binary):
 
 def calc_degs(adj):
     return np.array(adj.sum(0))[0]
-
-
-def save_compressed(obj, path):
-    compressed = gzip.compress(pickle.dumps(obj))
-    with open(path, "wb") as f:
-        f.write(compressed)
 
 
 def main(

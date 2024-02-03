@@ -2,27 +2,19 @@ from tqdm import tqdm
 import numpy as np
 import fire
 import logging
-import os
-import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from graph import Graph
+from materials_concepts.model.graph import Graph
+from materials_concepts.utils.utils import setup_logger, load_pickle, save_pickle
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    "%(asctime)s | %(levelname)s | %(message)s", "%m-%d-%Y %H:%M:%S"
+logger = setup_logger(
+    logging.getLogger(__name__),
+    file="logs/baseline_embeddings.log",
+    level=logging.DEBUG,
 )
 
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setLevel(logging.DEBUG)
-stdout_handler.setFormatter(formatter)
 
-logger.addHandler(stdout_handler)
-
-
-def get_degrees(adjmatrix):
+def get_degrees(adjmatrix: np.ndarray):
     return np.array(adjmatrix.sum(0))[0]
 
 
@@ -195,19 +187,9 @@ def main(
     data_path="data/model/data.pkl",
     output_path="data/model/baseline/embeddings.pkl",
     include_jaccard=True,
-    log_path="logs/baseline_embeddings.log",
 ):
-    file_handler = logging.FileHandler(log_path)
-    file_handler.setLevel(logging.DEBUG)
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
-
-    import pickle
-
     logging.info("Loading data...")
-    with open(data_path, "rb") as f:
-        data = pickle.load(f)
+    data = load_pickle(data_path)
 
     logging.info("Calculating embeddings...")
     X_train, X_test = calculate_embeddings(
@@ -215,8 +197,10 @@ def main(
     )
 
     logging.info("Saving embeddings...")
-    with open(output_path, "wb") as f:
-        pickle.dump({"X_train": X_train, "X_test": X_test}, f)
+    save_pickle(
+        {"X_train": X_train, "X_test": X_test},
+        output_path,
+    )
 
 
 if __name__ == "__main__":
