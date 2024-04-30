@@ -1,12 +1,16 @@
 name: materials-concepts
+channels:
+  - conda-forge
 dependencies:
   - pandas
   - click
   - nltk
   - rake_nltk
-  - keybert
   - fire
   - langdetect
   - scipy
   - networkx
   - pyarrow
+  - hatchling
+  - requests
+
