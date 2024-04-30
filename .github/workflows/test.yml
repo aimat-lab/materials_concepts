@@ -1,0 +1,10 @@
+name: Test CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Echo "test ci"
+      run: echo "test ci"
