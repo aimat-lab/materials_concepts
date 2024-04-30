@@ -6,9 +6,7 @@ Create `data/` top-level folder.
 
 ## Data Fetching
 
-Fetch all related sources: (`--folder data/` can be omitted)
-
-`$ python downloader/download_sources.py 'materials science' --folder data/`
+`$ python materials_concepts/dataset/downloader/download_sources.py --query 'materials science' --out data/table/test_3810.csv`
 
 > This will create a `data/materials-science.sources.csv` file with all the sources.
 
