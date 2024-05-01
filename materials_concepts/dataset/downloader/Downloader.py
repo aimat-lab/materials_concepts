@@ -76,7 +76,13 @@ class OADownloader:
     CURSOR_START = "*"  # init value for OpenAlex
 
     def __init__(
-        self, url, fields, handler=None, per_page=200, fetch_limit=None, filter=None
+        self,
+        url,
+        fields,
+        handler=None,
+        per_page=200,
+        fetch_limit: int | None = None,
+        filter=None,
     ) -> None:
         self._cache = []
         self.url = url
