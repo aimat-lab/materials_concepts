@@ -19,7 +19,7 @@ Install the local package in editable mode:
 
 ## Create data/ folder
 
-Create `data/` top-level folder.
+Create `data/` top-level folder and a `table/` subfolder to store the dataset.
 
 ## Data Fetching
 
