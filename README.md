@@ -12,15 +12,15 @@ Create `data/` top-level folder.
 
 Fetch works from single source:
 
-`$ python downloader/download_works.py S82336448 --folder data/`
+`$ python materials_concepts/dataset/downloader/download_works.py fetchsingle --source S82336448 --out data/table/S82336448.works.csv`
 
-> This will create a `data/S82336448.csv` file with all the works belonging to that source.
+> This will create a `S82336448.csv` file with all the works belonging to that source.
 
 Fetch works from all sources:
 
-`$ python downloader/download_works.py data/materials-science.sources.csv --folder data/`
+`$ python materials_concepts/dataset/downloader/download_works.py fetchall --sources data/materials-science.sources.csv --out data/table/materials-science.works.csv`
 
-> During fetching, this will create a `{source}.csv` file for each source in `{folder}/` listing all the works which belong to that source. After downloading, these are merged automatically into a single file `materials-science.works.csv` in the specified folder.
+> During fetching, this will create a `{source}.csv` file for each source in `cache` listing all the works which belong to that source. After downloading, these are merged automatically into a single file `out`.
 > If the download gets interrupted, the downloaded files serve as a cache. Re-run the script, it will automatically skip sources for which the data was already fetched.
 
 ## Data Filtering

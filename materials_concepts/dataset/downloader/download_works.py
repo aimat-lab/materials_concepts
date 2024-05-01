@@ -1,8 +1,10 @@
-# custom imports
 import os
 
+import click
 import pandas as pd
+from pathlib import Path
 from tqdm import tqdm
+from loguru import logger
 
 from materials_concepts.dataset.downloader.Downloader import Converter, OADownloader
 from materials_concepts.utils.utils import Timer
@@ -46,12 +48,13 @@ def invert_abstract_and_clean(abstract_inverted_index):
     return abstract.replace("\n", " ").replace("\r", " ").replace("\r\n", " ")
 
 
-def create_file(filename):
+def create_file(filename: Path):
     with open(filename, "w") as _:
         pass  # create file
 
 
-def append_to_file(filename, df):
+def append_to_file(filename: Path, df: pd.DataFrame):
+    """Append a DataFrame to a file. If the file is empty, write the header."""
     with open(filename, "a") as f:
         file_empty = f.tell() == 0
         df.to_csv(f, header=file_empty, index=False)
@@ -67,15 +70,55 @@ converter = Converter(
 )
 
 
-def fetch_single(source, fetch_limit, folder, handler=None):
-    filename = os.path.join(folder, f"{source}.csv")
+def merge_files(source_file: Path, merged_file: Path, cache_folder: Path):
+    create_file(merged_file)
+
+    df = pd.read_csv(source_file)
+    for source_id in tqdm(df["id"]):
+        # load
+        source_filename = cache_folder / f"{source_id}.csv"
+        # append to merge file
+        append_to_file(filename=merged_file, df=pd.read_csv(source_filename))
+        # clean up source file
+        os.remove(source_filename)
+
+
+def get_line_count(filepath: Path):
+    with open(filepath) as file:
+        line_count = sum(1 for _ in file) - 1  # subtract 1 for the header
+    return line_count
+
+
+def file_cached(source: str, cache_folder: Path, works_count: int):
+    # This won't always work because the amount of sources available is
+    # not always the same as the 'works_count'.
+    # Therefore, accept if the file is within a certain tolerance of the works_count.
+    _tolerance = 30
+
+    cache_file = cache_folder / f"{source}.csv"
+
+    return (
+        cache_file.exists() and get_line_count(cache_file) >= works_count - _tolerance
+    )
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.option("--source", default="S26125866")
+@click.option("--out", default="data/table/S26125866.works.csv")
+@click.option("--fetch-limit", default=None)
+def fetchsingle(source: str, out: Path, fetch_limit: int | None, handler=None):
 
     downloader = OADownloader(
         url=WORKS_URL,
         fields=FIELDS,
         handler=handler,
         fetch_limit=fetch_limit,
-        filter=f"host_venue.id:{source}",
+        filter=f"primary_location.source.id:{source}",
     )
 
     with Timer("Download time:"):
@@ -84,103 +127,51 @@ def fetch_single(source, fetch_limit, folder, handler=None):
         df = df.rename(
             columns={"abstract_inverted_index": "abstract"}
         )  # after generating the abstract from the inverted index, the column name should be changed
-        df.to_csv(filename, index=False)
+        df.to_csv(out, index=False)
 
 
-def merge_files(csv_file, folder):
-    merged_file = os.path.join(
-        folder,
-        # materials-science.sources.csv -> materials-science.works.csv
-        os.path.basename(csv_file).split(".")[0] + ".works.csv",
-    )
+@cli.command()
+@click.option("--sources", default="data/table/materials-science.sources.csv")
+@click.option("--out", default="data/table/materials-science.works.csv")
+@click.option("--fetch-limit", default=None)
+@click.option("--cache", default="/tmp/materials_concepts/.cache/sources/")
+def fetchall(
+    sources: str,
+    out: str = "data/table/materials-science.works.csv",
+    fetch_limit: int | None = None,
+    cache: str = "/tmp/materials_concepts/.cache/sources/",
+):
+    cache_folder = Path(cache)
+    cache_folder.mkdir(parents=True, exist_ok=True)
+    logger.debug(f"Cache folder: {cache_folder}")
 
-    create_file(merged_file)
-
-    df = pd.read_csv(csv_file)
-    for source_id in tqdm(df["id"]):
-        # load
-        source_filename = os.path.join(folder, f"{source_id}.csv")
-        # append to merge file
-        append_to_file(filename=merged_file, df=pd.read_csv(source_filename))
-        # clean up source file
-        os.remove(source_filename)
-
-
-def get_line_count(filepath):
-    with open(filepath) as file:
-        line_count = sum(1 for _ in file) - 1  # subtract 1 for the header
-    return line_count
-
-
-def file_cached(source, folder, works_count):
-    # This won't always work because the amount of sources available is
-    # not always the same as the 'works_count'.
-    # Therefore, accept if the file is within a certain tolerance of the works_count.
-
-    filename = os.path.join(folder, f"{source}.csv")
-
-    TOLERANCE = 30
-    return (
-        os.path.exists(filename) and get_line_count(filename) >= works_count - TOLERANCE
-    )
-
-
-def fetch_multiple(csv_file, fetch_limit=None, folder="data/"):
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(sources)
     sources_count = len(df)
+    logger.info("Fetching works for each source...")
     for index, (source_id, display_name, works_count) in enumerate(
         zip(df["id"], df["display_name"], df["works_count"], strict=False)
     ):
-        if file_cached(source_id, folder, works_count):
-            print(
+        if file_cached(source_id, cache_folder, works_count):
+            logger.info(
                 f"({index+1}/{sources_count}) Skipping: {works_count} works already cached for {display_name} ({source_id})..."
             )
             continue
 
-        print(
+        logger.info(
             f"({index+1}/{sources_count}) Fetching {works_count} works for {display_name} ({source_id})..."
         )
-        fetch_single(
-            source=source_id, fetch_limit=(fetch_limit or works_count), folder=folder
+        fetchsingle.callback(
+            source=source_id,
+            out=cache_folder / f"{source_id}.csv",
+            fetch_limit=(fetch_limit or works_count),
         )
+
+    logger.info("Creating merged file...")
+    merge_files(Path(sources), Path(out), cache_folder)
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Script to retrieve works for given source (enter ID) \
-            or for a list of sources (enter path to .csv file) from OpenAlex."
-    )
-    parser.add_argument(
-        "source",
-        help="The source ID to filter by or a csv file containing the column 'id', 'display_name', and 'works_count'",
-    )
-    parser.add_argument(
-        "--fetch_limit",
-        type=int,
-        default=None,
-        help="The number of works to fetch. Defaults to all works.",
-    )
-    parser.add_argument(
-        "--folder",
-        default="data/",
-        help="The output file (default: 'data/'))",
-    )
-    args = parser.parse_args()
-
     try:
-        if args.source.endswith(".csv"):
-            print("Fetching works for each source...")
-            fetch_multiple(
-                args.source, fetch_limit=args.fetch_limit, folder=args.folder
-            )
-            print("Creating merged file...")
-            merge_files(args.source, args.folder)
-
-        else:
-            fetch_single(
-                source=args.source, fetch_limit=args.fetch_limit, folder=args.folder
-            )
+        cli()
     except KeyboardInterrupt:
-        print("Interrupted by user")
+        logger.info("Interrupted by user.")

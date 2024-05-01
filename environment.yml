@@ -13,4 +13,5 @@ dependencies:
   - pyarrow
   - hatchling
   - requests
+  - loguru
 
