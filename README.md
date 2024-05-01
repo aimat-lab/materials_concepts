@@ -1,3 +1,20 @@
+# Installation
+
+Install [micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html) for dependency management.
+
+> [!TIP]
+> Adding `alias mm="micromamba"` to your `.bashrc` or `.zshrc` shortens your commands.
+
+Create a new environment from `environment.yml`: `$ mm create -n materials-concepts -f environment.yml`
+
+> [!NOTE]
+> If changes were made to the environment, update the environment file: `$ mm install -f environment.yml`.
+
+Activate the environment: `$ mm activate materials-concepts`
+
+Install the local package in editable mode:
+`pip install --no-build-isolation --no-deps --disable-pip-version-check -e .`
+
 # Dataset Creation
 
 ## Create data/ folder
