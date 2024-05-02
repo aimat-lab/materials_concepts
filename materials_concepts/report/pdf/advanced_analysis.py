@@ -77,7 +77,7 @@ class Analyser:
         }
         logger.info(f"Found {len(self.interesting_concepts)} interesting concepts")
 
-        self.predictions: dict = load_pickle(predictions)
+        self.predictions: dict = load_compressed(predictions)
         logger.info(f"Loaded {len(self.predictions)} predictions")
 
         logger.info("Loading own and other predictions")
@@ -551,7 +551,7 @@ class Report:
 generation_base = Path("report/pdf/generation")
 prediction_base = generation_base / "predictions"
 if __name__ == "__main__":
-    df = pd.read_csv(generation_base / "fixed_concepts.csv")
+    df = pd.read_csv(generation_base / "jasmin_jens_concepts.csv")
     df["llama_concepts"] = df["llama_concepts"].apply(literal_eval)  # make usable
 
     sources = sorted(set(df["source"].tolist()))  # you can also use manual mode
@@ -564,7 +564,7 @@ if __name__ == "__main__":
             logger.warning(f"Skipping {author_name}")
             continue
 
-        predictions = prediction_base / f"{raw_name}.pkl"
+        predictions = prediction_base / f"{raw_name}.pkl.gz"
 
         analyser = Analyser(
             generation_base,
