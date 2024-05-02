@@ -44,7 +44,7 @@ Fetch works from all sources:
 
 Filter the data to improve its quality:
 
-```$ python materials_concepts/dataset/filtering/filter_works.py --source data/table/materials-science.works.csv --out data/table/materials-science.filtered.works.csv --njobs 8 --min-abstract-length 250 --max-abstract-length 3000```
+```$ python materials_concepts/dataset/filtering/filter_works.py --source data/table/materials-science.works.csv --out data/table/materials-science.filtered.works.csv --njobs 8 --min-abstract-length 250 --max-abstract-length 3000 --topic "Materials science"```
 
 > This will output a file `materials-science.filtered.works.csv` in the `data/table/` containing all works which sufficed the conditions.
 

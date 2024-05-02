@@ -71,8 +71,8 @@ def has_no_latex(df: pd.DataFrame) -> pd.Series:
     return ~df["abstract"].str.contains(r"\\[a-z]+")
 
 
-def mat_science_related(df: pd.DataFrame) -> pd.Series:
-    return df["mat_score"] > 0
+def topic_related(df: pd.DataFrame) -> pd.Series:
+    return df["topic_score"] > 0
 
 
 def extract_concept_score(c_list: str, concept):
@@ -83,9 +83,9 @@ def extract_concept_score(c_list: str, concept):
     return -1
 
 
-def add_materials_science_score(df):
-    df["mat_score"] = df["concepts"].apply(
-        lambda string: extract_concept_score(string, concept="Materials science")
+def add_topic_score(df: pd.DataFrame, topic: str):
+    df["topic_score"] = df["concepts"].apply(
+        lambda string: extract_concept_score(string, concept=topic)
     )
     return df
 
@@ -99,6 +99,21 @@ def apply_in_parallel(df, func, n_jobs=4):
         result = executor.map(func, tasks)
 
     return pd.concat(result)
+
+
+def verify_topic_is_openalex_concept(topic: str):
+    logger.debug("Verifying topic is an OpenAlex concept...")
+    import requests
+
+    url = f"https://api.openalex.org/concepts?filter=display_name.search:{topic}"
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    data = response.json()
+
+    if data["meta"]["count"] == 0:
+        raise SystemExit(f"Concept '{topic}' not found in OpenAlex concepts.")
 
 
 def filter_df(df: pd.DataFrame, n_jobs) -> pd.DataFrame:
@@ -115,9 +130,16 @@ def filter_df(df: pd.DataFrame, n_jobs) -> pd.DataFrame:
 
     df = filter_(df, has_no_latex, name="No latex code present")
 
-    logger.info("Extracting materials science score...")
-    df = add_materials_science_score(df)
-    df = filter_(df, mat_science_related, name="Materials science related")
+    if TOPIC is not None:
+        verify_topic_is_openalex_concept(TOPIC)
+
+        logger.info(f"Extracting {TOPIC} score...")
+        df = add_topic_score(df, TOPIC)
+        df = filter_(
+            df,
+            topic_related,
+            name="Materials science related",
+        )
 
     logger.info("Detecting primary language...")
     df = apply_in_parallel(df, add_primary_language, n_jobs=n_jobs)
@@ -130,8 +152,6 @@ def filter_df(df: pd.DataFrame, n_jobs) -> pd.DataFrame:
             "is_paratext",
             "is_retracted",
             "lang",
-            "length",
-            "mat_score",
         ]
     )
     return df
@@ -166,16 +186,24 @@ def filter_df(df: pd.DataFrame, n_jobs) -> pd.DataFrame:
     help="Maximum length of the abstract. Defaults to 3000.",
     type=int,
 )
+@click.option(
+    "--topic",
+    default=None,
+    help="An OpenAlex concept to filter the works. Defaults to None (no filtering). Works must contain this concept (tagged by OpenAlex) with score > 0.",
+    # Spreadsheet of all concepts: https://docs.google.com/spreadsheets/d/1LBFHjPt4rj_9r0t0TTAlT68NwOtNH8Z21lBMsJDMoZg/edit#gid=575855905
+)
 def filter_works(
     source: str,
     out: str,
     njobs: int,
     min_abstract_length: int = 250,
     max_abstract_length: int = 3000,
+    topic: str | None = None,
 ):
-    global MIN_ABSTRACT_LENGTH, MAX_ABSTRACT_LENGTH
+    global MIN_ABSTRACT_LENGTH, MAX_ABSTRACT_LENGTH, TOPIC
     MIN_ABSTRACT_LENGTH = min_abstract_length
     MAX_ABSTRACT_LENGTH = max_abstract_length
+    TOPIC = topic
 
     df = pd.read_csv(source)
     df = filter_df(df, n_jobs=njobs)
