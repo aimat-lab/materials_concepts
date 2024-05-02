@@ -14,4 +14,6 @@ dependencies:
   - hatchling
   - requests
   - loguru
+  - langdetect
+  - tqdm
 

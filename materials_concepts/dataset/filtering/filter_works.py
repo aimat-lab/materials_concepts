@@ -6,12 +6,14 @@ import pandas as pd
 from langdetect import DetectorFactory, detect
 from tqdm import tqdm
 
+from typing import Callable
+import click
+
+from loguru import logger
+
 tqdm.pandas()
 
 DetectorFactory.seed = 0  # deterministic results: https://pypi.org/project/langdetect/
-
-MIN_ABSTRACT_LENGTH = 100
-MAX_ABSTRACT_LENGTH = 4000
 
 
 def detect_language(text):
@@ -21,65 +23,56 @@ def detect_language(text):
         return "unknown"
 
 
-def detect_other_language(text):
-    """This can be used to detect (heuristically) if there are any non-english paragraphs in the text."""
-    LANGUAGE = {
-        "resumo": "pt",
-        "autores": "pt",
-        "auteurs": "fr",
-        "autoren": "de",
-        " und ": "de",
-        " le ": "fr",
-        " les ": "fr",
-    }
-
-    # not a complete list of all occuring languages
-    # but the ones that were not filtered out by language detection
-    # already will be filtered manually
-    for word, lang in LANGUAGE.items():
-        if word in text.lower():
-            return lang
-
-    return "en"
-
-
 def add_primary_language(df):
     df["lang"] = df["abstract"].progress_apply(detect_language)
-    return df
-
-
-def add_secondary_language(df):
-    # overwrite lang attribute, as after filtering out non-english abstracts before
-    df["lang"] = df["abstract"].progress_apply(detect_other_language)
     return df
 
 
 states = []
 
 
-def filter(df, func, name=None):
+def filter_(df: pd.DataFrame, func: Callable, name=None) -> pd.DataFrame:
     before = len(df)
     if name is not None:
-        print("Applying filter: ", name, end="")
-    print(f" ({before} -> ", end="")
+        logger.info(f"Applying filter: {name}")
+
     filtered = df[func(df)]
 
     states.append((name, df[~func(df)]))
 
     after = len(filtered)
-    print(f"{after}) [{before - after} filtered]")
+    logger.info(f"{before} -> {after} ({before - after} filtered)")
     return filtered
 
 
-has_abstract = lambda df: df["abstract"].notnull()
-has_title = lambda df: df["display_name"].notnull()
-not_paratext_or_retracted = lambda df: ~df["is_paratext"] & ~df["is_retracted"]
-is_english = lambda df: df["lang"] == "en"
-abstract_length_ok = lambda df: (df.length >= MIN_ABSTRACT_LENGTH) & (
-    df.length <= MAX_ABSTRACT_LENGTH
-)
-has_no_latex = lambda df: ~df.abstract.str.contains(r"\\[a-z]+")
-mat_science_related = lambda df: df["mat_score"] > 0
+def has_abstract(df: pd.DataFrame) -> pd.Series:
+    return df["abstract"].notnull()
+
+
+def has_title(df: pd.DataFrame) -> pd.Series:
+    return df["display_name"].notnull()
+
+
+def not_paratext_or_retracted(df: pd.DataFrame) -> pd.Series:
+    return ~df["is_paratext"] & ~df["is_retracted"]
+
+
+def is_english(df: pd.DataFrame) -> pd.Series:
+    return df["lang"] == "en"
+
+
+def abstract_length_ok(df: pd.DataFrame) -> pd.Series:
+    return (df["abstract"].str.len() >= MIN_ABSTRACT_LENGTH) & (
+        df["abstract"].str.len() <= MAX_ABSTRACT_LENGTH
+    )
+
+
+def has_no_latex(df: pd.DataFrame) -> pd.Series:
+    return ~df["abstract"].str.contains(r"\\[a-z]+")
+
+
+def mat_science_related(df: pd.DataFrame) -> pd.Series:
+    return df["mat_score"] > 0
 
 
 def extract_concept_score(c_list: str, concept):
@@ -108,30 +101,29 @@ def apply_in_parallel(df, func, n_jobs=4):
     return pd.concat(result)
 
 
-def filter_df(df, n_jobs):
-    df = filter(df, has_title, name="Has title")
-    df = filter(df, has_abstract, name="Has abstract")
-    df = filter(df, not_paratext_or_retracted, name="Is not paratext or retracted")
+def filter_df(df: pd.DataFrame, n_jobs) -> pd.DataFrame:
+    df = filter_(df, has_title, name="Has title")
+    df = filter_(df, has_abstract, name="Has abstract")
+    df = filter_(df, not_paratext_or_retracted, name="Is not paratext or retracted")
 
     df["length"] = df["abstract"].str.len()
-    df = filter(
+    df = filter_(
         df,
         abstract_length_ok,
         name=f"Abstract length between {MIN_ABSTRACT_LENGTH} and {MAX_ABSTRACT_LENGTH} characters",
     )
 
-    df = filter(df, has_no_latex, name="No latex code present")
+    df = filter_(df, has_no_latex, name="No latex code present")
 
-    print("Extracting materials science score...")
+    logger.info("Extracting materials science score...")
     df = add_materials_science_score(df)
-    df = filter(df, mat_science_related, name="Materials science related")
+    df = filter_(df, mat_science_related, name="Materials science related")
 
-    print("Detecting primary language...")
+    logger.info("Detecting primary language...")
     df = apply_in_parallel(df, add_primary_language, n_jobs=n_jobs)
-    df = filter(df, is_english, name="Primary language is english")
+    df = filter_(df, is_english, name="Primary language is english")
 
-    df = add_secondary_language(df)  # if any other language parts are still present
-    df = filter(df, is_english, name="No other languages present")
+    df = filter_(df, is_english, name="No other languages present")
 
     df = df.drop(
         columns=[
@@ -145,40 +137,50 @@ def filter_df(df, n_jobs):
     return df
 
 
-def main(works_file, folder, n_jobs):
-    import os
+@click.command()
+@click.option(
+    "--source",
+    default="data/table/materials-science.works.csv",
+    help="Path to the input .csv file",
+)
+@click.option(
+    "--out",
+    default="data/table/materials-science.filtered.works.csv",
+    help="Path to the output folder",
+)
+@click.option(
+    "--njobs",
+    default=8,
+    help="How many processes should be used for the heavier tasks. Defaults to 8.",
+    type=int,
+)
+@click.option(
+    "--min-abstract-length",
+    default=250,
+    help="Minimum length of the abstract. Defaults to 250.",
+    type=int,
+)
+@click.option(
+    "--max-abstract-length",
+    default=3000,
+    help="Maximum length of the abstract. Defaults to 3000.",
+    type=int,
+)
+def filter_works(
+    source: str,
+    out: str,
+    njobs: int,
+    min_abstract_length: int = 250,
+    max_abstract_length: int = 3000,
+):
+    global MIN_ABSTRACT_LENGTH, MAX_ABSTRACT_LENGTH
+    MIN_ABSTRACT_LENGTH = min_abstract_length
+    MAX_ABSTRACT_LENGTH = max_abstract_length
 
-    input_file = os.path.join(folder, works_file)
-    df = pd.read_csv(input_file)
-    df = filter_df(df, n_jobs=n_jobs)
-
-    topic = works_file.split(".")[0]
-    output_file = os.path.join(folder, f"{topic}.filtered.works.csv")
-    df.to_csv(output_file, index=False)
+    df = pd.read_csv(source)
+    df = filter_df(df, n_jobs=njobs)
+    df.to_csv(out, index=False)
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Script to filter works listed in a .csv file."
-    )
-    parser.add_argument(
-        "works_file",
-        help="The .csv file containing the works which should be filtered.",
-    )
-    parser.add_argument(
-        "--folder",
-        help="Where input file is located and where output file will be created. Defaults to 'data/'",
-        default="data/",
-    )
-
-    parser.add_argument(
-        "--njobs",
-        help="How many processes should be used for the heavier tasks. Defaults to 8.",
-        default=8,
-    )
-
-    args = parser.parse_args()
-
-    main(works_file=args.works_file, folder=args.folder, n_jobs=int(args.njobs))
+    filter_works()

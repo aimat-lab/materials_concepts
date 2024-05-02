@@ -5,7 +5,7 @@ Install [micromamba](https://mamba.readthedocs.io/en/latest/installation/microma
 > [!TIP]
 > Adding `alias mm="micromamba"` to your `.bashrc` or `.zshrc` shortens your commands.
 
-Create a new environment from `environment.yml`: `$ mm create -n materials-concepts -f environment.yml`
+Create a new environment from `environment.yml`: ```$ mm create -n materials-concepts -f environment.yml```
 
 > [!NOTE]
 > If changes were made to the environment, update the environment file: `$ mm install -f environment.yml`.
@@ -13,7 +13,7 @@ Create a new environment from `environment.yml`: `$ mm create -n materials-conce
 Activate the environment: `$ mm activate materials-concepts`
 
 Install the local package in editable mode:
-`pip install --no-build-isolation --no-deps --disable-pip-version-check -e .`
+```pip install --no-build-isolation --no-deps --disable-pip-version-check -e .```
 
 # Dataset Creation
 
@@ -23,19 +23,19 @@ Create `data/` top-level folder and a `table/` subfolder to store the dataset.
 
 ## Data Fetching
 
-`$ python materials_concepts/dataset/downloader/download_sources.py --query 'materials science' --out data/table/test_3810.csv`
+```$ python materials_concepts/dataset/downloader/download_sources.py --query 'materials science' --out data/table/test_3810.csv```
 
 > This will create a `data/materials-science.sources.csv` file with all the sources.
 
 Fetch works from single source:
 
-`$ python materials_concepts/dataset/downloader/download_works.py fetchsingle --source S82336448 --out data/table/S82336448.works.csv`
+```$ python materials_concepts/dataset/downloader/download_works.py fetchsingle --source S82336448 --out data/table/S82336448.works.csv```
 
 > This will create a `S82336448.csv` file with all the works belonging to that source.
 
 Fetch works from all sources:
 
-`$ python materials_concepts/dataset/downloader/download_works.py fetchall --sources data/materials-science.sources.csv --out data/table/materials-science.works.csv`
+```$ python materials_concepts/dataset/downloader/download_works.py fetchall --sources data/materials-science.sources.csv --out data/table/materials-science.works.csv```
 
 > During fetching, this will create a `{source}.csv` file for each source in `cache` listing all the works which belong to that source. After downloading, these are merged automatically into a single file `out`.
 > If the download gets interrupted, the downloaded files serve as a cache. Re-run the script, it will automatically skip sources for which the data was already fetched.
@@ -44,9 +44,9 @@ Fetch works from all sources:
 
 Filter the data to improve its quality:
 
-`$ python filtering/filter_works.py materials-science.works.csv --folder data/`
+```$ python materials_concepts/dataset/filtering/filter_works.py --source data/table/materials-science.works.csv --out data/table/materials-science.filtered.works.csv --njobs 8 --min-abstract-length 250 --max-abstract-length 3000```
 
-> This will output a file `materials-science.filtered.works.csv` in the specified folder containing all works which sufficed the conditions.
+> This will output a file `materials-science.filtered.works.csv` in the `data/table/` containing all works which sufficed the conditions.
 
 ## Data Preparation
 
