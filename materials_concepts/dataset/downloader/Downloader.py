@@ -130,4 +130,10 @@ class OADownloader:
                     next_cursor = req_data["meta"]["next_cursor"]
                     self.cursor = next_cursor
 
+                    # check if we reached the fetch limit
+                    if self.fetch_limit is not None:
+                        self.fetch_limit -= count
+                        if self.fetch_limit <= 0:
+                            break
+
         return self.handler

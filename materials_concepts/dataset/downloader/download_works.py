@@ -110,7 +110,7 @@ def cli():
 @cli.command()
 @click.option("--source", default="S26125866")
 @click.option("--out", default="data/table/S26125866.works.csv")
-@click.option("--fetch-limit", default=None)
+@click.option("--fetch-limit", default=None, type=int)
 def fetchsingle(source: str, out: Path, fetch_limit: int | None, handler=None):
 
     downloader = OADownloader(
@@ -133,7 +133,7 @@ def fetchsingle(source: str, out: Path, fetch_limit: int | None, handler=None):
 @cli.command()
 @click.option("--sources", default="data/table/materials-science.sources.csv")
 @click.option("--out", default="data/table/materials-science.works.csv")
-@click.option("--fetch-limit", default=None)
+@click.option("--fetch-limit", default=None, type=int)
 @click.option("--cache", default="/tmp/materials_concepts/.cache/sources/")
 def fetchall(
     sources: str,
