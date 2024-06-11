@@ -69,9 +69,9 @@ def query_openai(text):
 
 def save_responses(anthropic_response, openai_response, path):
     with open(path, "w", encoding="utf-8") as file:
-        file.write("Anthropic Response:\n")
+        file.write("Claude 3 Opus\n")
         file.write(str(anthropic_response))
-        file.write("\n\nOpenAI Response:\n")
+        file.write("\n\nOpenAI GPT4 Turbo\n")
         file.write(str(openai_response))
 
 
