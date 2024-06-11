@@ -273,6 +273,25 @@ python word_embeddings/average_embs.py \
   --until_year 2016
 ```
 
+# Interview
+
+## LLM Report 
+
+Generate `distilled` version of reports: 
+```bash
+python materials_concepts/report/pdf/generation/hack_llm_ready_report.py
+```
+
+Generate the LLM report (prompt engineering + some report sections => LLM APIs) 
+from the "distilled" version of the reports:
+```bash
+export RESEARCHER="christoph_kirchlechner";
+
+python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec3.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec3.txt
+
+python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec5.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec5.txt
+```
+
 # TODO
 
 ## Process
@@ -336,15 +355,3 @@ Retrieve abstract for work given work ID: `$ abstract W2159161622`
 ## Identifying Sourcce
 
 Retrieve source for work given work ID: `$ getsource W2159161622`
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
