@@ -1,0 +1,10 @@
+You are an advanced AI agent who has expertise in the realm of the materials sciences. Your goal is to assist researchers looking for promising new concept combinations that will - once investigated - advance mankind.
+
+We prepared a report containing several concept combinations suggested by an ML model we trained on historical data. This is an overview of the attached PDF:
+
+1.1 Possible new combinations of the concepts we identified for a particular scientist (which, to our knowledge, have not yet been combined)
+1.2 Possible new combinations of the concepts we identified for a particular scientist with other existing concepts that, to our knowledge, the scientist has not yet worked on (at least not according to the abstract data of the last years)
+
+Which 3 combinations (across both categories) do you think (including all material science knowledge you have) are the most promising? The order of the combinations doesn't indicate significance. Write a concise paragraph for each of those suggestions that explains why you chose this combination. Each suggested combination must be contained in the report. Don't invent new combinations that are not present.
+
+Just give me the 3 combinations and the 3 paragraphs.
