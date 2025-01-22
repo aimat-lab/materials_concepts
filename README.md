@@ -289,5 +289,5 @@ export RESEARCHER="...";
 
 python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec3.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec3.txt
 
-python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec5.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec5.txt
+python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec5.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/exotic_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec5.txt
 ```
