@@ -16,4 +16,5 @@ dependencies:
   - loguru
   - langdetect
   - tqdm
+  - jupyter
 
