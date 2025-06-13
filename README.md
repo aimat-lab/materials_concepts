@@ -285,73 +285,9 @@ python materials_concepts/report/pdf/generation/hack_llm_ready_report.py
 Generate the LLM report (prompt engineering + some report sections => LLM APIs) 
 from the "distilled" version of the reports:
 ```bash
-export RESEARCHER="christoph_kirchlechner";
+export RESEARCHER="...";
 
 python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec3.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec3.txt
 
 python materials_concepts/report/generate_llm_selection.py --txt_path materials_concepts/report/prompt_sec5.txt --tex_path materials_concepts/report/pdf/generation/${RESEARCHER}/distilled/plain_suggestions.tex --output_path materials_concepts/report/pdf/generation/${RESEARCHER}/llm_report_sec5.txt
 ```
-
-# TODO
-
-## Process
-
-- [x] Create README with instructions to recreate progress
-- [x] Implement cursor fetching
-- [x] Work cleaning: Filter out works (no title, no abstract, retracted, paratext, english lang)
-- [x] Abstract cleaning: Clean chemical elements
-- [ ] Invert filenames: ...cleaned.works.csv -> ...works.cleaned.csv
-- [x] Add title to abstract (before cleaning)
-- [x] Generate cleaned 'list' of all concepts
-  - [x] Rake
-  - [x] LLM
-    - [x] Get access to BWUniCluster
-    - [x] Annotate 100 abstracts with concepts
-    - [x] Fine-tune LLM
-    - [x] Inference: extract concepts from all abstracts
-- [x] Build graph with histogram edges
-  - [x] Start with reduced concept list (keep concepts n>1) and discard materials where an element appears twice
-- [x] Implement Baseline
-- [x] Implement evaluation (on test set)
-- [x] Implement validation (on future data)
-- [x] Implement top performing model from kaggle challange (More or less)
-- [x] Store model and graph
-- [x] Extract concept embeddings (Calculate storage requirements)
-- [x] Build Baseline (Features + Embeddings)
-
-  - [x] Resturct Trainloop
-    - [x] One epoch: sample batchsize / 2 positive and batchsize / 2 negative samples
-    - [x] Generalize Model architecture with params: LR, #Layers, Layer degradation, Initial hidden state
-    - [x] Trainloop: with early stopping and eval on every ith epoch on test set
-  - [x] Generate embeddings "on the fly", just store the squared adjacency matrix
-
-- [x] Optimize Hyperparameters: Layer
-- [x] Optimize Hyperparameters: LR + Gamma
-- [x] Optimize Hyperparameters: Pos rate
-- [x] Optimize Hyperparameters: Dropout (?)
-
-- [x] Build API to query prediction service
-- [x] Build Tiny Frontend
-  - [x] Build Search Bar
-  - [x] Input: Concept (with Suggestions) -> Output: future synergies (ranked, k=10)
-  - [ ] Every researcher is a subgraph, calculate collaboration in O(C1 \* C2) where C1 and C2 are the number of concepts of the researchers. Highest ranked concept combinations are the most promising collaborations.
-
-## Optimization
-
-- [x] Where to store the data? (-> Device)
-- [x] Data storing for works: How to store concepts (fetched and generated)
-- [x] How to speed up text processing in pandas? Pandas 2.0 (x) or other option to achieve pyarrow backend
-- [ ] Dockerize what comes after data fetching
-- [ ] How to optimize "concept synergy" query for concept v? (Naive: `O(n * pred(x,v))`)
-  - [x] Caching: Precalculate and store
-  - [x] Online Algorithm: Enter new concept (Get embeddings, likely to work better if word embeddings are used in addition)
-
-# My handy tools
-
-## Abstract checking
-
-Retrieve abstract for work given work ID: `$ abstract W2159161622`
-
-## Identifying Sourcce
-
-Retrieve source for work given work ID: `$ getsource W2159161622`
