@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --output=logs-v2/plot-map.out
-#SBATCH --mail-user=fb6372@partner.kit.edu
+#SBATCH --mail-user={CLUSTER_USER}@partner.kit.edu
 
 for year in {1990..2023}
 do

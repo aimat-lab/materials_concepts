@@ -14,7 +14,7 @@ Put abstracts as separate .txt files in `report/abstracts/` folder.
 Copy `analysis_works.elements.works.csv` to BWUniCluster:
 
 ```
-scp report/analysis_works.elements.works.csv fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconcepts/pfs/work7/workspace/scratch/fb6372-matconcepts/
+scp report/analysis_works.elements.works.csv {CLUSTER_USER}@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/{CLUSTER_USER}-matconcepts/pfs/work7/workspace/scratch/{CLUSTER_USER}-matconcepts/
 ```
 
 Extract concepts with model `ft-xxl`:
@@ -28,7 +28,7 @@ Extract concepts with model `ft-xxl`:
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --output=logs/inf%j.output
-#SBATCH --mail-user=fb6372@partner.kit.edu
+#SBATCH --mail-user={CLUSTER_USER}@partner.kit.edu
 module load devel/cuda/11.8
 source $HOME/miniconda3/etc/profile.d/conda.sh
 
@@ -48,7 +48,7 @@ Time estimation: 300 abstracts with batch_size 20 takes ~730 seconds (12 minutes
 Copy back to local machine:
 
 ```
-scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconcepts/pfs/work7/workspace/scratch/fb6372-matconcepts/data/inference_13B-v2/ft-xxl/2024-01-24_23-16-11_ft-xxl.csv report/concepts.csv
+scp {CLUSTER_USER}@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/{CLUSTER_USER}-matconcepts/pfs/work7/workspace/scratch/{CLUSTER_USER}-matconcepts/data/inference_13B-v2/ft-xxl/2024-01-24_23-16-11_ft-xxl.csv report/concepts.csv
 ```
 
 ## Post-proces concepts
@@ -60,14 +60,14 @@ scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-matconce
 1. Upload `fixed_concepts.csv` to BWUniCluster
 
    ```
-   scp report/fixed_concepts.csv fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-linkpr/fb6372-graph/backend/predictions/
+   scp report/fixed_concepts.csv {CLUSTER_USER}@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/{CLUSTER_USER}-linkpr/{CLUSTER_USER}-graph/backend/predictions/
    ```
 
 2. Run `job.sh` in `backend` folder which will run `analysis_inference.py`.
    Make sure to adapt the --concepts argument in `job.sh` to the correct path.
 
 3. Download `.pkl` files with predictions to `report/pdf/generation/` folder.
-   `scp fb6372@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/fb6372-linkpr/fb6372-graph/backend/predictions/christoph_brabec_all.txt.pkl report/pdf/generation/predictions/christoph_brabec.pkl`
+   `scp {CLUSTER_USER}@bwunicluster.scc.kit.edu:/pfs/work7/workspace/scratch/{CLUSTER_USER}-linkpr/{CLUSTER_USER}-graph/backend/predictions/researcher.txt.pkl report/pdf/generation/predictions/researcher.pkl`
 
 ## Generate PDFs
 

@@ -6,7 +6,7 @@ import tabulate
 STEP_SIZE = 2000
 
 regex = re.compile(r"(\d+)_(\d+)")
-inf_dir = "/pfs/work7/workspace/scratch/fb6372-matconcepts/data/inference_13B/full-finetune-100/"
+inf_dir = "/pfs/work7/workspace/scratch/{CLUSTER_USER}-matconcepts/data/inference_13B/full-finetune-100/"
 
 
 def get_filename(path):
