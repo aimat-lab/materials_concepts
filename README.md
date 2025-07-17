@@ -1,19 +1,57 @@
+# System Requirements
+
+### Hardware requirements
+
+This package requires only a standard computer with enough RAM to support the in-memory operations. Models were trained on a NVIDIA Tesla V100 from the [BWUniCluster 2.0](https://wiki.bwhpc.de/e/BwUniCluster2.0/Hardware_and_Architecture).
+
+### Software requirements
+
+#### OS Requirements
+
+This package is supported for Linux. The package has been tested on the following systems:
+
+- Linux: Red Hat Enterprise Linux release 9.4 (Plow)
+
+#### Python Dependencies
+
+This repo's code depends mainly on:
+
+- `pandas`
+- `nltk`
+- `rake_nltk`
+- `fire`
+- `langdetect`
+- `scipy`
+- `networkx`
+- `pyarrow`
+- `tqdm`
+- `jupyter`
+- `torch`
+- `sklearn`
+- `transformers`
+
 # Installation
 
-Install [micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html) for dependency management.
+Create a new virtual environment using `venv`:
 
-> [!TIP]
-> Adding `alias mm="micromamba"` to your `.bashrc` or `.zshrc` shortens your commands.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 
-Create a new environment from `environment.yml`: ```$ mm create -n materials-concepts -f environment.yml```
+Install the required dependencies from `requirements.txt`:
 
-> [!NOTE]
-> If changes were made to the environment, update the environment file: `$ mm install -f environment.yml`.
-
-Activate the environment: `$ mm activate materials-concepts`
+```bash
+pip install -r requirements.txt
+```
 
 Install the local package in editable mode:
-```pip install --no-build-isolation --no-deps --disable-pip-version-check -e .```
+
+```bash
+pip install --no-build-isolation --no-deps --disable-pip-version-check -e .
+```
+
+Installation should take **5-10 min**.
 
 # Dataset Creation
 
@@ -23,19 +61,19 @@ Create `data/` top-level folder and a `table/` subfolder to store the dataset.
 
 ## Data Fetching
 
-```$ python materials_concepts/dataset/downloader/download_sources.py --query 'materials science' --out data/table/test_3810.csv```
+``$ python materials_concepts/dataset/downloader/download_sources.py --query 'materials science' --out data/table/test_3810.csv``
 
 > This will create a `data/materials-science.sources.csv` file with all the sources.
 
 Fetch works from single source:
 
-```$ python materials_concepts/dataset/downloader/download_works.py fetchsingle --source S82336448 --out data/table/S82336448.works.csv```
+``$ python materials_concepts/dataset/downloader/download_works.py fetchsingle --source S82336448 --out data/table/S82336448.works.csv``
 
 > This will create a `S82336448.csv` file with all the works belonging to that source.
 
 Fetch works from all sources:
 
-```$ python materials_concepts/dataset/downloader/download_works.py fetchall --sources data/materials-science.sources.csv --out data/table/materials-science.works.csv```
+``$ python materials_concepts/dataset/downloader/download_works.py fetchall --sources data/materials-science.sources.csv --out data/table/materials-science.works.csv``
 
 > During fetching, this will create a `{source}.csv` file for each source in `cache` listing all the works which belong to that source. After downloading, these are merged automatically into a single file `out`.
 > If the download gets interrupted, the downloaded files serve as a cache. Re-run the script, it will automatically skip sources for which the data was already fetched.
@@ -44,11 +82,39 @@ Fetch works from all sources:
 
 Filter the data to improve its quality:
 
-```$ python materials_concepts/dataset/filtering/filter_works.py --source data/table/materials-science.works.csv --out data/table/materials-science.filtered.works.csv --njobs 8 --min-abstract-length 250 --max-abstract-length 3000 --topic "Materials science"```
+``$ python materials_concepts/dataset/filtering/filter_works.py --source data/table/materials-science.works.csv --out data/table/materials-science.filtered.works.csv --njobs 8 --min-abstract-length 250 --max-abstract-length 3000 --topic "Materials science"``
 
 > This will output a file `materials-science.filtered.works.csv` in the `data/table/` containing all works which sufficed the conditions.
 
 ## Data Preparation
+
+In the end, the data folder should be structured like this. File names can be varied if the corresponding cli args to the individual scripts are adapted.
+
+```bash
+data
+├── graph
+│   └── edges.M.pkl
+├── model
+│   ├── baseline
+│   │   ├── features.2016.binary.M.pkl.gz
+│   │   ├── features.2019.binary.M.pkl.gz
+│   │   ├── features.2022.binary.M.pkl.gz
+│   │   └── model.pt
+│   ├── combi
+│   │   └── model.pt
+│   ├── pure_embs
+│   │   ├── features.concept-embs.2016.M.pkl.gz
+│   │   ├── features.concept-embs.2019.M.pkl.gz
+│   │   ├── features.concept-embs.2022.M.pkl.gz
+│   │   └── model.pt
+│   ├── test.data.M.pkl
+│   └── train_val.M.pkl
+└── table
+    ├── lookup
+    │   └── lookup.M.2.csv
+    ├── materials-science.llama2.works.csv
+    └── materials-science.sources.csv
+```
 
 ### Cleaning abstracts
 
@@ -210,7 +276,6 @@ python model/baseline/train.py \
 ## MLP
 
 1. Use concatentation of baseline features and word embeddings as input. Take a look at the chapter `Word Embeddings` to see how to generate word embeddings.
-
 2. Train the model
 
 ```
@@ -275,15 +340,17 @@ python word_embeddings/average_embs.py \
 
 # Interview
 
-## LLM Report 
+## LLM Report
 
-Generate `distilled` version of reports: 
+Generate `distilled` version of reports:
+
 ```bash
 python materials_concepts/report/pdf/generation/hack_llm_ready_report.py
 ```
 
-Generate the LLM report (prompt engineering + some report sections => LLM APIs) 
+Generate the LLM report (prompt engineering + some report sections => LLM APIs)
 from the "distilled" version of the reports:
+
 ```bash
 export RESEARCHER="...";
 
