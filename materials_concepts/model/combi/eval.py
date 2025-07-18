@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 from torch import nn
 
-from materials_concepts.model.metrics import test
+from materials_concepts.model.metrics import test, print_metrics
 from materials_concepts.utils.utils import (
     load_compressed,
     load_pickle,
@@ -98,6 +98,7 @@ def main(
     model_path="data/model/combi/pos_rate-dropout-tuned.pt",
     csv_path="data/model/combi/threshold_tuning.csv",
     pred_path="data/model/combi/predictions.pkl.gz",
+    metrics_path="data/model/combi/metrics.pkl",
 ):
     data = load_pickle(data_path)
 
@@ -118,6 +119,9 @@ def main(
     ).to(device)
 
     predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
+
+    if metrics_path:
+        print_metrics(d_test.labels, predictions, threshold=0.5, save_path=metrics_path)
 
     stats = []
     for threshold in np.arange(0.5, 1, 0.05):

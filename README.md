@@ -327,6 +327,86 @@ python -u materials_concepts/model/combi/train.py \
 
 No need to train anything, as we just combine a baseline with a pure embeddings model.
 
+# Evaluation
+
+To evaluate a trained model, you can run the corresponding training script in evaluation mode. You need to provide the path to the saved model and the path to the test data. The script will then output the evaluation metrics.
+
+## Baseline Model
+
+```
+python materials_concepts/model/baseline/train.py \
+  --eval_mode data/model/baseline/model.pt \
+  --data_path data/model/data.pkl \
+  --embeddings_path data/model/baseline/embeddings.pkl \
+  --metrics_path data/model/baseline/metrics.pkl
+```
+
+This will output a json file `metrics.pkl` containing the following evaluation metrics:
+- `auc`: Area under the ROC curve
+- `precision`: Precision score
+- `recall`: Recall score
+- `fscore`: F1 score
+- `confusion_matrix`: Confusion matrix with true negatives, false positives, false negatives, and true positives.
+
+## Pure Embeddings Model
+
+```
+python materials_concepts/model/concept_embs/train.py \
+  --eval_mode data/model/concept_embs/model.pt \
+  --data_path data/model/data.pkl \
+  --emb_test_path data/model/concept_embs/av_embs_2019.pkl.gz \
+  --metrics_path data/model/concept_embs/metrics.pkl
+```
+
+This will output a json file `metrics.pkl` containing the following evaluation metrics:
+- `auc`: Area under the ROC curve
+- `precision`: Precision score
+- `recall`: Recall score
+- `fscore`: F1 score
+- `confusion_matrix`: Confusion matrix with true negatives, false positives, false negatives, and true positives.
+
+## Combination of features
+
+```
+python materials_concepts/model/combi/eval.py \
+  --model_path data/model/combi/model.pt \
+  --data_path data/model/data.M.pkl \
+  --emb_f_test_path data/model/combi/features_2019.M.pkl.gz \
+  --emb_c_test_path data/model/concept_embs/av_embs_2019.M.pkl.gz \
+  --csv_path data/model/combi/threshold_tuning.csv \
+  --pred_path data/model/combi/predictions.pkl.gz \
+  --metrics_path data/model/combi/metrics.pkl
+```
+
+This will output a csv file `threshold_tuning.csv` with evaluation metrics for different thresholds, a pickled file `predictions.pkl.gz` with the model's predictions, and a json file `metrics.pkl` with the evaluation metrics.
+
+## Combination of models
+
+1. Generate predictions for the mixture model by blending the predictions of two other models.
+
+```
+python materials_concepts/model/mixture/run_mixture.py \
+  --model_path_1 data/model/baseline/model.pt \
+  --architecture1 baseline \
+  --model_path_2 data/model/pure_embs/model.pt \
+  --architecture2 pure_embs \
+  --save_file data/model/mixture/predictions.pkl.gz \
+  --save_blend "[0.6, 0.4]"
+```
+
+This will output a pickled file `predictions.pkl.gz` containing the blended predictions.
+
+2. Evaluate the blended predictions.
+
+```
+python materials_concepts/model/mixture/eval.py \
+  --data_path data/model/val.data.M.pkl \
+  --pred_path data/model/mixture/predictions.pkl.gz \
+  --csv_path data/model/mixture/eval.csv
+```
+
+This will output a csv file `eval.csv` with evaluation metrics for different thresholds.
+
 # Word Embeddings
 
 ## Generate Word Embeddings
