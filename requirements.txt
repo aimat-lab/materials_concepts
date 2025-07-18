@@ -111,9 +111,7 @@ tornado==6.3.1
 tqdm==4.65.0
 traitlets==5.9.0
 transformers==4.28.1
-triton==2.0.0
-trove-classifiers==2025.5.9.12
-typing_extensions==4.14.1
+typing_extensions==4.5.0
 tzdata==2023.3
 urllib3==1.26.15
 userpath==1.9.2
