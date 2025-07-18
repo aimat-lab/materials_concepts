@@ -120,7 +120,7 @@ data
 
 Clean the abstracts:
 
-`$ python preparation/clean_abstracts.py materials-science.filtered.works.csv --folder data/`
+`$ python materials_concepts/dataset/preparation/clean_abstracts.py materials-science.filtered.works.csv --folder data/`
 
 > This will output a file `materials-science.cleaned.works.csv` in the specified folder containing all works with cleaned abstracts.
 
@@ -132,7 +132,7 @@ Clean the abstracts:
 
 Extract 'chemical elements' from abstracts:
 
-`$ python preparation/extract_elements.py materials-science.cleaned.works.csv --folder data/`
+`$ python materials_concepts/dataset/preparation/extract_elements.py materials-science.cleaned.works.csv --folder data/`
 
 > This will output a file `materials-science.elements.works.csv` in the specified folder containing all works with extracted chemical elements in a separate columns `elements`.
 
@@ -140,11 +140,11 @@ Extract 'chemical elements' from abstracts:
 
 Extract 'concepts' from abstracts using several methods (RAKE, keyBERT, OpenAlex concept list, Searching 'keywords' in abstracts):
 
-`$ python preparation/extract_concepts.py materials-science.elements.works.csv {method} {colname} --folder data/`
+`$ python materials_concepts/dataset/preparation/extract_concepts.py materials-science.elements.works.csv {method} {colname} --folder data/`
 
 e.g.:
 
-`$ python preparation/extract_concepts.py materials-science.elements.works.csv rake rake_concepts --folder data/`
+`$ python materials_concepts/dataset/preparation/extract_concepts.py materials-science.elements.works.csv rake rake_concepts --folder data/`
 
 > This will output a file `materials-science.rake.works.csv` in the specified folder containing all works with extracted concepts according to `rake` (`{method}`) in a separate columns `rake_concepts` (`{colname}`).
 
@@ -163,7 +163,7 @@ If you were to replicate the process, you would have to copy the `materials-scie
 Build concepts graph by executing the following command:
 
 ```
-python graph/build.py \
+python materials_concepts/graph/build.py \
   --input_path data/table/materials-science.llama2.works.csv \
   --output_path data/graph/edges.S.pkl \
   --output_lookup_path data/table/lookup/lookup.S.csv \
@@ -195,7 +195,7 @@ Because of the sparse nature of the graph, it is stored as edge list. The timest
 Generate training and test data for classification task: Given {n} vertex pairs, decide whether they will be connected or not in {delta} years.
 
 ```
-python model/create_data.py \
+python materials_concepts/model/create_data.py \
  --graph_path data/graph/edges.pkl \
  --data_path data/model/data.pkl \
  --year_start_train 2016 \
@@ -234,14 +234,14 @@ The classification process can typically be divided into two steps:
 1. Generate embeddings for nodes
 2. Train a (binary) classifier on the (concatenated) embeddings
 
-## Baseline Model
+### Baseline Model
 
 1. Generate the embeddings
 
 Embeddings for training:
 
 ```
-python -u model/combi/pre_compute.py \
+python -u materials_concepts/model/combi/pre_compute.py \
   --graph_path data/graph/edges.M.pkl \
   --output_path data/model/baseline/features.2016.binary.M.pkl.gz \
   --binary True \
@@ -251,7 +251,7 @@ python -u model/combi/pre_compute.py \
 Embeddings for validation:
 
 ```
-python -u model/combi/pre_compute.py \
+python -u materials_concepts/model/combi/pre_compute.py \
   --graph_path data/graph/edges.M.pkl \
   --output_path data/model/baseline/features.2019.binary.M.pkl.gz \
   --binary True \
@@ -261,7 +261,7 @@ python -u model/combi/pre_compute.py \
 2. Train the model
 
 ```
-python model/baseline/train.py \
+python materials_concepts/model/baseline/train.py \
   --data_path data/model/data.pkl \
   --embeddings_path data/model/baseline/embeddings.pkl \
   --lr 0.001 \
@@ -273,13 +273,34 @@ python model/baseline/train.py \
   --eval_mode False
 ```
 
-## MLP
+### Pure Embeddings Model
+
+0. Generate the emebddings (see `Word Embeddings` below)
+1. Train the model
+
+```
+python materials_concepts/model/concept_embs/train.py \
+  --data_path data/model/data.pkl \
+  --emb_train_path data/model/concept_embs/av_embs_2016.pkl.gz \
+  --emb_test_path data/model/concept_embs/av_embs_2019.pkl.gz \
+  --lr 0.001 \
+  --batch_size 100 \
+  --num_epochs 1 \
+  --train_model True \
+  --save_model data/model/concept_embs/model.pt \
+  --metrics_path data/model/concept_embs/metrics.pkl \
+  --eval_mode False \
+  --pos_to_neg_ratio 0.03 \
+  --input_dim 1536
+```
+
+### Combination of features
 
 1. Use concatentation of baseline features and word embeddings as input. Take a look at the chapter `Word Embeddings` to see how to generate word embeddings.
 2. Train the model
 
 ```
-python -u model/combi/train.py \
+python -u materials_concepts/model/combi/train.py \
   --data_path data/model/data.pkl \
   --emb_f_train_path data/model/combi/features_2016.M.pkl.gz \
   --emb_f_test_path data/model/combi/features_2019.M.pkl.gz \
@@ -302,6 +323,10 @@ python -u model/combi/train.py \
 
 ```
 
+### Combination of models
+
+No need to train anything, as we just combine a baseline with a pure embeddings model.
+
 # Word Embeddings
 
 ## Generate Word Embeddings
@@ -310,7 +335,7 @@ Word embeddings are generated using BERT or a fine-tuned version of BERT e.g. Ma
 To extract ambeddings for all concepts (all embedded tokens comprising a concept are `averaged`), run:
 
 ```
-python -u word_embeddings/generate.py \
+python -u materials_concepts/word_embeddings/generate.py \
   --concepts_path data/table/materials-science.llama.works.csv \
   --lookup_path data/table/lookup/lookup.Ls.csv \
   --output_path data/embeddings/large/ \
@@ -328,7 +353,7 @@ python -u word_embeddings/generate.py \
 Averaging word (concept) embeddings so that they can be used as feature vectors for classification.
 
 ```
-python word_embeddings/average_embs.py \
+python materials_concepts/word_embeddings/average_embs.py \
   --concepts_path data/table/materials-science.llama.works.csv \
   --lookup_path data/table/lookup/lookup_large.csv \
   --filter_path data/table/lookup/lookup_small.csv \
