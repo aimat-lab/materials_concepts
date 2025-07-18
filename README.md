@@ -48,7 +48,7 @@ pip install -r requirements.txt
 Install the local package in editable mode:
 
 ```bash
-pip install --no-build-isolation --no-deps --disable-pip-version-check -e .
+python -m pip install --no-deps --disable-pip-version-check -e .
 ```
 
 Installation should take **5-10 min**.
