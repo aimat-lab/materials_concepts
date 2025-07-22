@@ -61,15 +61,12 @@ python -u materials_concepts/model/combi/eval.py \
 
 echo ""
 echo "Mixture"
+# to avoid re-running the baseline and pure_embs models, we can just use the predictions from the previous runs and blend them
 
-python -u materials_concepts/model/mixture/run_mixture.py \
+python -u materials_concepts/model/mixture/blend.py \
   --data_path test-data/test.data.M.pkl \
-  --emb_f_test_path test-data/baseline/features.2019.binary.M.pkl.gz \
-  --emb_c_test_path test-data/pure_embs/features.concept-embs.2019.M.pkl.gz \
-  --model_path_1 "test-data/baseline/model.pt" \
-  --architecture1 "baseline" \
-  --model_path_2 "test-data/pure_embs/model.pt" \
-  --architecture2 "pure_embs" \
-  --save_file "test-data/eval/mixture_predictions.pkl.gz" \
-  --save_blend "[0.6, 0.4]" \
-  --chunk_size $CHUNK_SIZE
+  --predictions_path_1 "test-data/eval/baseline_predictions.pkl.gz" \
+  --predictions_path_2 "test-data/eval/pure_embs_predictions.pkl.gz" \
+  --save_path "test-data/eval/mixture_predictions.pkl.gz" \
+  --metrics_path "test-data/eval/mixture_metrics.pkl.gz" \
+  --blend "[0.6, 0.4]" 

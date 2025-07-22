@@ -23,3 +23,4 @@ Run the `reproduce.sh` script that will evaluate the models on the test data. Yo
 
 Before running, please make sure you've followed the installation guide and your virtual env is activated. Also make sure to run the script on a machine with sufficient RAM. The inference can be carried out on a CPU, but 2 million data points to evaluate are quite many. Therefore, we emply a batched inference with a `chunk_size` of 10k, feel free to adapt that in the reproduce script. 
 
+The metrics and predictions are saved, allowing to calculate the ROC curves as well using `sklearn.metrics.roc_curve`.
