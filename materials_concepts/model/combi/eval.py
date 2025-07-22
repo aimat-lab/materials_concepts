@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch import nn
+from tqdm import tqdm
 
 from materials_concepts.model.metrics import test, print_metrics
 from materials_concepts.utils.utils import (
@@ -56,8 +57,13 @@ class BaselineNetwork(nn.Module):
 
         return res
 
+def concat_embs(emb1, emb2):
+    return np.concatenate([emb1, emb2])
 
-def get_embeddings(pairs, feature_embeddings, concept_embeddings):
+
+def get_embeddings(
+    pairs, feature_embeddings, concept_embeddings, feature_func=concat_embs
+):
     logger.debug(f"Getting embeddings for {len(pairs)} samples")
 
     l = []
@@ -65,13 +71,21 @@ def get_embeddings(pairs, feature_embeddings, concept_embeddings):
         i1 = int(v1.item())
         i2 = int(v2.item())
 
-        emb1_f = np.array(feature_embeddings[i1])
-        emb2_f = np.array(feature_embeddings[i2])
+        feature_vector = []
 
-        emb1_c = np.array(concept_embeddings[i1])
-        emb2_c = np.array(concept_embeddings[i2])
+        if feature_embeddings is not None:
+            emb1_f = np.array(feature_embeddings[i1])
+            emb2_f = np.array(feature_embeddings[i2])
 
-        l.append(np.concatenate([emb1_f, emb2_f, emb1_c, emb2_c]))
+            feature_vector.extend([emb1_f, emb2_f])
+
+        if concept_embeddings is not None:
+            emb1_c = np.array(concept_embeddings[i1])
+            emb2_c = np.array(concept_embeddings[i2])
+
+            feature_vector.append(feature_func(emb1_c, emb2_c))
+
+        l.append(np.concatenate(feature_vector))
     return torch.tensor(np.array(l)).float()
 
 
@@ -99,13 +113,14 @@ def main(
     csv_path="data/model/combi/threshold_tuning.csv",
     pred_path="data/model/combi/predictions.pkl.gz",
     metrics_path="data/model/combi/metrics.pkl",
+    chunk_size=10_000,
 ):
     data = load_pickle(data_path)
 
     d_test = Data(
         pairs=torch.tensor(data["X_test"]),
-        feature_embeddings=load_compressed(emb_f_test_path),
-        concept_embeddings=load_compressed(emb_c_test_path),
+        feature_embeddings=load_compressed(emb_f_test_path)["v_features"] if emb_f_test_path else None,
+        concept_embeddings=load_compressed(emb_c_test_path) if emb_c_test_path else None,
         labels=torch.tensor(data["y_test"], dtype=torch.float),
     )
 
@@ -114,11 +129,22 @@ def main(
     model.load_state_dict(torch.load(model_path, map_location=device))
 
     model.eval()
-    inputs = get_embeddings(
-        d_test.pairs, d_test.feature_embeddings, d_test.concept_embeddings
-    ).to(device)
+    all_predictions = []
+    num_samples = len(d_test.pairs)
 
-    predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
+    with torch.no_grad():
+        for i in tqdm(range(0, num_samples, chunk_size), desc="Evaluating in chunks"):
+            chunk_end = min(i + chunk_size, num_samples)
+            pairs_chunk = d_test.pairs[i:chunk_end]
+
+            inputs = get_embeddings(
+                pairs_chunk, d_test.feature_embeddings, d_test.concept_embeddings
+            ).to(device)
+
+            predictions_chunk = model(inputs).detach().cpu().numpy()
+            all_predictions.extend(flatten(predictions_chunk))
+
+    predictions = np.array(all_predictions)
 
     if metrics_path:
         print_metrics(d_test.labels, predictions, threshold=0.5, save_path=metrics_path)
