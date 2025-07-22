@@ -57,6 +57,14 @@ Installation should take **5-10 min**.
 
 Notes on how to reproduce the AUROC values present in the paper can be found in `Reproduce.md`.
 
+# Predicting the future for YOUR concepts
+
+This is a demo of the best performing model in our paper (the mixture), utilzing both input modalities (topological features and semantic information).
+
+Refer to `materials_concepts/predict/README.md` that guides you through running `materials_concepts/predict/main.py`. The "CLI App" will allow you entering your concepts after specifying where the model and feature files can be found. It will output a report containing your own concepts, enriched by top suggestions what new concepts might be interesting to combine. 
+
+If you don't find the proposed concepts relevant, feel free to increase the number of proposed concepts and to play around with the `use_min_depth_of_threshold` setting.
+
 # Dataset Creation
 
 Note: You'll either need to download the figshare data or you can run the whole process on a small testset that we were able to store in this repo itself.

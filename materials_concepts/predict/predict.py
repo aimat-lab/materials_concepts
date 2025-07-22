@@ -81,7 +81,7 @@ class Predictor:
         ]
         logger.info(f"Using features: {self.features}")
 
-        logger.info(f"Loading graph from '{graph}'")
+        logger.info(f"Loading graph from '{graph}' (this may take a while)")
         self.g = Graph.from_edge_list(graph.get_until_year(since))
         self.g_nx = graph.get_nx_graph(since)
         self.graph_bfs_lock = Lock()
@@ -184,6 +184,25 @@ class Predictor:
             dict(concept=self.lookup_id_c[pairs[i][1].item()], score=float(outs[i]))
             for i in top_k_indices
         ]
+
+    @staticmethod
+    def verify_concepts(concepts: list[str], lookup_path: str):
+        lookup = load_lookup(lookup_path)
+        available_concepts = set(lookup["concept"].tolist())
+        for concept in concepts:
+            if concept not in available_concepts:
+                logger.error(f"Concept '{concept}' is not contained in our database. Please check the contents of the lookup file to see all available concepts.")
+                return False
+        return True
+
+    def save_result(self, concept: str, result: list[dict], filename: str):
+        # save as markdown:
+        # heading ## keyword, then list with concept: score (rounded to 4 decimal places)
+        with open(filename, "a") as f:
+            f.write(f"## {concept}\n")
+            for r in result:
+                f.write(f"- {r['concept']}: *{r['score']:.4f}*\n")
+            f.write("\n")
 
     @staticmethod
     def load_model(layers: list[str], path: list[str], blending: list[float] = None):
