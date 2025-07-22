@@ -59,6 +59,13 @@ python -u materials_concepts/model/combi/eval.py \
   --metrics_path test-data/eval/combi_metrics.pkl.gz \
   --chunk_size $CHUNK_SIZE
 
+# AUC 0.9147
+# Precision 0.0019
+# Recall 0.6906
+# F1 0.0038
+# Confusion matrix:
+# TN: 1888826, FP: 110867, FN: 95, TP: 212
+
 echo ""
 echo "Mixture"
 # to avoid re-running the baseline and pure_embs models, we can just use the predictions from the previous runs and blend them
@@ -70,3 +77,10 @@ python -u materials_concepts/model/mixture/blend.py \
   --save_path "test-data/eval/mixture_predictions.pkl.gz" \
   --metrics_path "test-data/eval/mixture_metrics.pkl.gz" \
   --blend "[0.6, 0.4]" 
+
+# AUC 0.9372
+# Precision 0.0025
+# Recall 0.7264
+# F1 0.0049
+# Confusion matrix:
+# TN: 1909506, FP: 90187, FN: 84, TP: 223
