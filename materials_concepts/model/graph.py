@@ -4,7 +4,7 @@ import pickle
 from scipy import sparse
 import networkx as nx
 
-from materials_concepts.utils.constants import ORIGIN_DAY
+from materials_concepts.utils.constants import ORIGIN_DATE
 
 
 class Graph:
@@ -83,7 +83,7 @@ class Graph:
         return np.array(adj_mat.sum(0))[0]
 
     def get_until(self, date):
-        return self.edges[self.edges[:, 2] < (date - ORIGIN_DAY).days]
+        return self.edges[self.edges[:, 2] < (date - ORIGIN_DATE).days]
 
     def get_until_year(self, year):
         return self.get_until(date(year + 1, 1, 1))
