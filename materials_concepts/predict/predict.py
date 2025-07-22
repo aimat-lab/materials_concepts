@@ -88,7 +88,7 @@ class Predictor:
 
     async def predict(
         self, concept: str, max_degree: int = None, min_depth: int = None, k: int = 10
-    ):
+    ) -> list[dict]:
         concept_id = self.lookup_c_id[concept]
         pairs = await self._get_pairs(
             concept_id, max_degree, min_depth
@@ -174,7 +174,7 @@ class Predictor:
         outs = self.model(inputs)
         return outs
 
-    def _create_response(self, outs, pairs, k):
+    def _create_response(self, outs, pairs, k) -> list[dict]:
         self.logger.debug(f"Creating response of {k} data points")
         sorted_indices = np.argsort(outs)[::-1]
 

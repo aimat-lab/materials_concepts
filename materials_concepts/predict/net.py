@@ -13,10 +13,10 @@ class Network(nn.Module):
             layers.append(nn.Linear(in_, out_))
             layers.append(nn.BatchNorm1d(out_))
             layers.append(nn.ReLU())
-            # Dropout is not active in eval mode
-
+            layers.append(nn.Dropout(p=0.0))
 
         layers.pop()  # remove last relu layer
+        layers.pop()  # remove last dropout layer
         layers.append(nn.Sigmoid())
 
         self.net = nn.Sequential(*layers)
