@@ -53,7 +53,13 @@ python -m pip install --no-deps --disable-pip-version-check -e .
 
 Installation should take **5-10 min**.
 
+# Reproducing paper results
+
+Notes on how to reproduce the AUROC values present in the paper can be found in `Reproduce.md`.
+
 # Dataset Creation
+
+Note: You'll either need to download the figshare data or you can run the whole process on a small testset that we were able to store in this repo itself.
 
 ## Create data/ folder
 
