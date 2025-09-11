@@ -230,6 +230,7 @@ class Trainer:
         log_interval,
         emb_strategy,
         use_loader=False,
+        eval_batch_size=None,
     ):
         self.model = model
         self.train_data = train_data
@@ -244,6 +245,7 @@ class Trainer:
         self.use_loader = use_loader
         self.data_loader = Loader(train_data.labels)
         self.emb_strategy = emb_strategy
+        self.eval_batch_size = eval_batch_size if eval_batch_size else batch_size * 100
 
     def train(self, num_epochs):
         logger.info("Training model")
@@ -253,7 +255,10 @@ class Trainer:
 
             if epoch % self.log_interval == 0:
                 auc, (tn, fp, fn, tp) = eval(
-                    self.model, self.eval_data, feature_func=self.emb_strategy
+                    self.model,
+                    self.eval_data,
+                    feature_func=self.emb_strategy,
+                    batch_size=self.eval_batch_size, # use larger batch for eval as inference is without grad
                 )
 
                 self.early_stopping.append(loss=loss, auc=auc)
@@ -315,15 +320,25 @@ def sample_batch(y, batch_size, pos_ratio=0.5):
     return batch_indices
 
 
-def eval(model, data: Data, feature_func):
+def eval(model, data: Data, feature_func, batch_size: int):
     """Load the pytorch model and evaluate it on the test set"""
     model.eval()
 
-    inputs = get_embeddings(
-        data.pairs, data.feature_embeddings, data.concept_embeddings, feature_func
-    ).to(device)
+    all_predictions = []
+    with torch.no_grad():
+        for i in range(0, len(data.pairs), batch_size):
+            batch_pairs = data.pairs[i : i + batch_size]
+            inputs = get_embeddings(
+                batch_pairs,
+                data.feature_embeddings,
+                data.concept_embeddings,
+                feature_func,
+            ).to(device)
 
-    predictions = np.array(flatten(model(inputs).detach().cpu().numpy()))
+            predictions = model(inputs).cpu().numpy()
+            all_predictions.extend(predictions)
+
+    predictions = np.array(flatten(all_predictions))
 
     auc, _, confusion_matrix = test(data.labels, predictions, threshold=0.5)
     return auc, confusion_matrix
@@ -356,6 +371,7 @@ def main(
     sliding_window=5,
     use_loader=False,
     seed=42,
+    eval_batch_size=None,
 ):
     reload(logging)
     global logger
@@ -424,6 +440,7 @@ def main(
         log_interval=log_interval,
         use_loader=use_loader,
         emb_strategy=emb_strategies[emb_comb_strategy],
+        eval_batch_size=eval_batch_size,
     )
     trainer.train(num_epochs)
 
