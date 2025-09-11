@@ -1,6 +1,7 @@
 import gzip
 import logging
 import pickle
+import random
 import sys
 from collections import namedtuple
 from importlib import reload
@@ -354,10 +355,19 @@ def main(
     save_model=False,
     sliding_window=5,
     use_loader=False,
+    seed=42,
 ):
     reload(logging)
     global logger
     logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+    logger.info(f"Running with seed: {seed}")
+
 
     logger.info("Running with parameters:")
     logger.info(f"lr: {lr}")
