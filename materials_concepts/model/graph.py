@@ -120,7 +120,7 @@ class Graph:
             self.build_adj_matrix(
                 self.get_until(date(year, 12, 31)),
                 binary=binary,
-                dim=len(self.vertices) if full else None,
+                dim=max(self.vertices) + 1 if full else None,
             )
             for year in years
         ]
