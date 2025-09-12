@@ -1,3 +1,4 @@
+import os
 import gzip
 import logging
 import pickle
@@ -246,6 +247,7 @@ class Trainer:
         self.data_loader = Loader(train_data.labels)
         self.emb_strategy = emb_strategy
         self.eval_batch_size = eval_batch_size if eval_batch_size else batch_size * 100
+        self.save_path = None
 
     def train(self, num_epochs):
         logger.info("Training model")
@@ -258,7 +260,7 @@ class Trainer:
                     self.model,
                     self.eval_data,
                     feature_func=self.emb_strategy,
-                    batch_size=self.eval_batch_size, # use larger batch for eval as inference is without grad
+                    batch_size=self.eval_batch_size,  # use larger batch for eval as inference is without grad
                 )
 
                 self.early_stopping.append(loss=loss, auc=auc)
@@ -267,9 +269,46 @@ class Trainer:
                     f"Epoch: {epoch}, Loss: {loss:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
                 )
 
+                if self.save_path:
+                    self.save_checkpoint(epoch)
+
                 if self.early_stopping.should_stop_early():
                     logger.info("Early stopping triggered")
                     break
+
+    def save_checkpoint(self, epoch):
+        if not self.save_path:
+            return
+        checkpoint_path = f"{self.save_path}.{epoch}"
+        logger.info(f"Saving checkpoint to {checkpoint_path}")
+        torch.save(
+            {
+                "epoch": epoch,
+                "model_state_dict": self.model.state_dict(),
+                "optimizer_state_dict": self.optimizer.state_dict(),
+                "scheduler_state_dict": self.scheduler.state_dict(),
+                "loss": self.early_stopping.losses[-1],
+                "losses": self.early_stopping.losses,
+                "aucs": self.early_stopping.aucs,
+            },
+            checkpoint_path,
+        )
+
+    def load_checkpoint(self, checkpoint_path):
+        if not checkpoint_path or not os.path.exists(checkpoint_path):
+            logger.info("No checkpoint found, starting from scratch.")
+            return 0
+
+        logger.info(f"Loading checkpoint from {checkpoint_path}")
+        checkpoint = torch.load(checkpoint_path)
+        self.model.load_state_dict(checkpoint["model_state_dict"])
+        self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        self.scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        self.early_stopping.losses = checkpoint.get("losses", [])
+        self.early_stopping.aucs = checkpoint.get("aucs", [])
+        start_epoch = checkpoint["epoch"] + 1
+        logger.info(f"Resuming training from epoch {start_epoch}")
+        return start_epoch
 
     def _train_epoch(self):
         data = self.train_data
@@ -372,6 +411,7 @@ def main(
     use_loader=False,
     seed=42,
     eval_batch_size=None,
+    checkpoint_path=None,
 ):
     reload(logging)
     global logger
@@ -442,7 +482,9 @@ def main(
         emb_strategy=emb_strategies[emb_comb_strategy],
         eval_batch_size=eval_batch_size,
     )
-    trainer.train(num_epochs)
+    trainer.save_path = save_model
+    start_epoch = trainer.load_checkpoint(checkpoint_path) if checkpoint_path else 0
+    trainer.train(num_epochs - start_epoch)
 
     if save_model:
         torch.save(model.state_dict(), save_model)
