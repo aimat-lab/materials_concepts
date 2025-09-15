@@ -1,5 +1,6 @@
-import pickle
 import logging
+import os
+import pickle
 import sys
 
 import fire
@@ -7,6 +8,7 @@ import numpy as np
 import pandas as pd
 import torch
 from datasets import Dataset as HfDataset
+from datasets import load_from_disk
 from sklearn.metrics import roc_auc_score, accuracy_score
 from transformers import (
     AutoModelForSequenceClassification,
@@ -91,11 +93,12 @@ def compute_metrics(eval_pred):
 def main(
     data_path: str = "data-v2/model/data.M.pkl",
     lookup_path: str = "data-v2/table/lookup/lookup.M.csv",
+    processed_data_dir: str = "data-v2/text-baseline/processed_data",
     model_name: str = "m3rg-iitd/matscibert",
     output_dir: str = "data-v2/text-baseline/",
     num_epochs: int = 3,
     batch_size: int = 32,
-    learning_rate: float = 2e-5,
+    learning_rate: float = 1e-5,
     max_length: int = 32,
     seed: int = 42,
 ):
@@ -105,6 +108,7 @@ def main(
     Args:
         data_path: Path to the input data file (.pkl).
         lookup_path: Path to the concept ID to name lookup CSV.
+        processed_data_dir: Directory to save/load cached processed datasets.
         model_name: Name of the pre-trained model from Hugging Face Hub.
         output_dir: Directory to save the trained model and results.
         num_epochs: Number of training epochs.
@@ -124,16 +128,36 @@ def main(
     model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 
     # Prepare datasets
-    logger.info("Preparing datasets...")
-    train_dataset = prepare_dataset(
-        data["X_train"], data["y_train"], id_to_concept, tokenizer, max_length
-    )
-    val_dataset = prepare_dataset(
-        data["X_val"], data["y_val"], id_to_concept, tokenizer, max_length
-    )
-    test_dataset = prepare_dataset(
-        data["X_test"], data["y_test"], id_to_concept, tokenizer, max_length
-    )
+    train_dataset_path = os.path.join(processed_data_dir, "train")
+    val_dataset_path = os.path.join(processed_data_dir, "val")
+    test_dataset_path = os.path.join(processed_data_dir, "test")
+
+    if (
+        os.path.exists(train_dataset_path)
+        and os.path.exists(val_dataset_path)
+        and os.path.exists(test_dataset_path)
+    ):
+        logger.info(f"Loading processed datasets from {processed_data_dir}...")
+        train_dataset = load_from_disk(train_dataset_path)
+        val_dataset = load_from_disk(val_dataset_path)
+        test_dataset = load_from_disk(test_dataset_path)
+    else:
+        logger.info("Processed datasets not found. Creating and saving them...")
+        train_dataset = prepare_dataset(
+            data["X_train"], data["y_train"], id_to_concept, tokenizer, max_length
+        )
+        val_dataset = prepare_dataset(
+            data["X_val"], data["y_val"], id_to_concept, tokenizer, max_length
+        )
+        test_dataset = prepare_dataset(
+            data["X_test"], data["y_test"], id_to_concept, tokenizer, max_length
+        )
+
+        logger.info(f"Saving processed datasets to {processed_data_dir}...")
+        train_dataset.save_to_disk(train_dataset_path)
+        val_dataset.save_to_disk(val_dataset_path)
+        test_dataset.save_to_disk(test_dataset_path)
+
     logger.info(f"Train dataset size: {len(train_dataset)}")
     logger.info(f"Validation dataset size: {len(val_dataset)}")
     logger.info(f"Test dataset size: {len(test_dataset)}")
@@ -148,7 +172,8 @@ def main(
         warmup_steps=500,
         weight_decay=0.01,
         logging_dir=f"{output_dir}/logs",
-        logging_steps=100,
+        logging_strategy="steps",
+        logging_steps=1,
         evaluation_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,

@@ -32,3 +32,36 @@ MatSciBERT from hugging face (`m3rg-iitd/matscibert`) with commit hash: `24a4e43
 BERT from hugging face (`bert-base-uncased`) with commit hash: `86b5e0934494bd15c9632b12f734a8a67f723594`.
 
 Random seed for all numpy and torch operations: `42` (this is also the default setting).
+
+## Evaluating a model on Mario Krenn's Science4Cast challenge
+
+All information regarding the challenge can be found [here](https://github.com/artificial-scientist-lab/FutureOfAIviaAI?tab=readme-ov-file). The necessary data can be 
+
+The data structure is slightly different, so some adjustments are necessary:
+
+- Origin DAY needs to be adjusted to `1990-01-01` in `materials_concepts/utils/constants.py`
+- The data format in the `.pkl` files needs to be ported slightly
+  - Note: the data can be found [here](https://zenodo.org/records/7882892#.ZE-Egx9BwuU) 
+  - The portation can be done in a simple Python interpreter with the code shown below
+  - `all_edges.pkl`: All edges of the final graph, we'll use that to create a graph up until 2014 and 2017 for training and validation.
+  - `SemanticGraph_delta_3_cutoff_0_minedge_1.pkl`: Contains the test edges and their labels used in the challenge
+
+```python
+import pickle
+import numpy as np
+
+def load_pickle(file_path):
+    with open(file_path, 'rb') as f:
+        data = pickle.load(f)
+    return data
+
+def write_pickle(data, file_path):
+    with open(file_path, 'wb') as f:
+        pickle.dump(data, f)
+
+all_edges = load_pickle('all_edges.pkl')
+write_pickle({"edges": np.array(all_edges)}, "ported_all_edges.pkl")
+
+ground_truth = load_pickle('SemanticGraph_delta_3_cutoff_0_minedge_1.pkl')
+write_pickle({"X_test": ground_truth[1], "y_test": ground_truth[2]}, "ported_SemanticGraph_delta_3_cutoff_0_minedge_1.pkl")
+```
