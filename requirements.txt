@@ -43,7 +43,6 @@ langdetect==1.0.9
 lit==18.1.8
 markdown-it-py==2.2.0
 MarkupSafe==2.1.2
--e git+https://github.com/aimat-lab/materials_concepts.git@44c198ab4a1ea7c4489b7eaa8916abb7db469093#egg=materials_concepts
 matplotlib==3.7.1
 matplotlib-inline==0.1.6
 mdurl==0.1.2
@@ -75,6 +74,7 @@ Pillow==9.5.0
 platformdirs==3.5.0
 prompt-toolkit==3.0.38
 propcache==0.3.2
+protobuf==6.32.1
 psutil==5.9.4
 ptyprocess==0.7.0
 pure-eval==0.2.2
@@ -99,6 +99,7 @@ six==1.16.0
 smart-open==6.3.0
 stack-data==0.6.2
 sympy==1.11.1
+tensorboardX==2.6.4
 termcolor==3.1.0
 threadpoolctl==3.1.0
 tokenizers==0.13.3
