@@ -15,6 +15,7 @@ from transformers import (
     AutoTokenizer,
     Trainer,
     TrainingArguments,
+    TrainerCallback,
 )
 
 # Setup logging
@@ -25,6 +26,57 @@ logging.basicConfig(
     stream=sys.stdout,
 )
 logger = logging.getLogger(__name__)
+
+
+class TestEvaluationCallback(TrainerCallback):
+    """Custom callback to evaluate on test set after each epoch."""
+    
+    def __init__(self, test_dataset, patience: int = 1, min_delta: float = 0.0):
+        self.test_dataset = test_dataset
+        self.patience = max(1, int(patience))
+        self.min_delta = float(min_delta)
+        self.best_auc = None
+        self.no_improve_count = 0
+        # Will be attached after Trainer is created
+        self.trainer = None
+    
+    def on_epoch_end(self, args, state, control, **kwargs):
+        """Evaluate on test set at the end of each epoch and early stop on no improvement."""
+        if self.trainer is None:
+            # Trainer reference not set; skip safely
+            logger.warning("TestEvaluationCallback.trainer not set; skipping test evaluation.")
+            return control
+
+        logger.info(f"Evaluating on test set after epoch {state.epoch}")
+        test_results = self.trainer.evaluate(
+            eval_dataset=self.test_dataset, metric_key_prefix="test"
+        )
+        logger.info(f"Test Set Metrics (Epoch {state.epoch}): {test_results}")
+
+        # Early stopping based on test_auc (higher is better)
+        current_auc = test_results.get("test_auc")
+        if current_auc is None:
+            logger.warning("test_auc not found in metrics; early stopping check skipped.")
+            return control
+
+        if self.best_auc is None or (current_auc > self.best_auc + self.min_delta):
+            self.best_auc = current_auc
+            self.no_improve_count = 0
+            logger.info(
+                f"New best test_auc: {self.best_auc:.6f}. Reset no-improve counter."
+            )
+        else:
+            self.no_improve_count += 1
+            logger.info(
+                f"No improvement in test_auc (current={current_auc:.6f}, best={self.best_auc:.6f}); "
+                f"no-improve count = {self.no_improve_count}/{self.patience}."
+            )
+            if self.no_improve_count >= self.patience:
+                logger.info(
+                    "Early stopping triggered due to no improvement on test_auc. Stopping training."
+                )
+                control.should_training_stop = True
+        return control
 
 
 def load_data(data_path: str) -> dict:
@@ -101,6 +153,8 @@ def main(
     learning_rate: float = 1e-5,
     max_length: int = 32,
     seed: int = 42,
+    early_stopping_patience: int = 1,
+    early_stopping_min_delta: float = 0.0,
 ):
     """
     Fine-tunes a transformer model for link prediction based on concept names.
@@ -193,14 +247,19 @@ def main(
         tokenizer=tokenizer,
     )
 
+    # Add custom callback for test evaluation
+    test_callback = TestEvaluationCallback(
+        test_dataset,
+        patience=early_stopping_patience,
+        min_delta=early_stopping_min_delta,
+    )
+    # Attach the trainer reference so the callback can call evaluate()
+    test_callback.trainer = trainer
+    trainer.add_callback(test_callback)
+
     # Train the model
     logger.info("Starting model training...")
     trainer.train()
-
-    # Evaluate on the test set
-    logger.info("Evaluating model on the test set...")
-    test_results = trainer.evaluate(eval_dataset=test_dataset)
-    logger.info(f"Test Set Metrics: {test_results}")
 
     # Save the final model and tokenizer
     trainer.save_model(f"{output_dir}/final_model")
