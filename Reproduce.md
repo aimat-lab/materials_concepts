@@ -60,6 +60,16 @@ The data collection scripts can be found in:
 - `materials_concepts/dataset/downloader/download_sources.py` - for retrieving sources
 - `materials_concepts/dataset/downloader/download_works.py` - for retrieving works from each source
 
+## Wall Clock Times
+
+- Generating the graph: `00:03:07`
+- Generating the raw classification data: `00:24:21`
+- Computing the baseline features: `00:33:19`
+- Computing the semantic features:
+  - Generating the word embeddings: `18:03:57`
+  - Computing averaged embeddings (cut-off): `00:50:10`
+- Training the models: `01:27:13`
+
 ## Evaluating a model on Mario Krenn's Science4Cast challenge
 
 All information regarding the challenge can be found [here](https://github.com/artificial-scientist-lab/FutureOfAIviaAI?tab=readme-ov-file). The necessary data can be 
