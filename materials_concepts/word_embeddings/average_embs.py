@@ -189,8 +189,8 @@ def main(
     filter_path="data/table/lookup/lookup_small.csv",
     embeddings_dir="data/embeddings/large/",
     output_path="data/model/con_embs/av_embs_small_2016.pkl.gz",
-    store_concepts_ids=False,
-    until_year=2016,
+    store_concepts_ids=False, # only true for semantic search
+    until_year=2016, # inclusive
     until_month=None,  # 0 3 6 9
     only_average_contained=False,
 ):

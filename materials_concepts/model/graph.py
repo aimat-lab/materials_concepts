@@ -1,10 +1,12 @@
-from datetime import date
+from datetime import date, timedelta
 import numpy as np
 import pickle
 from scipy import sparse
 import networkx as nx
 
 from materials_concepts.utils.constants import ORIGIN_DATE
+from tqdm import tqdm
+from materials_concepts.utils.utils import save_pickle, load_pickle
 
 
 class Graph:
@@ -120,7 +122,79 @@ class Graph:
             self.build_adj_matrix(
                 self.get_until(date(year, 12, 31)),
                 binary=binary,
-                dim=len(self.vertices) if full else None,
+                dim=max(self.vertices) + 1 if full else None,
             )
             for year in years
         ]
+
+    def compute_event_years_for_pairs(
+        self,
+        pairs: np.ndarray,
+        start_year: int,
+        end_year: int | None = None,
+        cache_path: str | None = None,
+    ) -> np.ndarray:
+        """
+        For each (u,v) in pairs, return the first calendar year when an edge (u,v)
+        appears strictly AFTER start_year (i.e., event_year > start_year). If end_year is
+        provided, only consider events up to and including end_year; otherwise later events
+        are ignored (treated as no event in window). Returns -1 when no event within the window.
+
+        If cache_path is provided and exists, loads and returns cached years.
+        """
+        if cache_path is not None:
+            try:
+                cached = load_pickle(cache_path)
+                if isinstance(cached, dict) and "years" in cached:
+                    return np.asarray(cached["years"], dtype=int)
+                # Backward compatibility if plain array was cached
+                if isinstance(cached, (list, np.ndarray)):
+                    return np.asarray(cached, dtype=int)
+            except Exception:
+                pass
+
+        # Build mapping from undirected pair -> earliest event year in (start_year, end_year]
+        pair_min_year: dict[tuple[int, int], int] = {}
+
+        # Convert edge offsets to calendar years once
+        # edges is expected to be of shape (m, 3) with columns [u, v, day_offset]
+        for u, v, day_offset in tqdm(self.edges, desc="Scanning edges for event years"):
+            try:
+                u = int(u)
+                v = int(v)
+                day_offset = int(day_offset)
+            except Exception:
+                # skip malformed row
+                continue
+
+            year = (ORIGIN_DATE + timedelta(days=day_offset)).year
+
+            if year <= start_year:
+                continue
+            if end_year is not None and year > end_year:
+                continue
+
+            key = (u, v) if u <= v else (v, u)
+            prev = pair_min_year.get(key)
+            if prev is None or year < prev:
+                pair_min_year[key] = year
+
+        # Lookup for requested pairs
+        years_out = np.full(len(pairs), -1, dtype=int)
+        for i, (u, v) in enumerate(tqdm(pairs, desc="Assigning event years to pairs")):
+            try:
+                u = int(u)
+                v = int(v)
+            except Exception:
+                years_out[i] = -1
+                continue
+            key = (u, v) if u <= v else (v, u)
+            years_out[i] = int(pair_min_year.get(key, -1))
+
+        if cache_path is not None:
+            try:
+                save_pickle({"years": years_out.tolist(), "start_year": start_year, "end_year": end_year}, cache_path)
+            except Exception:
+                pass
+
+        return years_out

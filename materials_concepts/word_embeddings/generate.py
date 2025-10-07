@@ -39,9 +39,10 @@ def setup_logger(level=logging.INFO, log_to_stdout=True):
     return logger
 
 
-def setup_model(model_name):
+def setup_model(model_name, device):
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
+    model.to(device)
 
     return tokenizer, model
 
@@ -57,7 +58,7 @@ def wrap(tokens):
     return tokens
 
 
-def init_get_embeddings(model, tokenizer):
+def init_get_embeddings(model, tokenizer, device):
     def func(text):
         tokens = tokenizer(text)["input_ids"]
 
@@ -68,7 +69,7 @@ def init_get_embeddings(model, tokenizer):
         embedded_chunks = []
         with torch.no_grad():
             for chunk in chunks:
-                outputs = model(torch.tensor([chunk]))
+                outputs = model(torch.tensor([chunk]).to(device))
                 embeddings = outputs.last_hidden_state.squeeze()
                 embedded_chunks.append(embeddings[1:-1])  # remove [CLS] and [SEP]
 
@@ -164,7 +165,7 @@ def process_works(df, desc):
 
         assert len(embeddings.values()) == len(concepts)
 
-        store[id] = embeddings
+        store[id] = {k: v.cpu() for k, v in embeddings.items()}
 
     return store
 
@@ -173,6 +174,7 @@ def main(
     concepts_path="data/table/materials-science.llama.works.csv",
     lookup_path="data/table/lookup/lookup_large.csv",
     output_path="data/embeddings/large/",
+    embedding_model="m3rg-iitd/matscibert",
     log_to_stdout=False,
     step_size=500,
     start=0,
@@ -180,6 +182,10 @@ def main(
 ):
     global logger, get_embeddings, get_token_ids
     logger = setup_logger(logging.INFO, log_to_stdout=log_to_stdout)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    logger.info(f"Using device: {device}")
+
     logger.info("Prepare dataframe")
 
     df = prepare_dataframe(
@@ -189,8 +195,8 @@ def main(
     )
 
     logger.info("Setup model")
-    tokenizer, model = setup_model("m3rg-iitd/matscibert")
-    get_embeddings = init_get_embeddings(model, tokenizer)
+    tokenizer, model = setup_model(embedding_model, device)
+    get_embeddings = init_get_embeddings(model, tokenizer, device)
     get_token_ids = init_get_token_ids(tokenizer)
 
     logger.info("Generate word embeddings")

@@ -25,7 +25,12 @@ def get_node_features(graph_path, years, binary):
     degrees_squared = [calc_degs(m) for m in squares]
 
     v_features = []
-    for v in graph.vertices:
+    for v in range(max(graph.vertices) + 1): # science4cast data has gaps in node ids
+        if v not in graph.vertices:
+            # fill in missing nodes with zeros
+            v_features.append([0] * (2 * len(degrees)))
+            continue
+
         v_features.append(
             [degrees[i][v] for i in range(len(degrees))]
             + [degrees_squared[i][v] for i in range(len(degrees_squared))]
