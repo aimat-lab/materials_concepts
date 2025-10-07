@@ -44,6 +44,22 @@ BERT from hugging face (`bert-base-uncased`) with commit hash: `86b5e0934494bd15
 
 Random seed for all numpy and torch operations: `42` (this is also the default setting).
 
+## OpenAlex Data Collection
+
+The dataset used in this work was collected from the [OpenAlex API](https://openalex.org/) using a two-step query process:
+
+1. **Source Discovery**: We queried OpenAlex sources (host venues) using the search term `"materials science"` to identify relevant journals and venues in the materials science domain. This retrieves sources like journals, conferences, and repositories that publish materials science content.
+
+2. **Works Retrieval**: For each identified source, we fetched all associated works (publications) including their abstracts, concepts, publication dates, and metadata.
+
+The specific fields retrieved for each work include: `id`, `doi`, `display_name`, `publication_date`, `is_retracted`, `is_paratext`, `abstract_inverted_index`, and `concepts`.
+
+**Important Note on Data Reproducibility**: Instead of pinning to a specific OpenAlex snapshot (which can be difficult to maintain and access), we provide the raw data dump resulting from our query on Figshare. This ensures exact reproducibility of our results while making the data easily accessible.
+
+The data collection scripts can be found in:
+- `materials_concepts/dataset/downloader/download_sources.py` - for retrieving sources
+- `materials_concepts/dataset/downloader/download_works.py` - for retrieving works from each source
+
 ## Evaluating a model on Mario Krenn's Science4Cast challenge
 
 All information regarding the challenge can be found [here](https://github.com/artificial-scientist-lab/FutureOfAIviaAI?tab=readme-ov-file). The necessary data can be 
