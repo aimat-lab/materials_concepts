@@ -144,7 +144,7 @@ def main(
     logger.info("Evaluation complete.")
 
     save_compressed(
-        labels,
+        scores,
         os.path.join(output_dir, "test_predictions.pkl.gz"),
     )
 
