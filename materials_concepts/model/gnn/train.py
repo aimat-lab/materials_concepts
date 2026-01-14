@@ -363,6 +363,10 @@ def main(
     model=None,
     sampling=None,
     features=None,
+    ood_data_path=None,
+    ood_year_start=None,
+    ood_eval_interval=None,
+    ood_eval_batch_size=None,
     seed=42,
     log_file="logs-v2/gnn/gnn_train.log",
     save_model_path=None,
@@ -466,6 +470,34 @@ def main(
     adj = build_binary_adj_for_year(graph, year_start_train)
     sampler = CSRNeighborSampler(adj, rng=rng)
 
+    # Optional out-of-distribution (OOD) eval:
+    # Evaluate on a pair file generated at (year_start_train + 3), using message passing
+    # on the corresponding past graph to avoid leakage.
+    ood_pairs = None
+    ood_labels = None
+    ood_sampler = None
+    if ood_data_path:
+        ood = load_pickle(ood_data_path)
+        if "X_test" not in ood or "y_test" not in ood:
+            raise ValueError(
+                f"OOD data file must contain keys X_test and y_test: {ood_data_path}"
+            )
+        ood_pairs = np.asarray(ood["X_test"], dtype=np.int64)
+        ood_labels = np.asarray(ood["y_test"], dtype=np.float32)
+
+        ood_year = int(ood_year_start) if ood_year_start is not None else int(year_start_train) + 3
+        logger.info(
+            "Building OOD past-graph adjacency (binary CSR) at year_start=%d", ood_year
+        )
+        ood_adj = build_binary_adj_for_year(graph, ood_year)
+        ood_sampler = CSRNeighborSampler(ood_adj, rng=rng)
+        logger.info(
+            "OOD pairs: %d | pos_rate: %.4f | year_start=%d",
+            len(ood_pairs),
+            float(ood_labels.mean()) if len(ood_labels) else float("nan"),
+            ood_year,
+        )
+
     x_train = np.asarray(data["X_train"], dtype=np.int64)
     y_train = np.asarray(data["y_train"], dtype=np.float32)
     x_val = np.asarray(data.get("X_val", data.get("X_test")), dtype=np.int64)
@@ -505,6 +537,11 @@ def main(
         f"Model: GraphSAGE2Layer(in_dim={in_dim}, hidden_dim={model_cfg['hidden_dim']}, out_dim={model_cfg['out_dim']}), decoder={decoder_kind}"
     )
     logger.info(f"Train pairs: {len(x_train)} | Val pairs: {len(x_val)}")
+
+    if ood_eval_interval is None:
+        ood_eval_interval = int(train_cfg["log_interval"])
+    if ood_eval_batch_size is None:
+        ood_eval_batch_size = int(train_cfg["eval_batch_size"])
 
     for epoch in range(1, int(train_cfg["num_epochs"]) + 1):
         model.train()
@@ -606,6 +643,34 @@ def main(
             )
             logger.info(
                 f"Epoch: {epoch}, Loss: {loss_value:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
+            )
+
+        if (
+            ood_pairs is not None
+            and ood_labels is not None
+            and ood_sampler is not None
+            and int(ood_eval_interval) > 0
+            and epoch % int(ood_eval_interval) == 0
+        ):
+            ood_auc, (ood_tn, ood_fp, ood_fn, ood_tp) = eval_pairs(
+                model=model,
+                decoder=decoder,
+                sampler=ood_sampler,
+                v_features=v_features,
+                pairs=ood_pairs,
+                labels=ood_labels,
+                fanout1=int(sampling_cfg["fanout1"]),
+                fanout2=int(sampling_cfg["fanout2"]),
+                batch_size=int(ood_eval_batch_size),
+            )
+            logger.info(
+                "OOD | Epoch: %d, AUC: %.4f, TP: %d, FP: %d, FN: %d, TN: %d",
+                epoch,
+                float(ood_auc),
+                int(ood_tp),
+                int(ood_fp),
+                int(ood_fn),
+                int(ood_tn),
             )
 
     if save_model_path:

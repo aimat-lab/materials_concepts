@@ -43,7 +43,7 @@ def _require_pyg():
                     "PyTorch Geometric neighbor sampling backend missing.\n"
                     "LinkNeighborLoader requires either 'pyg-lib' or 'torch-sparse'.\n\n"
                     "Fix (recommended): install the official PyG wheels that match your torch build:\n"
-                    f"  python -m pip install pyg-lib torch-sparse torch-scatter \\\n+    -f https://data.pyg.org/whl/torch-{wheel_tag}.html\n\n"
+                        f"  python -m pip install pyg-lib torch-sparse torch-scatter \\\n    -f https://data.pyg.org/whl/torch-{wheel_tag}.html\n\n"
                     "If you're on a CPU-only machine, use the '+cpu' wheel tag instead.\n"
                     f"Detected torch: {torch_ver}"
                 )
@@ -186,6 +186,10 @@ def main(
     model=None,
     sampling=None,
     features=None,
+    ood_data_path=None,
+    ood_year_start=None,
+    ood_eval_interval=None,
+    ood_eval_batch_size=None,
     seed=42,
     log_file="logs-v2/gnn/gnn_train_pyg.log",
     save_model_path=None,
@@ -221,6 +225,7 @@ def main(
             "weight_decay": 0.0,
             "log_interval": 1,
             "eval_batch_size": 16384,
+            "ood_eval_interval": 0,
             "num_workers": 8,
             "amp": True,
             "grad_clip_norm": 1.0,
@@ -299,6 +304,62 @@ def main(
 
     val_edge_label_index = torch.from_numpy(x_val.T).contiguous()
     val_edge_label = torch.from_numpy(y_val).to(torch.float32)
+
+    # Optional OOD evaluation dataset (e.g., generated at year_start_train + 3)
+    ood_loader = None
+    ood_y = None
+    if ood_data_path:
+        ood = load_pickle(ood_data_path)
+        if "X_test" not in ood or "y_test" not in ood:
+            raise ValueError(
+                f"OOD data file must contain keys X_test and y_test: {ood_data_path}"
+            )
+        ood_x = np.asarray(ood["X_test"], dtype=np.int64)
+        ood_y = np.asarray(ood["y_test"], dtype=np.float32)
+
+        ood_year = (
+            int(ood_year_start)
+            if ood_year_start is not None
+            else int(year_start_train) + 3
+        )
+        logger.info("Building OOD past-graph edge_index at year_start=%d", ood_year)
+        edge_index_ood = build_edge_index_for_year(
+            graph, ood_year, num_nodes=num_nodes
+        )
+
+        pyg_data_ood = Data(
+            x=pyg_data.x,
+            edge_index=edge_index_ood,
+            num_nodes=num_nodes,
+        )
+
+        ood_edge_label_index = torch.from_numpy(ood_x.T).contiguous()
+        ood_edge_label = torch.from_numpy(ood_y).to(torch.float32)
+
+        if ood_eval_batch_size is None:
+            ood_eval_batch_size = int(train_cfg["eval_batch_size"])
+
+        ood_loader = LinkNeighborLoader(
+            pyg_data_ood,
+            edge_label_index=ood_edge_label_index,
+            edge_label=ood_edge_label,
+            num_neighbors=[
+                int(sampling_cfg["fanout1"]),
+                int(sampling_cfg["fanout2"]),
+            ],
+            batch_size=int(ood_eval_batch_size),
+            shuffle=False,
+            num_workers=int(train_cfg["num_workers"]),
+            pin_memory=True,
+            persistent_workers=int(train_cfg["num_workers"]) > 0,
+        )
+
+        logger.info(
+            "OOD pairs: %d | pos_rate: %.4f | year_start=%d",
+            int(ood_x.shape[0]),
+            float(ood_y.mean()) if ood_y.size else float("nan"),
+            int(ood_year),
+        )
 
     # NOTE: LinkNeighborLoader does not support "pos_ratio" directly when you provide labels.
     # If you want a controlled pos ratio, you should subsample x_train/y_train offline.
@@ -386,6 +447,28 @@ def main(
         auc, _, cm = test(torch.tensor(y_val, dtype=torch.float32), predictions, threshold=0.5)
         return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3]))
 
+    def evaluate_ood() -> tuple[float, tuple[int, int, int, int]]:
+        if ood_loader is None or ood_y is None:
+            raise RuntimeError("OOD loader not initialized")
+        encoder.eval()
+        decoder.eval()
+        scores: list[float] = []
+        with torch.no_grad():
+            for batch in tqdm(ood_loader, desc="OOD Eval", leave=False):
+                batch = batch.to(device, non_blocking=True)
+                z = encoder(batch.x, batch.edge_index)
+                u = batch.edge_label_index[0]
+                v = batch.edge_label_index[1]
+                logits = decoder(z[u], z[v])
+                probs = torch.sigmoid(logits).detach().cpu().numpy()
+                scores.extend(probs.tolist())
+
+        predictions = np.asarray(scores)
+        auc, _, cm = test(
+            torch.tensor(ood_y, dtype=torch.float32), predictions, threshold=0.5
+        )
+        return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3]))
+
     for epoch in range(1, int(train_cfg["num_epochs"]) + 1):
         encoder.train()
         decoder.train()
@@ -429,6 +512,22 @@ def main(
                 fp,
                 fn,
                 tn,
+            )
+
+        # OOD eval can be expensive; default is off unless configured.
+        interval = int(ood_eval_interval) if ood_eval_interval is not None else int(
+            train_cfg.get("ood_eval_interval", 0)
+        )
+        if ood_loader is not None and interval and interval > 0 and epoch % interval == 0:
+            ood_auc, (ood_tn, ood_fp, ood_fn, ood_tp) = evaluate_ood()
+            logger.info(
+                "OOD | Epoch: %d, AUC: %.4f, TP: %d, FP: %d, FN: %d, TN: %d",
+                epoch,
+                float(ood_auc),
+                int(ood_tp),
+                int(ood_fp),
+                int(ood_fn),
+                int(ood_tn),
             )
 
     if save_model_path:
