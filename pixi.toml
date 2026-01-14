@@ -1,0 +1,14 @@
+[workspace]
+authors = ["Thomas Marwitz <thomasmarwitz3@gmail.com>"]
+channels = ["conda-forge"]
+name = "materials_concepts"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+postinstall = "python -m pip install --no-build-isolation --no-deps --disable-pip-version-check -e ."
+
+[dependencies]
+python = "3.10.*"
+hatch = ">=1.13.0,<2"
+pip = "*"
