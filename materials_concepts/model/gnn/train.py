@@ -12,6 +12,7 @@ import fire
 import numpy as np
 import torch
 from torch import nn
+from tqdm import tqdm
 
 from materials_concepts.model.graph import Graph
 from materials_concepts.model.metrics import test
@@ -264,8 +265,26 @@ class GraphSAGE2Layer(nn.Module):
 
         h2_self = h1[seed_self_idx]
         h2_neigh = self._mean_agg(h1, seed_neigh_lists)
-        z = self.act(self.lin2(torch.cat([h2_self, h2_neigh], dim=1)))
+        # IMPORTANT: do NOT apply ReLU here when using a dot-product decoder.
+        # If embeddings are constrained to be non-negative, dot-products cannot be negative,
+        # which makes sigmoid(logit) >= 0.5 and collapses predictions to "all positive".
+        z = self.lin2(torch.cat([h2_self, h2_neigh], dim=1))
         return z
+
+
+class EdgeMLPDecoder(nn.Module):
+    def __init__(self, emb_dim: int, hidden_dim: int, dropout: float):
+        super().__init__()
+        self.mlp = nn.Sequential(
+            nn.Linear(emb_dim * 4, hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            nn.Linear(hidden_dim, 1),
+        )
+
+    def forward(self, z_u: torch.Tensor, z_v: torch.Tensor) -> torch.Tensor:
+        x = torch.cat([z_u, z_v, torch.abs(z_u - z_v), z_u * z_v], dim=1)
+        return self.mlp(x).squeeze(1)
 
 
 def build_binary_adj_for_year(graph: Graph, year: int):
@@ -277,6 +296,7 @@ def build_binary_adj_for_year(graph: Graph, year: int):
 
 def eval_pairs(
     model: GraphSAGE2Layer,
+    decoder: nn.Module,
     sampler: CSRNeighborSampler,
     v_features: np.ndarray,
     pairs: np.ndarray,
@@ -288,7 +308,7 @@ def eval_pairs(
     model.eval()
     all_scores = []
     with torch.no_grad():
-        for i in range(0, len(pairs), batch_size):
+        for i in tqdm(range(0, len(pairs), batch_size), desc="Eval batches"):
             batch_pairs = pairs[i : i + batch_size]
             sample = build_pair_batch_sample(batch_pairs, fanout1, fanout2, sampler)
 
@@ -320,7 +340,10 @@ def eval_pairs(
             )
             z_u = z_seeds[u_idx]
             z_v = z_seeds[v_idx]
-            logits = (z_u * z_v).sum(dim=1)
+            if isinstance(decoder, EdgeMLPDecoder):
+                logits = decoder(z_u, z_v)
+            else:
+                logits = (z_u * z_v).sum(dim=1)
             probs = torch.sigmoid(logits).detach().cpu().numpy()
             all_scores.extend(probs.tolist())
 
@@ -332,15 +355,16 @@ def eval_pairs(
 
 
 def main(
-    graph_path="data/graph/edges.pkl",
-    data_path="data/model/data.pkl",
-    v_features_path="data/model/combi/matrices_2016.pkl.gz",
+    graph_path="data-v2/graph/edges.M.pkl",
+    data_path="data-v2/model/data.M.pkl",
+    v_features_path="data-v2/model/baseline/features.2016.binary.M.pkl.gz",
     year_start_train=2016,
     train=None,
     model=None,
     sampling=None,
+    features=None,
     seed=42,
-    log_file="logs/gnn_train.log",
+    log_file="logs-v2/gnn/gnn_train.log",
     save_model_path=None,
 ):
     """Train a 2-layer GraphSAGE-style GNN for temporal link prediction.
@@ -351,7 +375,7 @@ def main(
     """
     reload(logging)
     global logger
-    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
+    logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
 
     os.makedirs(os.path.dirname(log_file) or ".", exist_ok=True)
 
@@ -367,11 +391,15 @@ def main(
         defaults={
             "batch_size": 512,
             "pos_ratio": 0.3,
+            # Number of sampled minibatches per epoch. With large pair lists, doing
+            # only 1 update/epoch learns extremely slowly.
+            "steps_per_epoch": 200,
             "num_epochs": 50,
             "lr": 1e-3,
             "weight_decay": 0.0,
+            "grad_clip_norm": 1.0,
             "log_interval": 5,
-            "eval_batch_size": 4096,
+            "eval_batch_size": 4096 * 10,
         },
     )
     model_cfg = _parse_config_str(
@@ -380,6 +408,9 @@ def main(
             "hidden_dim": 64,
             "out_dim": 64,
             "dropout": 0.1,
+            "decoder": "dot",  # dot | mlp
+            "decoder_hidden_dim": 128,
+            "decoder_dropout": 0.1,
         },
     )
     sampling_cfg = _parse_config_str(
@@ -387,6 +418,17 @@ def main(
         defaults={
             "fanout1": 15,
             "fanout2": 10,
+        },
+    )
+    features_cfg = _parse_config_str(
+        features,
+        defaults={
+            # Your v_features contain very large count-like values (up to millions).
+            # Without normalization, the first forward pass can produce gigantic logits,
+            # which destabilizes training and can collapse the model to near-constant outputs.
+            "log1p": True,
+            "zscore": True,
+            "eps": 1e-6,
         },
     )
 
@@ -402,7 +444,22 @@ def main(
     feats = load_compressed(v_features_path)
     if not feats or "v_features" not in feats:
         raise ValueError(f"Expected v_features in compressed file: {v_features_path}")
-    v_features = feats["v_features"]
+    v_features = np.asarray(feats["v_features"])
+    # normalize features for stable training
+    v_features = v_features.astype(np.float32, copy=False)
+    if bool(features_cfg.get("log1p", True)):
+        v_features = np.log1p(v_features)
+    if bool(features_cfg.get("zscore", True)):
+        mean = v_features.mean(axis=0, keepdims=True)
+        std = v_features.std(axis=0, keepdims=True)
+        eps = float(features_cfg.get("eps", 1e-6))
+        v_features = (v_features - mean) / (std + eps)
+        logger.info(
+            "v_features normalized | log1p=%s zscore=%s | col_std=%s",
+            bool(features_cfg.get("log1p", True)),
+            bool(features_cfg.get("zscore", True)),
+            np.round(v_features.std(axis=0), 4).tolist(),
+        )
 
     logger.info("Building past-graph adjacency (binary CSR)")
     graph = Graph(graph_path)
@@ -423,74 +480,122 @@ def main(
         out_dim=int(model_cfg["out_dim"]),
         dropout=float(model_cfg["dropout"]),
     ).to(device)
+
+    decoder_kind = str(model_cfg.get("decoder", "dot")).lower()
+    if decoder_kind not in {"dot", "mlp"}:
+        raise ValueError("model.decoder must be one of: dot, mlp")
+
+    if decoder_kind == "mlp":
+        decoder = EdgeMLPDecoder(
+            emb_dim=int(model_cfg["out_dim"]),
+            hidden_dim=int(model_cfg.get("decoder_hidden_dim", 128)),
+            dropout=float(model_cfg.get("decoder_dropout", model_cfg["dropout"])),
+        ).to(device)
+    else:
+        decoder = nn.Identity().to(device)
+
     optimizer = torch.optim.Adam(
-        model.parameters(),
+        list(model.parameters()) + list(decoder.parameters()),
         lr=float(train_cfg["lr"]),
         weight_decay=float(train_cfg["weight_decay"]),
     )
     criterion = nn.BCEWithLogitsLoss()
 
     logger.info(
-        f"Model: GraphSAGE2Layer(in_dim={in_dim}, hidden_dim={model_cfg['hidden_dim']}, out_dim={model_cfg['out_dim']})"
+        f"Model: GraphSAGE2Layer(in_dim={in_dim}, hidden_dim={model_cfg['hidden_dim']}, out_dim={model_cfg['out_dim']}), decoder={decoder_kind}"
     )
     logger.info(f"Train pairs: {len(x_train)} | Val pairs: {len(x_val)}")
 
     for epoch in range(1, int(train_cfg["num_epochs"]) + 1):
         model.train()
 
-        batch_idx = sample_pair_batch(
-            y_train_t,
-            batch_size=int(train_cfg["batch_size"]),
-            pos_ratio=float(train_cfg["pos_ratio"]),
-        )
-        batch_pairs = x_train[batch_idx.numpy()]
-        batch_labels = y_train_t[batch_idx].to(device)
+        steps_per_epoch = int(train_cfg["steps_per_epoch"])
+        epoch_losses: list[float] = []
 
-        sample = build_pair_batch_sample(
-            batch_pairs,
-            int(sampling_cfg["fanout1"]),
-            int(sampling_cfg["fanout2"]),
-            sampler,
-        )
+        for step in range(steps_per_epoch):
+            logger.debug(f"Epoch {epoch} step {step + 1}/{steps_per_epoch} sampling batch")
+            batch_idx = sample_pair_batch(
+                y_train_t,
+                batch_size=int(train_cfg["batch_size"]),
+                pos_ratio=float(train_cfg["pos_ratio"]),
+            )
+            batch_pairs = x_train[batch_idx.numpy()]
+            batch_labels = y_train_t[batch_idx].to(device)
 
-        bottom_nodes = np.unique(
-            np.concatenate([sample.nodes0, sample.nodes1, sample.nodes2])
-        )
-        middle_nodes = np.unique(np.concatenate([sample.nodes0, sample.nodes1]))
+            logger.debug(f"Epoch {epoch} step {step + 1}/{steps_per_epoch} building batch sample")
+            sample = build_pair_batch_sample(
+                batch_pairs,
+                int(sampling_cfg["fanout1"]),
+                int(sampling_cfg["fanout2"]),
+                sampler,
+            )
 
-        x_all = torch.tensor(
-            v_features[bottom_nodes], dtype=torch.float32, device=device
-        )
-        z_seeds = model(
-            x_all=x_all,
-            bottom_nodes=bottom_nodes,
-            middle_nodes=middle_nodes,
-            seed_nodes=sample.nodes0,
-            neighbors_for_layer1=sample.neighbors1,
-            neighbors_for_layer1_alt=sample.neighbors2,
-            neighbors_for_layer2=sample.neighbors1,
-        )
+            bottom_nodes = np.unique(
+                np.concatenate([sample.nodes0, sample.nodes1, sample.nodes2])
+            )
+            middle_nodes = np.unique(np.concatenate([sample.nodes0, sample.nodes1]))
 
-        seed_index = {int(n): j for j, n in enumerate(sample.nodes0)}
-        u_idx = torch.tensor(
-            [seed_index[int(u)] for u in sample.seeds_u], device=device
-        )
-        v_idx = torch.tensor(
-            [seed_index[int(v)] for v in sample.seeds_v], device=device
-        )
+            x_all = torch.tensor(
+                v_features[bottom_nodes], dtype=torch.float32, device=device
+            )
+            logger.debug(f"Epoch {epoch} step {step + 1}/{steps_per_epoch} running model forward")
+            z_seeds = model(
+                x_all=x_all,
+                bottom_nodes=bottom_nodes,
+                middle_nodes=middle_nodes,
+                seed_nodes=sample.nodes0,
+                neighbors_for_layer1=sample.neighbors1,
+                neighbors_for_layer1_alt=sample.neighbors2,
+                neighbors_for_layer2=sample.neighbors1,
+            )
 
-        z_u = z_seeds[u_idx]
-        z_v = z_seeds[v_idx]
-        logits = (z_u * z_v).sum(dim=1)
+            seed_index = {int(n): j for j, n in enumerate(sample.nodes0)}
+            u_idx = torch.tensor(
+                [seed_index[int(u)] for u in sample.seeds_u], device=device
+            )
+            v_idx = torch.tensor(
+                [seed_index[int(v)] for v in sample.seeds_v], device=device
+            )
 
-        loss = criterion(logits, batch_labels)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            z_u = z_seeds[u_idx]
+            z_v = z_seeds[v_idx]
+            if isinstance(decoder, EdgeMLPDecoder):
+                logits = decoder(z_u, z_v)
+            else:
+                logits = (z_u * z_v).sum(dim=1)
+
+            if (epoch == 1 and step == 0) or (
+                epoch % int(train_cfg["log_interval"]) == 0 and step == 0
+            ):
+                with torch.no_grad():
+                    pos_rate = float(batch_labels.mean().item())
+                    logger.debug(
+                        "Batch stats | pos_rate=%.3f | logits[min/mean/max]=%.3f/%.3f/%.3f | "
+                        "z_norm[mean]=%.3f",
+                        pos_rate,
+                        float(logits.min().item()),
+                        float(logits.mean().item()),
+                        float(logits.max().item()),
+                        float(z_seeds.norm(dim=1).mean().item()),
+                    )
+
+            loss = criterion(logits, batch_labels)
+            optimizer.zero_grad()
+            loss.backward()
+
+            grad_clip = float(train_cfg.get("grad_clip_norm", 0.0))
+            if grad_clip and grad_clip > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=grad_clip)
+
+            optimizer.step()
+            epoch_losses.append(float(loss.detach().cpu().item()))
+
+        loss_value = float(np.mean(epoch_losses)) if epoch_losses else float("nan")
 
         if epoch % int(train_cfg["log_interval"]) == 0:
             auc, (tn, fp, fn, tp) = eval_pairs(
                 model=model,
+                decoder=decoder,
                 sampler=sampler,
                 v_features=v_features,
                 pairs=x_val,
@@ -500,7 +605,7 @@ def main(
                 batch_size=int(train_cfg["eval_batch_size"]),
             )
             logger.info(
-                f"Epoch: {epoch}, Loss: {loss.item():.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
+                f"Epoch: {epoch}, Loss: {loss_value:.4f}, AUC: {auc:.4f}, TP: {tp}, FP: {fp}, FN: {fn}, TN: {tn}"
             )
 
     if save_model_path:

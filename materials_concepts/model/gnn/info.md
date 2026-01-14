@@ -72,6 +72,40 @@ pixi run python materials_concepts/model/gnn/train.py \
   --train="batch_size=512,pos_ratio=0.3,num_epochs=50,lr=1e-3,weight_decay=0.0,log_interval=5,eval_batch_size=4096" \
   --model="hidden_dim=64,out_dim=64,dropout=0.1" \
   --sampling="fanout1=15,fanout2=10"
+
+## Faster training (PyTorch Geometric)
+
+The reference implementation in `train.py` is intentionally dependency-light, but it is not GPU-efficient:
+it does neighbor aggregation in Python loops.
+
+If you have a large GPU and want much higher throughput, use the PyTorch Geometric trainer:
+
+`materials_concepts/model/gnn/train_pyg.py`
+
+### Install (PyG)
+
+Install a PyG build matching your installed `torch` and CUDA runtime.
+For neighbor sampling (`LinkNeighborLoader`), you also need **either** `pyg-lib` **or** `torch-sparse` (recommended: `pyg-lib`).
+Follow the official instructions:
+
+https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html
+
+### Run
+
+```bash
+pixi run python materials_concepts/model/gnn/train_pyg.py \
+  --graph_path=data-v2/graph/edges.M.pkl \
+  --data_path=data-v2/model/data.M.pkl \
+  --v_features_path=data-v2/model/baseline/features.2016.binary.M.pkl.gz \
+  --year_start_train=2016 \
+  --train="batch_size=4096,num_workers=8,amp=true,lr=3e-4,num_epochs=10" \
+  --sampling="fanout1=15,fanout2=10" \
+  --model="hidden_dim=128,out_dim=128,decoder_hidden_dim=256"
+```
+
+Notes:
+- This path uses an MLP decoder by default (similar to the baseline pair classifier) and supports AMP.
+- Increase `batch_size` until GPU memory is saturated, then increase `num_workers` for data loading.
 ```
 
 ## Notes / future extensions
