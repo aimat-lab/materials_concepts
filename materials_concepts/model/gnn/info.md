@@ -101,6 +101,23 @@ pixi run python materials_concepts/model/gnn/train_pyg.py \
   --train="batch_size=4096,num_workers=8,amp=true,lr=3e-4,num_epochs=10" \
   --sampling="fanout1=15,fanout2=10" \
   --model="hidden_dim=128,out_dim=128,decoder_hidden_dim=256"
+
+# Optional: Weights & Biases logging
+
+To log training/validation metrics to W&B, pass a `--wandb` config string.
+
+```bash
+pixi run python materials_concepts/model/gnn/train_pyg.py \
+  --wandb="enabled=true,project=materials_concepts,mode=online,name=gnn_pyg_2016"
+```
+
+Config keys (all optional):
+- `enabled` (bool)
+- `project`, `entity`, `name`, `group`, `job_type` (strings)
+- `tags` (comma-separated string)
+- `mode` (online|offline|disabled)
+- `log_model` (bool; uploads `--save_model_path` as an artifact)
+- `fail_fast` (bool; if `true`, aborts immediately when W&B init fails; default is `false` to avoid failing cluster jobs)
 ```
 
 Notes:

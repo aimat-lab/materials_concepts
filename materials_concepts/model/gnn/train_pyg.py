@@ -17,6 +17,81 @@ from materials_concepts.model.graph import Graph
 from materials_concepts.model.metrics import test
 
 
+def _maybe_init_wandb(
+    wandb_cfg: dict[str, Any],
+    config: dict[str, Any],
+    logger: logging.Logger,
+):
+    enabled = bool(wandb_cfg.get("enabled", False))
+    if not enabled:
+        return None
+
+    try:
+        import wandb  # type: ignore
+    except Exception as e:
+        raise RuntimeError(
+            "W&B logging requested but 'wandb' is not installed.\n"
+            "Install with: python -m pip install wandb\n"
+            "Or disable with: --wandb=enabled=false"
+        ) from e
+
+    tags_raw = str(wandb_cfg.get("tags", "")).strip()
+    tags = [t.strip() for t in tags_raw.split(",") if t.strip()] if tags_raw else None
+    mode = str(wandb_cfg.get("mode", "online")).strip() or "online"
+    fail_fast = bool(wandb_cfg.get("fail_fast", False))
+
+    init_kwargs: dict[str, Any] = {
+        "project": str(wandb_cfg.get("project", "materials_concepts")),
+        "entity": str(wandb_cfg.get("entity", "")) or None,
+        "name": str(wandb_cfg.get("name", "")) or None,
+        "group": str(wandb_cfg.get("group", "")) or None,
+        "job_type": str(wandb_cfg.get("job_type", "train")) or None,
+        "tags": tags,
+        "mode": mode,
+    }
+    init_kwargs = {k: v for k, v in init_kwargs.items() if v is not None}
+
+    try:
+        run = wandb.init(**init_kwargs)
+    except Exception as e:
+        # Common on clusters: no internet / blocked outbound, or permission issues.
+        # Keep training running unless explicitly asked to fail-fast.
+        logger.error(
+            "W&B init failed (project=%s, entity=%s, mode=%s): %s: %s",
+            init_kwargs.get("project"),
+            init_kwargs.get("entity"),
+            init_kwargs.get("mode"),
+            type(e).__name__,
+            e,
+        )
+        if fail_fast:
+            raise
+
+        if str(init_kwargs.get("mode", "")) != "offline":
+            try:
+                logger.info("Retrying W&B init in offline mode")
+                init_kwargs["mode"] = "offline"
+                run = wandb.init(**init_kwargs)
+            except Exception as e2:
+                logger.error(
+                    "W&B offline init also failed: %s: %s", type(e2).__name__, e2
+                )
+                return None
+        else:
+            return None
+
+    wandb.config.update(config, allow_val_change=True)
+    logger.info(
+        "W&B enabled: project=%s, entity=%s, name=%s, mode=%s",
+        init_kwargs.get("project"),
+        init_kwargs.get("entity"),
+        init_kwargs.get("name"),
+        init_kwargs.get("mode"),
+    )
+
+    return run
+
+
 def _require_pyg():
     try:
         from torch_geometric.data import Data  # noqa: F401
@@ -87,6 +162,86 @@ def load_compressed(path: str | None):
         return None
     with gzip.open(path, "rb") as f:
         return pickle.load(f)
+
+
+def _to_numpy_2d_float32(x: Any) -> np.ndarray:
+    if isinstance(x, np.ndarray):
+        arr = x
+    elif isinstance(x, torch.Tensor):
+        arr = x.detach().cpu().numpy()
+    else:
+        arr = np.asarray(x)
+
+    if arr.ndim == 1:
+        arr = arr.reshape(-1, 1)
+    if arr.ndim != 2:
+        raise ValueError(f"Expected a 2D feature matrix, got shape={arr.shape}")
+    return arr.astype(np.float32, copy=False)
+
+
+def _try_build_matrix_from_id_dict(obj: dict[Any, Any]) -> np.ndarray | None:
+    if not obj:
+        return None
+
+    keys_int: list[int] = []
+    values: list[np.ndarray] = []
+    for k, v in obj.items():
+        try:
+            k_int = int(k)
+        except Exception:
+            return None
+        keys_int.append(k_int)
+        values.append(_to_numpy_2d_float32(v).reshape(-1))
+
+    if not values:
+        return None
+
+    d = int(values[0].shape[0])
+    if any(int(v.shape[0]) != d for v in values):
+        return None
+
+    n = int(max(keys_int)) + 1
+    mat = np.zeros((n, d), dtype=np.float32)
+    for k_int, v in zip(keys_int, values, strict=False):
+        if k_int < 0:
+            continue
+        mat[k_int] = v
+    return mat
+
+
+def load_node_feature_matrix(path: str, *, name: str, logger: logging.Logger) -> np.ndarray:
+    obj = load_compressed(path)
+    if obj is None:
+        raise ValueError(f"{name}: failed to load features from {path} (got None)")
+
+    if isinstance(obj, dict):
+        if "v_features" in obj:
+            logger.info("%s: loaded from key 'v_features' (%s)", name, path)
+            return _to_numpy_2d_float32(obj["v_features"])
+
+        for k in ("embeddings", "embs", "x", "features"):
+            if k in obj:
+                logger.info("%s: loaded from key '%s' (%s)", name, k, path)
+                return _to_numpy_2d_float32(obj[k])
+
+        mat = _try_build_matrix_from_id_dict(obj)
+        if mat is not None:
+            logger.info(
+                "%s: loaded from id->vector dict (%s) | shape=%s",
+                name,
+                path,
+                tuple(mat.shape),
+            )
+            return mat
+
+        raise ValueError(
+            f"{name}: unsupported feature file format at {path}. "
+            f"Expected key 'v_features' (or one of embeddings/embs/x/features) or an id->vector dict. "
+            f"Keys found: {sorted(map(str, obj.keys()))[:50]}"
+        )
+
+    logger.info("%s: loaded from raw array (%s)", name, path)
+    return _to_numpy_2d_float32(obj)
 
 
 def _parse_config_str(value: str | None, defaults: dict[str, Any]) -> dict[str, Any]:
@@ -186,6 +341,7 @@ def main(
     model=None,
     sampling=None,
     features=None,
+    wandb=None,
     ood_data_path=None,
     ood_year_start=None,
     ood_eval_interval=None,
@@ -207,8 +363,8 @@ def main(
     from torch_geometric.loader import LinkNeighborLoader
 
     reload(logging)
-    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
     os.makedirs(os.path.dirname(log_file) or ".", exist_ok=True)
+    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
 
     random.seed(seed)
     np.random.seed(seed)
@@ -259,10 +415,43 @@ def main(
         },
     )
 
+    wandb_cfg = _parse_config_str(
+        wandb,
+        defaults={
+            "enabled": False,
+            "project": "materials_concepts",
+            "entity": "",
+            "name": "",
+            "group": "",
+            "job_type": "train_pyg",
+            "tags": "",
+            "mode": "online",  # online | offline | disabled
+            "watch": False,
+            "log_model": False,
+            "fail_fast": False,
+        },
+    )
+
     logger.info(f"device: {device}")
     logger.info(f"seed: {seed}")
     logger.info(f"year_start_train: {year_start_train}")
     logger.info(f"fanout: ({sampling_cfg['fanout1']}, {sampling_cfg['fanout2']})")
+
+    wandb_run = _maybe_init_wandb(
+        wandb_cfg,
+        config={
+            "graph_path": graph_path,
+            "data_path": data_path,
+            "v_features_path": v_features_path,
+            "year_start_train": int(year_start_train),
+            "seed": int(seed),
+            "train": dict(train_cfg),
+            "model": dict(model_cfg),
+            "sampling": dict(sampling_cfg),
+            "features": dict(features_cfg),
+        },
+        logger=logger,
+    )
 
     logger.info("Loading dataset")
     data_dict = load_pickle(data_path)
@@ -272,13 +461,17 @@ def main(
     y_val = np.asarray(data_dict.get("y_val", data_dict.get("y_test")), dtype=np.float32)
 
     logger.info("Loading node features")
-    feats = load_compressed(v_features_path)
-    if not feats or "v_features" not in feats:
-        raise ValueError(f"Expected v_features in compressed file: {v_features_path}")
-    v_features = np.asarray(feats["v_features"], dtype=np.float32)
+    v_features = load_node_feature_matrix(
+        v_features_path, name="v_features", logger=logger
+    )
 
     if bool(features_cfg.get("log1p", True)):
-        v_features = np.log1p(v_features)
+        if float(np.min(v_features)) < 0.0:
+            logger.warning(
+                "v_features contains negative values; skipping log1p transform"
+            )
+        else:
+            v_features = np.log1p(v_features)
     if bool(features_cfg.get("zscore", True)):
         mean = v_features.mean(axis=0, keepdims=True)
         std = v_features.std(axis=0, keepdims=True)
@@ -291,6 +484,19 @@ def main(
     logger.info("Building past-graph edge_index")
     graph = Graph(graph_path)
     edge_index = build_edge_index_for_year(graph, year_start_train, num_nodes=num_nodes)
+
+    if wandb_run is not None:
+        try:
+            wandb_run.log(
+                {
+                    "data/num_nodes": int(num_nodes),
+                    "data/in_dim": int(in_dim),
+                    "data/num_edges_undirected": int(edge_index.shape[1]),
+                },
+                step=0,
+            )
+        except Exception:
+            pass
 
     pyg_data = Data(
         x=torch.from_numpy(v_features),
@@ -429,6 +635,32 @@ def main(
     )
     logger.info(f"Train pairs: {len(x_train)} | Val pairs: {len(x_val)}")
 
+    if wandb_run is not None and bool(wandb_cfg.get("watch", False)):
+        # Optional and can be expensive.
+        try:
+            import wandb  # type: ignore
+
+            wandb.watch([encoder, decoder], log="all", log_freq=200)
+        except Exception:
+            pass
+
+    if wandb_run is not None:
+        try:
+            n_params = int(
+                sum(p.numel() for p in encoder.parameters())
+                + sum(p.numel() for p in decoder.parameters())
+            )
+            wandb_run.log(
+                {
+                    "model/params": n_params,
+                    "data/train_pairs": int(len(x_train)),
+                    "data/val_pairs": int(len(x_val)),
+                },
+                step=0,
+            )
+        except Exception:
+            pass
+
     def evaluate() -> tuple[float, tuple[int, int, int, int]]:
         encoder.eval()
         decoder.eval()
@@ -514,6 +746,25 @@ def main(
                 tn,
             )
 
+            if wandb_run is not None:
+                try:
+                    wandb_run.log(
+                        {
+                            "epoch": int(epoch),
+                            "train/loss": float(np.mean(losses))
+                            if losses
+                            else float("nan"),
+                            "val/auc": float(auc),
+                            "val/tp": int(tp),
+                            "val/fp": int(fp),
+                            "val/fn": int(fn),
+                            "val/tn": int(tn),
+                        },
+                        step=int(epoch),
+                    )
+                except Exception:
+                    pass
+
         # OOD eval can be expensive; default is off unless configured.
         interval = int(ood_eval_interval) if ood_eval_interval is not None else int(
             train_cfg.get("ood_eval_interval", 0)
@@ -530,6 +781,22 @@ def main(
                 int(ood_tn),
             )
 
+            if wandb_run is not None:
+                try:
+                    wandb_run.log(
+                        {
+                            "epoch": int(epoch),
+                            "ood/auc": float(ood_auc),
+                            "ood/tp": int(ood_tp),
+                            "ood/fp": int(ood_fp),
+                            "ood/fn": int(ood_fn),
+                            "ood/tn": int(ood_tn),
+                        },
+                        step=int(epoch),
+                    )
+                except Exception:
+                    pass
+
     if save_model_path:
         logger.info(f"Saving model to {save_model_path}")
         os.makedirs(os.path.dirname(save_model_path) or ".", exist_ok=True)
@@ -541,6 +808,25 @@ def main(
             },
             save_model_path,
         )
+
+        if wandb_run is not None and bool(wandb_cfg.get("log_model", False)):
+            try:
+                import wandb  # type: ignore
+
+                artifact = wandb.Artifact(
+                    name=str(wandb_cfg.get("artifact_name", "train_pyg_model")),
+                    type="model",
+                )
+                artifact.add_file(save_model_path)
+                wandb_run.log_artifact(artifact)
+            except Exception:
+                pass
+
+    if wandb_run is not None:
+        try:
+            wandb_run.finish()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":

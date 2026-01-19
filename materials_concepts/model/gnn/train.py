@@ -52,6 +52,102 @@ def load_compressed(path: str | None):
         return pickle.load(f)
 
 
+def _to_numpy_2d_float32(x: Any) -> np.ndarray:
+    if isinstance(x, np.ndarray):
+        arr = x
+    elif isinstance(x, torch.Tensor):
+        arr = x.detach().cpu().numpy()
+    else:
+        arr = np.asarray(x)
+
+    if arr.ndim == 1:
+        arr = arr.reshape(-1, 1)
+    if arr.ndim != 2:
+        raise ValueError(f"Expected a 2D feature matrix, got shape={arr.shape}")
+
+    return arr.astype(np.float32, copy=False)
+
+
+def _try_build_matrix_from_id_dict(obj: dict[Any, Any]) -> np.ndarray | None:
+    """Try converting a {node_id -> embedding} dict into a dense (N,D) matrix.
+
+    Supports int keys or stringified ints. Values can be numpy arrays, torch tensors, or lists.
+    """
+    if not obj:
+        return None
+
+    # keys -> int
+    keys_int: list[int] = []
+    values: list[np.ndarray] = []
+    for k, v in obj.items():
+        try:
+            k_int = int(k)
+        except Exception:
+            return None
+        keys_int.append(k_int)
+        values.append(_to_numpy_2d_float32(v).reshape(-1))
+
+    if not values:
+        return None
+    d = int(values[0].shape[0])
+    if any(int(v.shape[0]) != d for v in values):
+        return None
+
+    n = int(max(keys_int)) + 1
+    mat = np.zeros((n, d), dtype=np.float32)
+    for k_int, v in zip(keys_int, values, strict=False):
+        if k_int < 0:
+            continue
+        mat[k_int] = v
+    return mat
+
+
+def load_node_feature_matrix(path: str, *, name: str, logger: logging.Logger) -> np.ndarray:
+    """Load a node feature matrix from various pickle formats.
+
+    Supported:
+    - dict with key 'v_features' (current baseline convention)
+    - dict with common alternatives ('embeddings', 'embs', 'x', 'features')
+    - dict mapping node_id -> embedding vector (e.g. averaged word embeddings)
+    - raw numpy array / torch tensor
+    """
+    obj = load_compressed(path)
+    if obj is None:
+        raise ValueError(f"{name}: failed to load features from {path} (got None)")
+
+    if isinstance(obj, dict):
+        # preferred key
+        if "v_features" in obj:
+            logger.info("%s: loaded from key 'v_features' (%s)", name, path)
+            return _to_numpy_2d_float32(obj["v_features"])
+
+        # common alternatives
+        for k in ("embeddings", "embs", "x", "features"):
+            if k in obj:
+                logger.info("%s: loaded from key '%s' (%s)", name, k, path)
+                return _to_numpy_2d_float32(obj[k])
+
+        # try id->vector dict
+        mat = _try_build_matrix_from_id_dict(obj)
+        if mat is not None:
+            logger.info(
+                "%s: loaded from id->vector dict (%s) | shape=%s",
+                name,
+                path,
+                tuple(mat.shape),
+            )
+            return mat
+
+        raise ValueError(
+            f"{name}: unsupported feature file format at {path}. "
+            f"Expected key 'v_features' (or one of embeddings/embs/x/features) or an id->vector dict. "
+            f"Keys found: {sorted(map(str, obj.keys()))[:50]}"
+        )
+
+    logger.info("%s: loaded from raw array (%s)", name, path)
+    return _to_numpy_2d_float32(obj)
+
+
 def flatten(t):
     return [item for sublist in t for item in sublist]
 
@@ -364,6 +460,7 @@ def main(
     sampling=None,
     features=None,
     ood_data_path=None,
+    ood_v_features_path=None,
     ood_year_start=None,
     ood_eval_interval=None,
     ood_eval_batch_size=None,
@@ -379,9 +476,9 @@ def main(
     """
     reload(logging)
     global logger
-    logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
-
     os.makedirs(os.path.dirname(log_file) or ".", exist_ok=True)
+
+    logger = setup_logger(file=log_file, level=logging.DEBUG, log_to_stdout=True)
 
     random.seed(seed)
     np.random.seed(seed)
@@ -445,19 +542,23 @@ def main(
     data = load_pickle(data_path)
 
     logger.info("Loading node features (v_features)")
-    feats = load_compressed(v_features_path)
-    if not feats or "v_features" not in feats:
-        raise ValueError(f"Expected v_features in compressed file: {v_features_path}")
-    v_features = np.asarray(feats["v_features"])
-    # normalize features for stable training
-    v_features = v_features.astype(np.float32, copy=False)
+    v_features = load_node_feature_matrix(
+        v_features_path, name="v_features", logger=logger
+    )
+    v_features_mean: np.ndarray | None = None
+    v_features_std: np.ndarray | None = None
     if bool(features_cfg.get("log1p", True)):
-        v_features = np.log1p(v_features)
+        if float(np.min(v_features)) < 0.0:
+            logger.warning(
+                "v_features contains negative values; skipping log1p transform"
+            )
+        else:
+            v_features = np.log1p(v_features)
     if bool(features_cfg.get("zscore", True)):
-        mean = v_features.mean(axis=0, keepdims=True)
-        std = v_features.std(axis=0, keepdims=True)
+        v_features_mean = v_features.mean(axis=0, keepdims=True)
+        v_features_std = v_features.std(axis=0, keepdims=True)
         eps = float(features_cfg.get("eps", 1e-6))
-        v_features = (v_features - mean) / (std + eps)
+        v_features = (v_features - v_features_mean) / (v_features_std + eps)
         logger.info(
             "v_features normalized | log1p=%s zscore=%s | col_std=%s",
             bool(features_cfg.get("log1p", True)),
@@ -476,7 +577,12 @@ def main(
     ood_pairs = None
     ood_labels = None
     ood_sampler = None
+    ood_v_features = None
     if ood_data_path:
+        if not ood_v_features_path:
+            raise ValueError(
+                "ood_v_features_path is required when ood_data_path is provided"
+            )
         ood = load_pickle(ood_data_path)
         if "X_test" not in ood or "y_test" not in ood:
             raise ValueError(
@@ -484,6 +590,31 @@ def main(
             )
         ood_pairs = np.asarray(ood["X_test"], dtype=np.int64)
         ood_labels = np.asarray(ood["y_test"], dtype=np.float32)
+
+        logger.info("Loading OOD node features (ood_v_features)")
+        ood_v_features = load_node_feature_matrix(
+            ood_v_features_path, name="ood_v_features", logger=logger
+        )
+        # Apply the same transforms used for training features.
+        if bool(features_cfg.get("log1p", True)):
+            if float(np.min(ood_v_features)) < 0.0:
+                logger.warning(
+                    "ood_v_features contains negative values; skipping log1p transform"
+                )
+            else:
+                ood_v_features = np.log1p(ood_v_features)
+        if bool(features_cfg.get("zscore", True)):
+            if v_features_mean is None or v_features_std is None:
+                raise RuntimeError(
+                    "Internal error: expected training mean/std for zscore normalization"
+                )
+            eps = float(features_cfg.get("eps", 1e-6))
+            ood_v_features = (ood_v_features - v_features_mean) / (v_features_std + eps)
+        if ood_v_features.shape[1] != v_features.shape[1]:
+            raise ValueError(
+                "OOD v_features dimensionality mismatch: "
+                f"train={v_features.shape[1]} vs ood={ood_v_features.shape[1]}"
+            )
 
         ood_year = int(ood_year_start) if ood_year_start is not None else int(year_start_train) + 3
         logger.info(
@@ -649,6 +780,7 @@ def main(
             ood_pairs is not None
             and ood_labels is not None
             and ood_sampler is not None
+            and ood_v_features is not None
             and int(ood_eval_interval) > 0
             and epoch % int(ood_eval_interval) == 0
         ):
@@ -656,7 +788,7 @@ def main(
                 model=model,
                 decoder=decoder,
                 sampler=ood_sampler,
-                v_features=v_features,
+                v_features=ood_v_features,
                 pairs=ood_pairs,
                 labels=ood_labels,
                 fanout1=int(sampling_cfg["fanout1"]),
