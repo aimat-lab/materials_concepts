@@ -164,6 +164,16 @@ def load_compressed(path: str | None):
         return pickle.load(f)
 
 
+def save_compressed(obj: Any, path: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    if path.endswith(".gz"):
+        with gzip.open(path, "wb") as f:
+            pickle.dump(obj, f)
+    else:
+        with open(path, "wb") as f:
+            pickle.dump(obj, f)
+
+
 def _to_numpy_2d_float32(x: Any) -> np.ndarray:
     if isinstance(x, np.ndarray):
         arr = x
@@ -346,6 +356,7 @@ def main(
     ood_year_start=None,
     ood_eval_interval=None,
     ood_eval_batch_size=None,
+    ood_features_path=None,
     seed=42,
     log_file="logs-v2/gnn/gnn_train_pyg.log",
     save_model_path=None,
@@ -701,6 +712,45 @@ def main(
         )
         return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3]))
 
+    if save_model_path:
+        os.makedirs(save_model_path, exist_ok=True)
+
+    def _save_checkpoint(epoch_idx: int) -> None:
+        if not save_model_path:
+            return
+        ckpt_path = os.path.join(save_model_path, f"checkpoint_epoch_{epoch_idx}.pt")
+        torch.save(
+            {
+                "encoder": encoder.state_dict(),
+                "decoder": decoder.state_dict(),
+                "year_start_train": int(year_start_train),
+                "epoch": int(epoch_idx),
+                "model": dict(model_cfg),
+                "sampling": dict(sampling_cfg),
+                "features": dict(features_cfg),
+            },
+            ckpt_path,
+        )
+
+    def _save_final_model() -> str | None:
+        if not save_model_path:
+            return None
+        final_path = os.path.join(save_model_path, "model.pt")
+        logger.info("Saving final model to %s", final_path)
+        torch.save(
+            {
+                "encoder": encoder.state_dict(),
+                "decoder": decoder.state_dict(),
+                "year_start_train": int(year_start_train),
+                "epoch": int(train_cfg["num_epochs"]),
+                "model": dict(model_cfg),
+                "sampling": dict(sampling_cfg),
+                "features": dict(features_cfg),
+            },
+            final_path,
+        )
+        return final_path
+
     for epoch in range(1, int(train_cfg["num_epochs"]) + 1):
         encoder.train()
         decoder.train()
@@ -797,30 +847,61 @@ def main(
                 except Exception:
                     pass
 
+        _save_checkpoint(epoch)
+
+    final_model_path = _save_final_model()
+
+    if final_model_path and wandb_run is not None and bool(wandb_cfg.get("log_model", False)):
+        try:
+            import wandb  # type: ignore
+
+            artifact = wandb.Artifact(
+                name=str(wandb_cfg.get("artifact_name", "train_pyg_model")),
+                type="model",
+            )
+            artifact.add_file(final_model_path)
+            wandb_run.log_artifact(artifact)
+        except Exception:
+            pass
+
     if save_model_path:
-        logger.info(f"Saving model to {save_model_path}")
-        os.makedirs(os.path.dirname(save_model_path) or ".", exist_ok=True)
+        os.makedirs(save_model_path, exist_ok=True)
+
+    def _save_checkpoint(epoch_idx: int) -> None:
+        if not save_model_path:
+            return
+        ckpt_path = os.path.join(save_model_path, f"checkpoint_epoch_{epoch_idx}.pt")
         torch.save(
             {
                 "encoder": encoder.state_dict(),
                 "decoder": decoder.state_dict(),
                 "year_start_train": int(year_start_train),
+                "epoch": int(epoch_idx),
+                "model": dict(model_cfg),
+                "sampling": dict(sampling_cfg),
+                "features": dict(features_cfg),
             },
-            save_model_path,
+            ckpt_path,
         )
 
-        if wandb_run is not None and bool(wandb_cfg.get("log_model", False)):
-            try:
-                import wandb  # type: ignore
-
-                artifact = wandb.Artifact(
-                    name=str(wandb_cfg.get("artifact_name", "train_pyg_model")),
-                    type="model",
-                )
-                artifact.add_file(save_model_path)
-                wandb_run.log_artifact(artifact)
-            except Exception:
-                pass
+    def _save_final_model() -> str | None:
+        if not save_model_path:
+            return None
+        final_path = os.path.join(save_model_path, "model.pt")
+        logger.info("Saving final model to %s", final_path)
+        torch.save(
+            {
+                "encoder": encoder.state_dict(),
+                "decoder": decoder.state_dict(),
+                "year_start_train": int(year_start_train),
+                "epoch": int(train_cfg["num_epochs"]),
+                "model": dict(model_cfg),
+                "sampling": dict(sampling_cfg),
+                "features": dict(features_cfg),
+            },
+            final_path,
+        )
+        return final_path
 
     if wandb_run is not None:
         try:
@@ -829,5 +910,181 @@ def main(
             pass
 
 
+def eval_predictions(
+    graph_path="data-v2/graph/edges.M.pkl",
+    data_path="data-v2/model/data.M.pkl",
+    v_features_path="data-v2/model/baseline/features.2016.binary.M.pkl.gz",
+    model_path=None,
+    pred_path="data-v2/model/gnn/predictions.pkl.gz",
+    split="test",
+    year_start=None,
+    sampling=None,
+    features=None,
+    model=None,
+    eval_batch_size=16384,
+    num_workers=8,
+    log_file="logs-v2/gnn/gnn_eval_pyg.log",
+):
+    """Evaluate a saved checkpoint/model and write predictions to a pkl(.gz)."""
+
+    _require_pyg()
+    from torch_geometric.data import Data
+    from torch_geometric.loader import LinkNeighborLoader
+
+    if not model_path:
+        raise ValueError("model_path is required")
+
+    reload(logging)
+    os.makedirs(os.path.dirname(log_file) or ".", exist_ok=True)
+    logger = setup_logger(file=log_file, level=logging.INFO, log_to_stdout=True)
+
+    ckpt = torch.load(model_path, map_location=device)
+    ckpt_model_cfg = ckpt.get("model") or {}
+    ckpt_sampling_cfg = ckpt.get("sampling") or {}
+    ckpt_features_cfg = ckpt.get("features") or {}
+
+    model_cfg = _parse_config_str(
+        model,
+        defaults={
+            "hidden_dim": int(ckpt_model_cfg.get("hidden_dim", 128)),
+            "out_dim": int(ckpt_model_cfg.get("out_dim", 128)),
+            "dropout": float(ckpt_model_cfg.get("dropout", 0.1)),
+            "decoder": str(ckpt_model_cfg.get("decoder", "mlp")),
+            "decoder_hidden_dim": int(ckpt_model_cfg.get("decoder_hidden_dim", 256)),
+            "decoder_dropout": float(ckpt_model_cfg.get("decoder_dropout", 0.1)),
+        },
+    )
+    sampling_cfg = _parse_config_str(
+        sampling,
+        defaults={
+            "fanout1": int(ckpt_sampling_cfg.get("fanout1", 15)),
+            "fanout2": int(ckpt_sampling_cfg.get("fanout2", 10)),
+        },
+    )
+    features_cfg = _parse_config_str(
+        features,
+        defaults={
+            "log1p": bool(ckpt_features_cfg.get("log1p", True)),
+            "zscore": bool(ckpt_features_cfg.get("zscore", True)),
+            "eps": float(ckpt_features_cfg.get("eps", 1e-6)),
+        },
+    )
+
+    if year_start is None:
+        year_start = ckpt.get("year_start_train")
+    if year_start is None:
+        raise ValueError("year_start is required (or present in checkpoint)")
+
+    logger.info("Loading dataset")
+    data_dict = load_pickle(data_path)
+    split = str(split).lower()
+    if split == "train":
+        x = np.asarray(data_dict["X_train"], dtype=np.int64)
+        y = np.asarray(data_dict["y_train"], dtype=np.float32)
+    elif split == "val":
+        x = np.asarray(data_dict.get("X_val", data_dict.get("X_test")), dtype=np.int64)
+        y = np.asarray(data_dict.get("y_val", data_dict.get("y_test")), dtype=np.float32)
+    elif split == "test":
+        x = np.asarray(data_dict.get("X_test", data_dict.get("X_val")), dtype=np.int64)
+        y = np.asarray(data_dict.get("y_test", data_dict.get("y_val")), dtype=np.float32)
+    else:
+        raise ValueError("split must be one of: train, val, test")
+
+    logger.info("Loading node features")
+    v_features = load_node_feature_matrix(
+        v_features_path, name="v_features", logger=logger
+    )
+
+    if bool(features_cfg.get("log1p", True)):
+        if float(np.min(v_features)) < 0.0:
+            logger.warning("v_features contains negative values; skipping log1p transform")
+        else:
+            v_features = np.log1p(v_features)
+    if bool(features_cfg.get("zscore", True)):
+        mean = v_features.mean(axis=0, keepdims=True)
+        std = v_features.std(axis=0, keepdims=True)
+        eps = float(features_cfg.get("eps", 1e-6))
+        v_features = (v_features - mean) / (std + eps)
+
+    num_nodes = int(v_features.shape[0])
+    in_dim = int(v_features.shape[1])
+
+    logger.info("Building past-graph edge_index")
+    graph = Graph(graph_path)
+    edge_index = build_edge_index_for_year(graph, int(year_start), num_nodes=num_nodes)
+
+    pyg_data = Data(
+        x=torch.from_numpy(v_features),
+        edge_index=edge_index,
+        num_nodes=num_nodes,
+    )
+
+    edge_label_index = torch.from_numpy(x.T).contiguous()
+    edge_label = torch.from_numpy(y).to(torch.float32)
+
+    loader = LinkNeighborLoader(
+        pyg_data,
+        edge_label_index=edge_label_index,
+        edge_label=edge_label,
+        num_neighbors=[int(sampling_cfg["fanout1"]), int(sampling_cfg["fanout2"])],
+        batch_size=int(eval_batch_size),
+        shuffle=False,
+        num_workers=int(num_workers),
+        pin_memory=True,
+        persistent_workers=int(num_workers) > 0,
+    )
+
+    encoder = SAGEEncoder(
+        in_dim=in_dim,
+        hidden_dim=int(model_cfg["hidden_dim"]),
+        out_dim=int(model_cfg["out_dim"]),
+        dropout=float(model_cfg["dropout"]),
+    ).to(device)
+
+    decoder_kind = str(model_cfg.get("decoder", "mlp")).lower()
+    if decoder_kind not in {"mlp", "dot"}:
+        raise ValueError("model.decoder must be one of: mlp, dot")
+
+    if decoder_kind == "mlp":
+        decoder = EdgeMLPDecoder(
+            emb_dim=int(model_cfg["out_dim"]),
+            hidden_dim=int(model_cfg["decoder_hidden_dim"]),
+            dropout=float(model_cfg["decoder_dropout"]),
+        ).to(device)
+    else:
+        decoder = DotDecoder().to(device)
+
+    encoder.load_state_dict(ckpt["encoder"])
+    decoder.load_state_dict(ckpt["decoder"])
+
+    encoder.eval()
+    decoder.eval()
+    scores: list[float] = []
+    with torch.no_grad():
+        for batch in tqdm(loader, desc=f"Eval({split})", leave=False):
+            batch = batch.to(device, non_blocking=True)
+            z = encoder(batch.x, batch.edge_index)
+            u = batch.edge_label_index[0]
+            v = batch.edge_label_index[1]
+            logits = decoder(z[u], z[v])
+            probs = torch.sigmoid(logits).detach().cpu().numpy()
+            scores.extend(probs.tolist())
+
+    predictions = np.asarray(scores)
+    auc, _, cm = test(torch.tensor(y, dtype=torch.float32), predictions, threshold=0.5)
+    logger.info(
+        "Eval split=%s | AUC=%.4f | TP=%d FP=%d FN=%d TN=%d",
+        split,
+        float(auc),
+        int(cm[3]),
+        int(cm[1]),
+        int(cm[2]),
+        int(cm[0]),
+    )
+
+    save_compressed(predictions, pred_path)
+    logger.info("Saved predictions to %s", pred_path)
+
+
 if __name__ == "__main__":
-    fire.Fire(main)
+    fire.Fire({"train": main, "eval": eval_predictions})
