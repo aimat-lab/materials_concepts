@@ -3,6 +3,7 @@ import logging
 import os
 import pickle
 import random
+import shlex
 import sys
 from importlib import reload
 from typing import Any
@@ -14,7 +15,29 @@ from torch import nn
 from tqdm import tqdm
 
 from materials_concepts.model.graph import Graph
-from materials_concepts.model.metrics import test
+from materials_concepts.model.metrics import print_metrics, test
+
+
+def _default_wandb_run_name(
+    *,
+    features_path: str,
+    year_start_train: int,
+    seed: int,
+    train_cfg: dict[str, Any],
+    model_cfg: dict[str, Any],
+    sampling_cfg: dict[str, Any],
+) -> str:
+    # Keep names compact but informative; full details live in wandb.config.
+    type_ = "plain" if "binary" in features_path else "emb"
+    bs = int(train_cfg.get("batch_size", 0) or 0)
+    lr = float(train_cfg.get("lr", 0.0) or 0.0)
+    ep = int(train_cfg.get("num_epochs", 0) or 0)
+    h = int(model_cfg.get("hidden_dim", 0) or 0)
+    o = int(model_cfg.get("out_dim", 0) or 0)
+    dec = str(model_cfg.get("decoder", ""))
+    f1 = int(sampling_cfg.get("fanout1", 0) or 0)
+    f2 = int(sampling_cfg.get("fanout2", 0) or 0)
+    return f"{type_}_{year_start_train}_bs{bs}_lr{lr:g}_ep{ep}_h{h}_o{o}_f{f1}-{f2}_{dec}_s{seed}"
 
 
 def _maybe_init_wandb(
@@ -41,7 +64,7 @@ def _maybe_init_wandb(
     fail_fast = bool(wandb_cfg.get("fail_fast", False))
 
     init_kwargs: dict[str, Any] = {
-        "project": str(wandb_cfg.get("project", "materials_concepts")),
+        "project": str(wandb_cfg.get("project", "mat-concepts")),
         "entity": str(wandb_cfg.get("entity", "")) or None,
         "name": str(wandb_cfg.get("name", "")) or None,
         "group": str(wandb_cfg.get("group", "")) or None,
@@ -443,6 +466,16 @@ def main(
         },
     )
 
+    if bool(wandb_cfg.get("enabled", False)) and not str(wandb_cfg.get("name", "")).strip():
+        wandb_cfg["name"] = _default_wandb_run_name(
+            features_path=v_features_path,
+            year_start_train=int(year_start_train),
+            seed=int(seed),
+            train_cfg=train_cfg,
+            model_cfg=model_cfg,
+            sampling_cfg=sampling_cfg,
+        )
+
     logger.info(f"device: {device}")
     logger.info(f"seed: {seed}")
     logger.info(f"year_start_train: {year_start_train}")
@@ -460,6 +493,26 @@ def main(
             "model": dict(model_cfg),
             "sampling": dict(sampling_cfg),
             "features": dict(features_cfg),
+            "args_raw": {
+                "train": train or "",
+                "model": model or "",
+                "sampling": sampling or "",
+                "features": features or "",
+                "wandb": wandb or "",
+                "ood_data_path": ood_data_path or "",
+                "ood_year_start": "" if ood_year_start is None else str(ood_year_start),
+                "ood_eval_interval": ""
+                if ood_eval_interval is None
+                else str(ood_eval_interval),
+                "ood_eval_batch_size": ""
+                if ood_eval_batch_size is None
+                else str(ood_eval_batch_size),
+                "ood_features_path": ood_features_path or "",
+                "save_model_path": save_model_path or "",
+                "log_file": log_file or "",
+            },
+            "argv": list(sys.argv),
+            "argv_str": " ".join(shlex.quote(a) for a in sys.argv),
         },
         logger=logger,
     )
@@ -496,19 +549,6 @@ def main(
     graph = Graph(graph_path)
     edge_index = build_edge_index_for_year(graph, year_start_train, num_nodes=num_nodes)
 
-    if wandb_run is not None:
-        try:
-            wandb_run.log(
-                {
-                    "data/num_nodes": int(num_nodes),
-                    "data/in_dim": int(in_dim),
-                    "data/num_edges_undirected": int(edge_index.shape[1]),
-                },
-                step=0,
-            )
-        except Exception:
-            pass
-
     pyg_data = Data(
         x=torch.from_numpy(v_features),
         edge_index=edge_index,
@@ -534,6 +574,27 @@ def main(
         ood_x = np.asarray(ood["X_test"], dtype=np.int64)
         ood_y = np.asarray(ood["y_test"], dtype=np.float32)
 
+        if ood_features_path:
+            logger.info("Loading OOD node features")
+            v_features_ood = load_node_feature_matrix(
+                ood_features_path, name="v_features_ood", logger=logger
+            )
+
+            if bool(features_cfg.get("log1p", True)):
+                if float(np.min(v_features_ood)) < 0.0:
+                    logger.warning(
+                        "v_features_ood contains negative values; skipping log1p transform"
+                    )
+                else:
+                    v_features_ood = np.log1p(v_features_ood)
+            if bool(features_cfg.get("zscore", True)):
+                mean_ood = v_features_ood.mean(axis=0, keepdims=True)
+                std_ood = v_features_ood.std(axis=0, keepdims=True)
+                eps = float(features_cfg.get("eps", 1e-6))
+                v_features_ood = (v_features_ood - mean_ood) / (std_ood + eps)
+        else:
+            v_features_ood = v_features
+
         ood_year = (
             int(ood_year_start)
             if ood_year_start is not None
@@ -545,7 +606,7 @@ def main(
         )
 
         pyg_data_ood = Data(
-            x=pyg_data.x,
+            x=torch.from_numpy(v_features_ood),
             edge_index=edge_index_ood,
             num_nodes=num_nodes,
         )
@@ -801,14 +862,10 @@ def main(
                     wandb_run.log(
                         {
                             "epoch": int(epoch),
-                            "train/loss": float(np.mean(losses))
+                            "loss": float(np.mean(losses))
                             if losses
                             else float("nan"),
-                            "val/auc": float(auc),
-                            "val/tp": int(tp),
-                            "val/fp": int(fp),
-                            "val/fn": int(fn),
-                            "val/tn": int(tn),
+                            "train_auc": float(auc),
                         },
                         step=int(epoch),
                     )
@@ -836,11 +893,7 @@ def main(
                     wandb_run.log(
                         {
                             "epoch": int(epoch),
-                            "ood/auc": float(ood_auc),
-                            "ood/tp": int(ood_tp),
-                            "ood/fp": int(ood_fp),
-                            "ood/fn": int(ood_fn),
-                            "ood/tn": int(ood_tn),
+                            "val_auc": float(ood_auc),
                         },
                         step=int(epoch),
                     )
@@ -913,17 +966,17 @@ def main(
 def eval_predictions(
     graph_path="data-v2/graph/edges.M.pkl",
     data_path="data-v2/model/data.M.pkl",
-    v_features_path="data-v2/model/baseline/features.2016.binary.M.pkl.gz",
+    v_features_path="data-v2/model/baseline/features.2019.binary.M.pkl.gz",
     model_path=None,
     pred_path="data-v2/model/gnn/predictions.pkl.gz",
     split="test",
-    year_start=None,
+    year_start=2019,
     sampling=None,
     features=None,
     model=None,
     eval_batch_size=16384,
     num_workers=8,
-    log_file="logs-v2/gnn/gnn_eval_pyg.log",
+    log_file="logs-v2/gnn/gnn_eval_mixture_pyg.log",
 ):
     """Evaluate a saved checkpoint/model and write predictions to a pkl(.gz)."""
 
@@ -1084,6 +1137,8 @@ def eval_predictions(
 
     save_compressed(predictions, pred_path)
     logger.info("Saved predictions to %s", pred_path)
+
+    print_metrics(torch.tensor(y, dtype=torch.float32), predictions, threshold=0.5)
 
 
 if __name__ == "__main__":
