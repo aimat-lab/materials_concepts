@@ -257,7 +257,7 @@ def main(
             f"Distance array length {len(dists)} does not match number of labels {len(y_true)}"
         )
 
-    dist_mask = dists == 3
+    dist_mask = dists >= 2
     if not np.any(dist_mask):
         raise ValueError("No samples found at distance 3; check distance data and path")
 
@@ -267,7 +267,7 @@ def main(
     if pairs is not None:
         pairs = pairs[dist_mask]
 
-    print("Filtered to distance==3:", y_true.shape, y_score.shape, years.shape)
+    print("Filtered to distance>=2:", y_true.shape, y_score.shape, years.shape)
 
     assert len(y_true) == len(y_score), "Length of predictions must match y_test"
     assert len(years) == len(y_true), "Length of years_test must match y_test"
@@ -303,7 +303,7 @@ def main(
     if per_source_hit is not None:
         metrics["per_source_hit@k"] = per_source_hit
 
-    with open(os.path.join(out_dir, "dist_3_metrics.json"), "w") as f:
+    with open(os.path.join(out_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f, indent=2)
 
     print(f"Saved metrics and plots to {out_dir}")

@@ -28,16 +28,17 @@ def _default_wandb_run_name(
     sampling_cfg: dict[str, Any],
 ) -> str:
     # Keep names compact but informative; full details live in wandb.config.
-    type_ = "plain" if "binary" in features_path else "emb"
+    type_ = "base" if "binary" in features_path else "emb"
     bs = int(train_cfg.get("batch_size", 0) or 0)
     lr = float(train_cfg.get("lr", 0.0) or 0.0)
+    wd = float(train_cfg.get("weight_decay", 0.0) or 0.0)
     ep = int(train_cfg.get("num_epochs", 0) or 0)
     h = int(model_cfg.get("hidden_dim", 0) or 0)
     o = int(model_cfg.get("out_dim", 0) or 0)
     dec = str(model_cfg.get("decoder", ""))
     f1 = int(sampling_cfg.get("fanout1", 0) or 0)
     f2 = int(sampling_cfg.get("fanout2", 0) or 0)
-    return f"{type_}_{year_start_train}_bs{bs}_lr{lr:g}_ep{ep}_h{h}_o{o}_f{f1}-{f2}_{dec}_s{seed}"
+    return f"{type_}_{year_start_train}_bs{bs}_lr{lr:g}_wd{wd:g}_ep{ep}_h{h}_o{o}_f{f1}-{f2}_{dec}_s{seed}"
 
 
 def _maybe_init_wandb(
@@ -383,6 +384,7 @@ def main(
     seed=42,
     log_file="logs-v2/gnn/gnn_train_pyg.log",
     save_model_path=None,
+    wandb_save_path=False,
 ):
     """Fast GNN trainer using PyTorch Geometric neighbor sampling.
 
@@ -466,20 +468,29 @@ def main(
         },
     )
 
+    run_name = _default_wandb_run_name(
+        features_path=v_features_path,
+        year_start_train=int(year_start_train),
+        seed=int(seed),
+        train_cfg=train_cfg,
+        model_cfg=model_cfg,
+        sampling_cfg=sampling_cfg,
+    )
+
+    if bool(wandb_save_path):
+        if not save_model_path:
+            raise ValueError("wandb_save_path=true requires save_model_path")
+        save_model_path = os.path.join(str(save_model_path), run_name)
+
     if bool(wandb_cfg.get("enabled", False)) and not str(wandb_cfg.get("name", "")).strip():
-        wandb_cfg["name"] = _default_wandb_run_name(
-            features_path=v_features_path,
-            year_start_train=int(year_start_train),
-            seed=int(seed),
-            train_cfg=train_cfg,
-            model_cfg=model_cfg,
-            sampling_cfg=sampling_cfg,
-        )
+        wandb_cfg["name"] = run_name
 
     logger.info(f"device: {device}")
     logger.info(f"seed: {seed}")
     logger.info(f"year_start_train: {year_start_train}")
     logger.info(f"fanout: ({sampling_cfg['fanout1']}, {sampling_cfg['fanout2']})")
+    if save_model_path:
+        logger.info("save_model_path: %s", save_model_path)
 
     wandb_run = _maybe_init_wandb(
         wandb_cfg,
@@ -509,6 +520,7 @@ def main(
                 else str(ood_eval_batch_size),
                 "ood_features_path": ood_features_path or "",
                 "save_model_path": save_model_path or "",
+                "wandb_save_path": str(bool(wandb_save_path)),
                 "log_file": log_file or "",
             },
             "argv": list(sys.argv),
@@ -733,12 +745,19 @@ def main(
         except Exception:
             pass
 
-    def evaluate() -> tuple[float, tuple[int, int, int, int]]:
+    eval_dir = None
+    if save_model_path:
+        os.makedirs(save_model_path, exist_ok=True)
+        eval_dir = os.path.join(save_model_path, "eval")
+        os.makedirs(eval_dir, exist_ok=True)
+        logger.info("eval_dir: %s", eval_dir)
+
+    def _predict(loader, *, desc: str) -> np.ndarray:
         encoder.eval()
         decoder.eval()
         scores: list[float] = []
         with torch.no_grad():
-            for batch in tqdm(val_loader, desc="Eval", leave=False):
+            for batch in tqdm(loader, desc=desc, leave=False):
                 batch = batch.to(device, non_blocking=True)
                 z = encoder(batch.x, batch.edge_index)
                 u = batch.edge_label_index[0]
@@ -746,35 +765,28 @@ def main(
                 logits = decoder(z[u], z[v])
                 probs = torch.sigmoid(logits).detach().cpu().numpy()
                 scores.extend(probs.tolist())
+        return np.asarray(scores)
 
-        predictions = np.asarray(scores)
-        auc, _, cm = test(torch.tensor(y_val, dtype=torch.float32), predictions, threshold=0.5)
-        return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3]))
+    def _maybe_save_predictions(predictions: np.ndarray, *, filename: str) -> None:
+        if not eval_dir:
+            return
+        save_compressed(predictions, os.path.join(eval_dir, filename))
 
-    def evaluate_ood() -> tuple[float, tuple[int, int, int, int]]:
+    def evaluate() -> tuple[float, tuple[int, int, int, int], np.ndarray]:
+        predictions = _predict(val_loader, desc="Eval")
+        auc, _, cm = test(
+            torch.tensor(y_val, dtype=torch.float32), predictions, threshold=0.5
+        )
+        return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3])), predictions
+
+    def evaluate_ood() -> tuple[float, tuple[int, int, int, int], np.ndarray]:
         if ood_loader is None or ood_y is None:
             raise RuntimeError("OOD loader not initialized")
-        encoder.eval()
-        decoder.eval()
-        scores: list[float] = []
-        with torch.no_grad():
-            for batch in tqdm(ood_loader, desc="OOD Eval", leave=False):
-                batch = batch.to(device, non_blocking=True)
-                z = encoder(batch.x, batch.edge_index)
-                u = batch.edge_label_index[0]
-                v = batch.edge_label_index[1]
-                logits = decoder(z[u], z[v])
-                probs = torch.sigmoid(logits).detach().cpu().numpy()
-                scores.extend(probs.tolist())
-
-        predictions = np.asarray(scores)
+        predictions = _predict(ood_loader, desc="OOD Eval")
         auc, _, cm = test(
             torch.tensor(ood_y, dtype=torch.float32), predictions, threshold=0.5
         )
-        return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3]))
-
-    if save_model_path:
-        os.makedirs(save_model_path, exist_ok=True)
+        return float(auc), (int(cm[0]), int(cm[1]), int(cm[2]), int(cm[3])), predictions
 
     def _save_checkpoint(epoch_idx: int) -> None:
         if not save_model_path:
@@ -845,7 +857,10 @@ def main(
             losses.append(float(loss.detach().cpu().item()))
 
         if epoch % int(train_cfg["log_interval"]) == 0:
-            auc, (tn, fp, fn, tp) = evaluate()
+            auc, (tn, fp, fn, tp), predictions = evaluate()
+            _maybe_save_predictions(
+                predictions, filename=f"predictions.eval_epoch_{epoch}.pkl.gz"
+            )
             logger.info(
                 "Epoch: %d, Loss: %.4f, AUC: %.4f, TP: %d, FP: %d, FN: %d, TN: %d",
                 epoch,
@@ -877,7 +892,11 @@ def main(
             train_cfg.get("ood_eval_interval", 0)
         )
         if ood_loader is not None and interval and interval > 0 and epoch % interval == 0:
-            ood_auc, (ood_tn, ood_fp, ood_fn, ood_tp) = evaluate_ood()
+            ood_auc, (ood_tn, ood_fp, ood_fn, ood_tp), ood_predictions = evaluate_ood()
+            _maybe_save_predictions(
+                ood_predictions,
+                filename=f"predictions.ood_eval_epoch_{epoch}.pkl.gz",
+            )
             logger.info(
                 "OOD | Epoch: %d, AUC: %.4f, TP: %d, FP: %d, FN: %d, TN: %d",
                 epoch,
@@ -916,45 +935,6 @@ def main(
             wandb_run.log_artifact(artifact)
         except Exception:
             pass
-
-    if save_model_path:
-        os.makedirs(save_model_path, exist_ok=True)
-
-    def _save_checkpoint(epoch_idx: int) -> None:
-        if not save_model_path:
-            return
-        ckpt_path = os.path.join(save_model_path, f"checkpoint_epoch_{epoch_idx}.pt")
-        torch.save(
-            {
-                "encoder": encoder.state_dict(),
-                "decoder": decoder.state_dict(),
-                "year_start_train": int(year_start_train),
-                "epoch": int(epoch_idx),
-                "model": dict(model_cfg),
-                "sampling": dict(sampling_cfg),
-                "features": dict(features_cfg),
-            },
-            ckpt_path,
-        )
-
-    def _save_final_model() -> str | None:
-        if not save_model_path:
-            return None
-        final_path = os.path.join(save_model_path, "model.pt")
-        logger.info("Saving final model to %s", final_path)
-        torch.save(
-            {
-                "encoder": encoder.state_dict(),
-                "decoder": decoder.state_dict(),
-                "year_start_train": int(year_start_train),
-                "epoch": int(train_cfg["num_epochs"]),
-                "model": dict(model_cfg),
-                "sampling": dict(sampling_cfg),
-                "features": dict(features_cfg),
-            },
-            final_path,
-        )
-        return final_path
 
     if wandb_run is not None:
         try:
