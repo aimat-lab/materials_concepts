@@ -990,8 +990,8 @@ def eval_predictions(
     sampling_cfg = _parse_config_str(
         sampling,
         defaults={
-            "fanout1": int(ckpt_sampling_cfg.get("fanout1", 15)),
-            "fanout2": int(ckpt_sampling_cfg.get("fanout2", 10)),
+            "fanout1": int(ckpt_sampling_cfg.get("fanout1", 20)),
+            "fanout2": int(ckpt_sampling_cfg.get("fanout2", 15)),
         },
     )
     features_cfg = _parse_config_str(
