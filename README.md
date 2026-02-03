@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/618471480.svg)](https://doi.org/10.5281/zenodo.18466587)
+
+
 # System Requirements
 
 ### Hardware requirements
