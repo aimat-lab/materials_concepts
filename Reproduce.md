@@ -72,7 +72,7 @@ The data collection scripts can be found in:
 
 ## Evaluating a model on Mario Krenn's Science4Cast challenge
 
-All information regarding the challenge can be found [here](https://github.com/artificial-scientist-lab/FutureOfAIviaAI?tab=readme-ov-file). The necessary data can be 
+All information regarding the challenge can be found [here](https://github.com/artificial-scientist-lab/FutureOfAIviaAI?tab=readme-ov-file). The necessary data can be found [here](https://zenodo.org/records/7882892#.ZE-Egx9BwuU).
 
 The data structure is slightly different, so some adjustments are necessary:
 
