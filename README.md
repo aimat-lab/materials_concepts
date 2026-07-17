@@ -1,7 +1,15 @@
-[![DOI](https://zenodo.org/badge/618471480.svg)](https://doi.org/10.5281/zenodo.18466587)
-
+![https://doi.org/10.5281/zenodo.18466587](https://zenodo.org/badge/618471480.svg)
 
 # System Requirements
+
+> [!NOTE]
+> **Try out the static online demo!**  
+> You can test concept predictions directly in your browser without installing anything.  
+> * **Lightweight:** ~35 MB (model weights & graph index downloaded once into browser memory for the current session, nothing saved to your disk).  
+> * **Model:** Baseline NN model (powered ONNX Runtime WASM).  
+> 
+> 🔗 **Live Demo:** [https://aimat-lab.github.io/materials_concepts/](https://aimat-lab.github.io/materials_concepts/)  
+> *(To run the full ensemble model with 768-dim word embeddings, see local installation below).*
 
 ### Hardware requirements
 
