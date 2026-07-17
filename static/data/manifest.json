@@ -1,0 +1,20 @@
+{
+  "num_vertices": 136704,
+  "feature_dim": 10,
+  "total_concepts": 136704,
+  "adjacency": {
+    "indptr": "adjacency/indptr.bin",
+    "degrees": "adjacency/degrees.bin",
+    "vertices": "adjacency/vertices.bin",
+    "indices_chunks": [
+      "adjacency/indices_0.bin",
+      "adjacency/indices_1.bin",
+      "adjacency/indices_2.bin"
+    ],
+    "total_indices": 17958174
+  },
+  "features": "features.bin",
+  "lookup": "lookup.json",
+  "concept_to_id": "concept_to_id.json",
+  "model": "baseline.onnx"
+}

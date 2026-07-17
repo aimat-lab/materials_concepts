@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Concepts - Light Mode</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="topbar">
+        <button id="backBtn" class="icon-btn" aria-label="Back" title="Back">←</button>
+        <h1 style="margin: 0; margin-left: 8px;">Browse Concepts</h1>
+      </div>
+
+      <div class="row" style="margin-top: 16px;">
+        <input id="filterInput" type="text" placeholder="Filter concepts..." disabled />
+      </div>
+
+      <div id="progressCard" class="progress-card">
+        <div id="progressTitle" class="progress-title">Loading concept dataset...</div>
+        <div class="progress-bar-container">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <div id="progressSub" class="progress-sub">Fetching static data...</div>
+      </div>
+
+      <div class="row" style="justify-content: space-between; margin-top: 14px;">
+        <p id="meta" class="meta" style="margin: 0;"></p>
+        <div class="toolbar" style="margin: 0;">
+          <button id="prevBtn" disabled>← Previous</button>
+          <button id="nextBtn" disabled>Next →</button>
+        </div>
+      </div>
+
+      <div id="list" class="list"></div>
+    </main>
+
+    <script type="module">
+      import { dataLoader } from "./js/data-loader.js";
+      import { staticSearch } from "./js/search.js";
+
+      const backBtn = document.getElementById("backBtn");
+      const filterInput = document.getElementById("filterInput");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const meta = document.getElementById("meta");
+      const listEl = document.getElementById("list");
+
+      const progressCard = document.getElementById("progressCard");
+      const progressTitle = document.getElementById("progressTitle");
+      const progressBarFill = document.getElementById("progressBarFill");
+      const progressSub = document.getElementById("progressSub");
+
+      let currentPage = 1;
+      const pageSize = 100;
+      let totalItems = 0;
+
+      function updateProgress({ percent, text }) {
+        progressBarFill.style.width = `${percent}%`;
+        progressSub.textContent = text;
+        if (percent >= 100) {
+          setTimeout(() => {
+            progressCard.style.display = "none";
+            filterInput.disabled = false;
+            loadPage();
+          }, 300);
+        }
+      }
+
+      async function loadPage() {
+        const query = filterInput.value.trim();
+        const res = await staticSearch.getConcepts(query, pageSize, currentPage);
+        totalItems = res.total;
+
+        const maxPages = Math.ceil(totalItems / pageSize) || 1;
+        meta.textContent = `Showing ${(res.page - 1) * pageSize + 1} - ${Math.min(res.page * pageSize, totalItems)} of ${totalItems.toLocaleString()} concepts`;
+
+        prevBtn.disabled = currentPage <= 1;
+        nextBtn.disabled = currentPage >= maxPages;
+
+        if (!res.items.length) {
+          listEl.innerHTML = '<div class="status">No matching concepts found.</div>';
+          return;
+        }
+
+        listEl.innerHTML = res.items
+          .map((concept, index) => {
+            const globalIndex = (currentPage - 1) * pageSize + index + 1;
+            return `
+              <a class="item" href="./prediction.html?concept=${encodeURIComponent(concept)}">
+                <span class="rank">${globalIndex}.</span>
+                <span class="concept">${concept}</span>
+              </a>
+            `;
+          })
+          .join("");
+      }
+
+      filterInput.addEventListener("input", () => {
+        currentPage = 1;
+        loadPage();
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          loadPage();
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        const maxPages = Math.ceil(totalItems / pageSize);
+        if (currentPage < maxPages) {
+          currentPage += 1;
+          loadPage();
+        }
+      });
+
+      backBtn.addEventListener("click", () => {
+        if (globalThis.history.length > 1) {
+          globalThis.history.back();
+        } else {
+          globalThis.location.href = "./index.html";
+        }
+      });
+
+      dataLoader.loadAll(updateProgress).catch(err => {
+        progressTitle.textContent = "Error loading data";
+        progressSub.textContent = err.message;
+      });
+    </script>
+  </body>
+</html>

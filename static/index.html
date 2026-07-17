@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Concept Search - Light Mode</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="topbar">
+        <h1>Concept Search</h1>
+        <span class="mode-badge" title="Running fully client-side using baseline ONNX model">⚡ Static / Light Mode</span>
+      </div>
+      <p class="muted">Search concepts and tap one result to open predictions.</p>
+      <div class="info-note" style="margin-top: 10px; padding: 10px 12px; background: var(--accent-hover); border: 1px solid var(--line); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+        ℹ️ <strong>Note:</strong> Due to bandwidth constraints (word embeddings are ~400 MB), client-side browser inference is limited to the baseline features model. To run the full ensemble model locally, visit the <a href="https://github.com/aimat-lab/materials_concepts" target="_blank" rel="noopener noreferrer" style="color: var(--accent); font-weight: 500;">aimat-lab/materials_concepts repository</a>.
+      </div>
+
+      <div class="row">
+        <input id="searchInput" type="text" placeholder="Search concepts..." disabled />
+        <button id="searchBtn" class="primary" disabled>Search</button>
+      </div>
+      <div class="toolbar">
+        <button id="browseBtn">📚 Browse all concepts</button>
+        <button id="savedBtn">💾 Saved concepts</button>
+      </div>
+
+      <div id="progressCard" class="progress-card">
+        <div id="progressTitle" class="progress-title">Initializing static app data...</div>
+        <div class="progress-bar-container">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <div id="progressSub" class="progress-sub">Loading binary graph index...</div>
+      </div>
+
+      <p id="searchMeta" class="meta"></p>
+      <div id="searchResults" class="list"></div>
+    </main>
+
+    <script type="module">
+      import { dataLoader } from "./js/data-loader.js";
+      import { staticSearch } from "./js/search.js";
+
+      const searchInput = document.getElementById("searchInput");
+      const searchBtn = document.getElementById("searchBtn");
+      const browseBtn = document.getElementById("browseBtn");
+      const savedBtn = document.getElementById("savedBtn");
+      const searchMeta = document.getElementById("searchMeta");
+      const searchResults = document.getElementById("searchResults");
+
+      const progressCard = document.getElementById("progressCard");
+      const progressTitle = document.getElementById("progressTitle");
+      const progressBarFill = document.getElementById("progressBarFill");
+      const progressSub = document.getElementById("progressSub");
+
+      const searchState = {
+        items: [],
+        query: "",
+      };
+
+      function updateProgress({ step, percent, text }) {
+        progressBarFill.style.width = `${percent}%`;
+        progressSub.textContent = text;
+
+        if (percent >= 100) {
+          setTimeout(() => {
+            progressCard.style.display = "none";
+            searchInput.disabled = false;
+            searchBtn.disabled = false;
+            searchInput.focus();
+            searchResults.innerHTML = '<div class="item"><span>Start by searching a concept.</span></div>';
+          }, 400);
+        }
+      }
+
+      function renderSearchResults() {
+        if (!searchState.items.length) {
+          searchResults.innerHTML = '<div class="item"><span>No results found.</span></div>';
+          return;
+        }
+
+        const normalizedQuery = searchState.query.trim().toLowerCase();
+
+        searchResults.innerHTML = searchState.items
+          .map((item, index) => {
+            const concept = typeof item === "string" ? item : item.concept;
+            const isExact = normalizedQuery && concept.trim().toLowerCase() === normalizedQuery;
+
+            return `
+              <a class="item predict-link ${isExact ? "exact-match" : ""}" href="./prediction.html?concept=${encodeURIComponent(concept)}">
+                <span class="rank">${index + 1}.</span>
+                <span class="concept">${concept}</span>
+                ${isExact ? '<span class="badge">exact</span>' : ""}
+              </a>
+            `;
+          })
+          .join("");
+      }
+
+      async function runSearch() {
+        const query = searchInput.value.trim();
+        if (!query) {
+          searchMeta.textContent = "Enter a search term.";
+          return;
+        }
+
+        searchMeta.textContent = `Searching for "${query}"...`;
+
+        try {
+          const results = await staticSearch.search(query, 200, true);
+          searchState.items = results;
+          searchState.query = query;
+          searchMeta.textContent = `Found ${results.length} results for "${query}".`;
+          renderSearchResults();
+        } catch (error) {
+          searchMeta.textContent = "Search failed.";
+          searchResults.innerHTML = `<div class="item"><span>Error: ${error.message}</span></div>`;
+        }
+      }
+
+      searchBtn.addEventListener("click", runSearch);
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          runSearch();
+        }
+      });
+
+      browseBtn.addEventListener("click", () => {
+        globalThis.location.href = "./browse.html";
+      });
+      savedBtn.addEventListener("click", () => {
+        globalThis.location.href = "./saved.html";
+      });
+
+      // Initialize data loader on page load
+      dataLoader.loadAll(updateProgress).catch(err => {
+        progressTitle.textContent = "Error loading static data";
+        progressSub.textContent = err.message;
+        console.error(err);
+      });
+    </script>
+  </body>
+</html>

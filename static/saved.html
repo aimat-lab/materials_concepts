@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Concepts - Light Mode</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <style>
+      .pair-card {
+        padding: 12px 6px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .pair-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .pair-title {
+        font-weight: 600;
+      }
+
+      .pair-sub {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .del-btn {
+        background: none;
+        border: 1px solid var(--line);
+        color: #d9534f;
+        padding: 4px 10px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+      }
+
+      .del-btn:hover {
+        background: #fdf2f2;
+        border-color: #d9534f;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <div class="topbar">
+        <button id="backBtn" class="icon-btn" aria-label="Back" title="Back">←</button>
+      </div>
+
+      <h1>Saved Concept Pairs</h1>
+      <p class="muted">Your saved concept suggestions stored in browser localStorage.</p>
+
+      <div class="toolbar" style="margin-top: 14px;">
+        <button id="clearBtn" style="color: #d9534f; border-color: #f5c6cb;">🗑 Clear all</button>
+      </div>
+
+      <p id="meta" class="meta"></p>
+      <div id="list" class="list"></div>
+    </main>
+
+    <script type="module">
+      const SAVED_PAIRS_KEY = "savedConceptPairs";
+      const backBtn = document.getElementById("backBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const meta = document.getElementById("meta");
+      const listEl = document.getElementById("list");
+
+      function loadSavedPairs() {
+        try {
+          const raw = globalThis.localStorage.getItem(SAVED_PAIRS_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function renderList() {
+        const items = loadSavedPairs();
+        meta.textContent = `${items.length} saved pairs`;
+
+        if (!items.length) {
+          listEl.innerHTML = '<div class="status">No saved concept pairs yet.</div>';
+          return;
+        }
+
+        listEl.innerHTML = items
+          .map((item, index) => {
+            const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "";
+
+            return `
+              <div class="pair-card">
+                <div class="pair-info">
+                  <div class="pair-title">
+                    <a href="./prediction.html?concept=${encodeURIComponent(item.origin)}" style="color: var(--accent); text-decoration: none;">${item.origin}</a>
+                    →
+                    <a href="./prediction.html?concept=${encodeURIComponent(item.suggestion)}" style="color: var(--text); text-decoration: none;">${item.suggestion}</a>
+                  </div>
+                  <div class="pair-sub">Saved on ${dateStr}</div>
+                </div>
+                <button class="del-btn" data-index="${index}" type="button">Remove</button>
+              </div>
+            `;
+          })
+          .join("");
+
+        listEl.querySelectorAll(".del-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.dataset.index, 10);
+            const current = loadSavedPairs();
+            current.splice(idx, 1);
+            globalThis.localStorage.setItem(SAVED_PAIRS_KEY, JSON.stringify(current));
+            renderList();
+          });
+        });
+      }
+
+      clearBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear all saved concept pairs?")) {
+          globalThis.localStorage.removeItem(SAVED_PAIRS_KEY);
+          renderList();
+        }
+      });
+
+      backBtn.addEventListener("click", () => {
+        if (globalThis.history.length > 1) {
+          globalThis.history.back();
+        } else {
+          globalThis.location.href = "./index.html";
+        }
+      });
+
+      renderList();
+    </script>
+  </body>
+</html>

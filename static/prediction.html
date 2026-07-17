@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediction Results - Light Mode</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <!-- ONNX Runtime Web CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <div class="topbar">
+        <button id="backBtn" class="icon-btn" aria-label="Back to Search" title="Back to Search">←</button>
+        <button id="savedBtn" class="icon-btn" aria-label="Saved Concepts" title="Saved Concepts">💾</button>
+        <span class="mode-badge" style="margin-left: auto;">⚡ Baseline Model (ONNX)</span>
+      </div>
+
+      <h1>Prediction Results</h1>
+      <p class="muted">Top 200 predictions for the selected concept calculated locally in browser.</p>
+      <div class="info-note" style="margin-top: 10px; padding: 10px 12px; background: var(--accent-hover); border: 1px solid var(--line); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+        ℹ️ <strong>Note:</strong> Due to bandwidth constraints (word embeddings are ~400 MB), browser-side inference is limited to the baseline model. To run the full model, check out <a href="https://github.com/aimat-lab/materials_concepts" target="_blank" rel="noopener noreferrer" style="color: var(--accent); font-weight: 500;">https://github.com/aimat-lab/materials_concepts</a>.
+      </div>
+
+      <div class="row">
+        <input id="conceptInput" type="text" placeholder="Concept" readonly />
+      </div>
+
+      <div id="progressCard" class="progress-card">
+        <div id="progressTitle" class="progress-title">Initializing ONNX predictor...</div>
+        <div class="progress-bar-container">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <div id="progressSub" class="progress-sub">Loading binary graph index...</div>
+      </div>
+
+      <p id="meta" class="meta">Loading predictor...</p>
+      <div id="results" class="results"></div>
+    </main>
+
+    <script type="module">
+      import { predictor } from "./js/inference.js";
+
+      const conceptInput = document.getElementById("conceptInput");
+      const backBtn = document.getElementById("backBtn");
+      const savedBtn = document.getElementById("savedBtn");
+      const meta = document.getElementById("meta");
+      const resultsEl = document.getElementById("results");
+
+      const progressCard = document.getElementById("progressCard");
+      const progressTitle = document.getElementById("progressTitle");
+      const progressBarFill = document.getElementById("progressBarFill");
+      const progressSub = document.getElementById("progressSub");
+
+      const SAVED_PAIRS_KEY = "savedConceptPairs";
+
+      function getConceptFromUrl() {
+        const url = new URL(globalThis.location.href);
+        return (url.searchParams.get("concept") || "").trim();
+      }
+
+      function updateProgress({ step, percent, text }) {
+        progressBarFill.style.width = `${percent}%`;
+        progressSub.textContent = text;
+      }
+
+      function loadSavedPairs() {
+        try {
+          const raw = globalThis.localStorage.getItem(SAVED_PAIRS_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function persistSavedPairs(items) {
+        globalThis.localStorage.setItem(SAVED_PAIRS_KEY, JSON.stringify(items));
+      }
+
+      function normalizeText(value) {
+        return String(value || "").trim().toLowerCase();
+      }
+
+      function isPairSaved(origin, suggestion) {
+        const saved = loadSavedPairs();
+        const normalizedOrigin = normalizeText(origin);
+        const normalizedSuggestion = normalizeText(suggestion);
+
+        return saved.some(
+          (item) =>
+            normalizeText(item.origin) === normalizedOrigin &&
+            normalizeText(item.suggestion) === normalizedSuggestion
+        );
+      }
+
+      function savePair(origin, suggestion) {
+        const originConcept = String(origin || "").trim();
+        const predictedConcept = String(suggestion || "").trim();
+
+        if (!originConcept || !predictedConcept) return false;
+
+        const items = loadSavedPairs();
+        const alreadySaved = items.some(
+          (item) =>
+            normalizeText(item.origin) === normalizeText(originConcept) &&
+            normalizeText(item.suggestion) === normalizeText(predictedConcept)
+        );
+
+        if (alreadySaved) return false;
+
+        items.unshift({
+          origin: originConcept,
+          suggestion: predictedConcept,
+          createdAt: new Date().toISOString(),
+        });
+        persistSavedPairs(items);
+        return true;
+      }
+
+      function renderResults(items) {
+        if (!items.length) {
+          resultsEl.innerHTML = '<div class="status">No predictions found.</div>';
+          return;
+        }
+
+        resultsEl.innerHTML = items
+          .map((item, index) => {
+            const score = Number(item.score) || 0;
+            const saved = isPairSaved(conceptInput.value.trim(), item.concept);
+
+            return `
+              <div class="row" style="padding: 10px 4px; border-bottom: 1px solid var(--line);">
+                <span class="rank">${index + 1}.</span>
+                <span class="concept">${item.concept}</span>
+                <span class="score-wrap">
+                  <button
+                    class="save-btn ${saved ? "saved" : ""}"
+                    type="button"
+                    data-concept="${encodeURIComponent(item.concept)}"
+                    aria-label="Save concept pair"
+                    title="${saved ? "Saved" : "Save suggestion"}"
+                  >${saved ? "✓" : "💾"}</button>
+                  <span class="score">${score.toFixed(4)}</span>
+                </span>
+              </div>
+            `;
+          })
+          .join("");
+
+        resultsEl.querySelectorAll(".save-btn").forEach((button) => {
+          button.addEventListener("click", () => {
+            const savedConcept = decodeURIComponent(button.dataset.concept || "");
+            const originConcept = conceptInput.value.trim();
+            const didSave = savePair(originConcept, savedConcept);
+
+            if (didSave || isPairSaved(originConcept, savedConcept)) {
+              button.classList.add("saved");
+              button.textContent = "✓";
+              button.title = "Saved";
+            }
+          });
+        });
+      }
+
+      async function runLocalPrediction() {
+        const concept = getConceptFromUrl();
+        conceptInput.value = concept;
+
+        if (!concept) {
+          meta.textContent = "Select a concept from search first.";
+          progressCard.style.display = "none";
+          resultsEl.innerHTML = '<div class="status">No concept specified.</div>';
+          return;
+        }
+
+        try {
+          // Initialize predictor & load static assets
+          await predictor.init(updateProgress);
+          
+          // Hide progress card once predictor is ready
+          progressCard.style.display = "none";
+
+          meta.textContent = `Running local ONNX inference for "${concept}"...`;
+          const startTime = performance.now();
+
+          const results = await predictor.predict(
+            concept,
+            200,
+            null,
+            (statusMsg) => {
+              meta.textContent = statusMsg;
+            }
+          );
+
+          const duration = ((performance.now() - startTime) / 1000).toFixed(2);
+          meta.textContent = `Found ${results.length} predictions in ${duration}s (Client-side ONNX Inference)`;
+          renderResults(results);
+
+        } catch (error) {
+          console.error("Prediction error:", error);
+          progressCard.style.display = "none";
+          meta.textContent = `Prediction failed for "${concept}".`;
+          resultsEl.innerHTML = `<div class="status">Error: ${error.message}</div>`;
+        }
+      }
+
+      backBtn.addEventListener("click", () => {
+        if (globalThis.history.length > 1) {
+          globalThis.history.back();
+        } else {
+          globalThis.location.href = "./index.html";
+        }
+      });
+
+      savedBtn.addEventListener("click", () => {
+        globalThis.location.href = "./saved.html";
+      });
+
+      runLocalPrediction();
+    </script>
+  </body>
+</html>
