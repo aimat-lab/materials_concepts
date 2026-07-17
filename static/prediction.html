@@ -13,17 +13,24 @@
       <div class="topbar">
         <button id="backBtn" class="icon-btn" aria-label="Back to Search" title="Back to Search">←</button>
         <button id="savedBtn" class="icon-btn" aria-label="Saved Concepts" title="Saved Concepts">💾</button>
-        <span class="mode-badge" style="margin-left: auto;">⚡ Baseline Model (ONNX)</span>
+        <span class="mode-badge" style="margin-left: auto;">⚡ Static / ONNX</span>
       </div>
 
       <h1>Prediction Results</h1>
       <p class="muted">Top 200 predictions for the selected concept calculated locally in browser.</p>
       <div class="info-note" style="margin-top: 10px; padding: 10px 12px; background: var(--accent-hover); border: 1px solid var(--line); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
-        ℹ️ <strong>Note:</strong> Due to bandwidth constraints (word embeddings are ~400 MB), browser-side inference is limited to the baseline model. To run the full model, check out <a href="https://github.com/aimat-lab/materials_concepts" target="_blank" rel="noopener noreferrer" style="color: var(--accent); font-weight: 500;">https://github.com/aimat-lab/materials_concepts</a>.
+        ℹ️ <strong>Note:</strong> Select between <strong>Baseline MLP</strong> (~35 MB) and <strong>GraphSAGE GNN</strong> (~65 MB) models. All ONNX inference is performed 100% client-side in your browser.
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-top: 14px; gap: 12px; align-items: center;">
         <input id="conceptInput" type="text" placeholder="Concept" readonly />
+        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+          <label for="modelSelect" style="font-size: 0.88rem; font-weight: 600; color: var(--text);">Model:</label>
+          <select id="modelSelect" style="padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 0.88rem; background: #fff; color: var(--text); cursor: pointer;">
+            <option value="baseline" selected>Baseline MLP (~35 MB)</option>
+            <option value="gnn">GraphSAGE GNN (~65 MB)</option>
+          </select>
+        </div>
       </div>
 
       <div id="progressCard" class="progress-card">
@@ -42,6 +49,7 @@
       import { predictor } from "./js/inference.js";
 
       const conceptInput = document.getElementById("conceptInput");
+      const modelSelect = document.getElementById("modelSelect");
       const backBtn = document.getElementById("backBtn");
       const savedBtn = document.getElementById("savedBtn");
       const meta = document.getElementById("meta");
@@ -166,6 +174,7 @@
       async function runLocalPrediction() {
         const concept = getConceptFromUrl();
         conceptInput.value = concept;
+        const selectedModel = modelSelect.value || "baseline";
 
         if (!concept) {
           meta.textContent = "Select a concept from search first.";
@@ -181,7 +190,7 @@
           // Hide progress card once predictor is ready
           progressCard.style.display = "none";
 
-          meta.textContent = `Running local ONNX inference for "${concept}"...`;
+          meta.textContent = `Running local ONNX inference for "${concept}" (${selectedModel === "gnn" ? "GraphSAGE GNN" : "Baseline MLP"})...`;
           const startTime = performance.now();
 
           const results = await predictor.predict(
@@ -190,11 +199,13 @@
             null,
             (statusMsg) => {
               meta.textContent = statusMsg;
-            }
+            },
+            selectedModel
           );
 
           const duration = ((performance.now() - startTime) / 1000).toFixed(2);
-          meta.textContent = `Found ${results.length} predictions in ${duration}s (Client-side ONNX Inference)`;
+          const modelName = selectedModel === "gnn" ? "GraphSAGE GNN" : "Baseline MLP";
+          meta.textContent = `Found ${results.length} predictions in ${duration}s (Client-side ONNX ${modelName})`;
           renderResults(results);
 
         } catch (error) {
@@ -204,6 +215,10 @@
           resultsEl.innerHTML = `<div class="status">Error: ${error.message}</div>`;
         }
       }
+
+      modelSelect.addEventListener("change", () => {
+        runLocalPrediction();
+      });
 
       backBtn.addEventListener("click", () => {
         if (globalThis.history.length > 1) {

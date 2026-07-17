@@ -5,8 +5,8 @@
 > [!NOTE]
 > **Try out the static online demo!**  
 > You can test concept predictions directly in your browser without installing anything.  
-> * **Lightweight:** ~35 MB (model weights & graph index downloaded once into browser memory for the current session, nothing saved to your disk).  
-> * **Model:** Baseline NN model (powered ONNX Runtime WASM).  
+> * **Lightweight:** ~35 MB / 65 MB (model weights & graph index downloaded once into browser memory for the current session, nothing saved to your disk).  
+> * **Model:** NN Baseline and GNN Baseline (powered ONNX Runtime WASM).  
 > 
 > 🔗 **Live Demo:** [https://aimat-lab.github.io/materials_concepts/](https://aimat-lab.github.io/materials_concepts/)  
 > *(To run the full ensemble model with 768-dim word embeddings, see local installation below).*

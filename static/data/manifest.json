@@ -1,6 +1,7 @@
 {
   "num_vertices": 136704,
   "feature_dim": 10,
+  "gnn_dim": 128,
   "total_concepts": 136704,
   "adjacency": {
     "indptr": "adjacency/indptr.bin",
@@ -16,5 +17,21 @@
   "features": "features.bin",
   "lookup": "lookup.json",
   "concept_to_id": "concept_to_id.json",
-  "model": "baseline.onnx"
+  "models": {
+    "baseline": {
+      "name": "Baseline MLP",
+      "onnx": "baseline.onnx"
+    },
+    "gnn": {
+      "name": "GraphSAGE GNN",
+      "onnx": "gnn/decoder.onnx",
+      "embedding_chunks": [
+        "gnn/gnn_embeddings_0.bin",
+        "gnn/gnn_embeddings_1.bin",
+        "gnn/gnn_embeddings_2.bin"
+      ],
+      "total_nodes": 136704,
+      "emb_dim": 128
+    }
+  }
 }

@@ -15,7 +15,9 @@ class DataLoader {
     this.lookup = null;
     this.conceptToId = null;
     this.idToConcept = null;
+    this.gnnEmbeddings = null;
     this.isLoaded = false;
+    this.isGNNLoaded = false;
   }
 
   async loadAll(onProgress = () => {}) {
@@ -83,6 +85,44 @@ class DataLoader {
 
     onProgress({ step: "complete", percent: 100, text: "Data loading complete!" });
     this.isLoaded = true;
+    return this;
+  }
+
+  async loadGNNData(onProgress = () => {}) {
+    if (this.isGNNLoaded) {
+      return this;
+    }
+
+    if (!this.isLoaded) {
+      await this.loadAll(onProgress);
+    }
+
+    const gnnMeta = this.manifest.models?.gnn;
+    if (!gnnMeta) {
+      throw new Error("GraphSAGE GNN metadata missing from manifest.json");
+    }
+
+    const totalElements = gnnMeta.total_nodes * gnnMeta.emb_dim;
+    this.gnnEmbeddings = new Float32Array(totalElements);
+
+    const chunks = gnnMeta.embedding_chunks;
+    let offset = 0;
+
+    for (let i = 0; i < chunks.length; i++) {
+      const percent = Math.round(((i + 1) / chunks.length) * 100);
+      onProgress({
+        step: `gnn_chunk_${i}`,
+        percent: percent,
+        text: `Loading GraphSAGE embeddings part ${i + 1}/${chunks.length} (~22.3 MB raw each)...`
+      });
+
+      const chunkBuf = await (await fetch(`${this.baseDataUrl}/${chunks[i]}`)).arrayBuffer();
+      const chunkArr = new Float32Array(chunkBuf);
+      this.gnnEmbeddings.set(chunkArr, offset);
+      offset += chunkArr.length;
+    }
+
+    this.isGNNLoaded = true;
     return this;
   }
 }
